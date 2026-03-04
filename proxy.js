@@ -26,7 +26,6 @@ export function middleware(request) {
 export const config = {
   matcher: [
     "/mockup/:path*",
-    "/analytics/:path*",
     "/choose-username/:path*",
   ],
 };
