@@ -171,16 +171,16 @@ useEffect(() => {
 className={`w-full min-h-screen ${
   layout === "minimal"
     ? ""
-    : "flex justify-center sm:pt-6"
-} ${visualsOpen ? "pb-[380px]" : "pb-10"}`}
+    : "flex sm:justify-center sm:pt-6"
+}`}
 
   >
 2
 <div
-  className={`${
+  className={`w-full ${
     layout === "networking" || layout === "minimal"
-      ? "w-full"
-      : "w-full max-w-[390px]"
+      ? ""
+      : "sm:max-w-[420px] mx-auto"
   }`}
 >
 
