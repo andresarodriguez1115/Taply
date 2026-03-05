@@ -255,6 +255,16 @@ onClick={() => setLayout?.("executive")}
 </button>
 
 <button
+onClick={() => setLayout?.("minimal")}
+  className={`w-full p-2 sm:p-2 sm:p-2 sm:p-3 rounded-lg border text-sm font-medium transition
+    ${layout === "minimal"
+      ? "border-blue-500 bg-blue-50"
+      : "border-gray-200 hover:bg-gray-50"}`}
+>
+  Minimal
+</button>
+
+<button
  onClick={() => setLayout?.("modern")}
   className={`w-full p-2 sm:p-2 sm:p-2 sm:p-3 rounded-lg border text-sm font-medium transition
     ${layout === "modern"
@@ -262,20 +272,6 @@ onClick={() => setLayout?.("executive")}
       : "border-gray-200 hover:bg-gray-50"}`}
 >
   Modern
-</button>
-
-<button
-onClick={() => {
-  setLayout?.("minimal");
-  setProfileScale?.(1);
-  setProfilePos?.({ x: 0, y: 0 });
-}}
-  className={`w-full p-2 sm:p-2 sm:p-2 sm:p-3 rounded-lg border text-sm font-medium transition
-    ${layout === "minimal"
-      ? "border-blue-500 bg-blue-50"
-      : "border-gray-200 hover:bg-gray-50"}`}
->
-  Minimal
 </button>
 
 </div>

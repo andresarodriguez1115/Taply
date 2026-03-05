@@ -1,6 +1,6 @@
 "use client";
-
-import { motion } from "framer-motion";
+import { useState } from "react";
+import { motion, useMotionValue, useTransform } from "framer-motion";
 import { Phone, Mail, ChevronRight, Linkedin, Instagram } from "lucide-react";
 export default function ExecutiveLayout({  name,
   
@@ -33,6 +33,9 @@ fieldValues,
   titleSize,
   cardRadius
 }) {
+  const dragX = useMotionValue(0);
+const fillWidth = useTransform(dragX, [0, 240], ["0px", "500px"]);
+const [saved, setSaved] = useState(false);
   return (
     <div
       style={{
@@ -146,14 +149,20 @@ onTouchEnd={profileMouseUp}
       {/* NAME CARD (NOW PERFECTLY ALIGNED) */}
 <div className="-mt-20 w-full sm:w-[650px] bg-white rounded-2xl shadow-md px-6 py-6">
   <div className="ml- 20 mt-16 sm:ml-[30px] sm:mt-16 text-left ">
-  <h1
-  className="font-bold text-[21px] sm:text-[24px]"
+<h1
+  className="font-bold"
+  style={{
+    fontSize: `clamp(${nameSize * 0.7}px, ${nameSize}px, ${nameSize}px)`
+  }}
 >
             {name}
           </h1>
 
 <p
-  className="text-gray-500 mt-2 ml- text-[15px] sm:text-[12px]"
+  className="text-gray-500 mt-2"
+  style={{
+    fontSize: `clamp(${titleSize * 0.8}px, ${titleSize}px, ${titleSize}px)`
+  }}
 >
   {title}
 </p>
@@ -161,12 +170,45 @@ onTouchEnd={profileMouseUp}
       </div>
       {/* SAVE CONTACT BUTTON */}
 <div className="mt-6 w-full sm:w-[600px] flex justify-center">
-<button
-  className="w-[95%] h-[48px] sm:w-full sm:h-[60px] text-[13px] sm:text-[16px] font-semibold tracking-wide rounded-3xl bg-black text-white flex items-center justify-center"
-  style={{ fontFamily: "Inter, sans-serif" }}
->
-Save To Contacts
-</button>
+<div className="w-[95%] sm:w-full h-[48px] sm:h-[60px] bg-black rounded-3xl relative overflow-hidden flex items-center">
+
+  {/* GREEN PROGRESS */}
+  <motion.div
+    style={{ width: fillWidth }}
+    className="absolute left-0 top-0 h-full bg-gradient-to-r from-green-500 to-green-400"
+  />
+
+  {/* TEXT */}
+  <span className="absolute w-full text-center text-white text-[13px] sm:text-[16px] font-semibold tracking-wide pointer-events-none">
+    {saved ? "✓ Contact Saved" : "Slide to Save Contact"}
+  </span>
+
+  {/* SLIDER */}
+  <motion.div
+    drag="x"
+    style={{ x: dragX }}
+    dragConstraints={{ left: 0, right: 240 }}
+    whileTap={{ scale: 1.1 }}
+    onDragEnd={() => {
+  const x = dragX.get();
+
+  if (x > 200) {
+    setSaved(true);
+
+    setTimeout(() => {
+      dragX.set(0);
+      setSaved(false);
+    }, 1800);
+  } else {
+    dragX.set(0);
+  }
+}}
+    className="w-[44px] h-[44px] sm:w-[52px] sm:h-[52px] bg-white rounded-full ml-2 flex items-center justify-center cursor-grab shadow-md"
+  >
+  
+  </motion.div>
+
+</div>
 </div>
 {/* ================= CONTACT SECTION ================= */}
 {(fields?.phone ||
