@@ -175,12 +175,12 @@ className={`w-full min-h-screen ${
 } ${visualsOpen ? "pb-[380px]" : "pb-10"}`}
 
   >
-
+2
 <div
   className={`${
     layout === "networking" || layout === "minimal"
       ? "w-full"
-      : "w-full max-w-[420px]"
+      : "w-full max-w-[390px]"
   }`}
 >
 
