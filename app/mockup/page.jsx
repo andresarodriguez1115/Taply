@@ -25,6 +25,7 @@ const [bannerUrl, setBannerUrl] = useState(null);
   const [saving, setSaving] = useState(false)
 const [saveSuccess, setSaveSuccess] = useState(false)
 const [backgroundColor, setBackgroundColor] = useState("#f3f4f6");
+const [username, setUsername] = useState(null)
 // ==============================
 // IMAGE POSITIONING STATE
 // ==============================
@@ -46,7 +47,10 @@ const [bannerPos, setBannerPos] = useState({ x: 0, y: 0 });
     bio: false,
   });
 const router = useRouter()
-
+const handleLogout = async () => {
+  await supabase.auth.signOut()
+  router.replace("/login")
+}
 useEffect(() => {
   const loadProfile = async () => {
     const { data: userData } = await supabase.auth.getUser()
@@ -100,7 +104,7 @@ setProfilePos({
   x: data.avatar_x ?? 0,
   y: data.avatar_y ?? 0,
 });
-
+setUsername(data.username)
 setBannerScale(data.banner_scale ?? 1);
 setBannerPos({
   x: data.banner_x ?? 0,
@@ -166,7 +170,7 @@ const handleSave = async () => {
 }
   const [lastAddedField, setLastAddedField] = useState(null);
   const inputRefs = useRef({});
-
+const avatarMenuRef = useRef(null)
   // -----------------------------
   // EDIT MODE
   // -----------------------------
@@ -182,7 +186,7 @@ const handleSave = async () => {
   // SIDEBAR VISIBILITY
   // -----------------------------
   const [panelOpen, setPanelOpen] = useState(true);
-
+const [avatarMenuOpen, setAvatarMenuOpen] = useState(false);
   // -----------------------------
   // FIELD HANDLERS
   // -----------------------------
@@ -258,7 +262,22 @@ const handleBannerUpload = async (e) => {
       setLastAddedField(null);
     }
   }, [lastAddedField]);
+useEffect(() => {
+  const handleClickOutside = (event) => {
+    if (
+      avatarMenuRef.current &&
+      !avatarMenuRef.current.contains(event.target)
+    ) {
+      setAvatarMenuOpen(false)
+    }
+  }
 
+  document.addEventListener("mousedown", handleClickOutside)
+
+  return () => {
+    document.removeEventListener("mousedown", handleClickOutside)
+  }
+}, [])
   // -----------------------------
   // MODES
   // -----------------------------
@@ -305,7 +324,7 @@ const updateField = (field, value) => {
     switch (mode) {
       case "business":
   return (
-<BusinessLayout
+<BusinessLayout key="business-layout"
   {...layoutProps}
   layout={layout}
   setLayout={setLayout}
@@ -361,7 +380,36 @@ case "social":
 
 return (
   <div className="w-full min-h-screen flex justify-center relative">
+{/* AVATAR MENU */}
+<div ref={avatarMenuRef} className="absolute top-6 right-6 z-50">
 
+  <button
+    onClick={() => setAvatarMenuOpen(!avatarMenuOpen)}
+    className="w-10 h-10 rounded-full bg-black text-white flex items-center justify-center text-sm"
+  >
+    {name?.charAt(0)?.toUpperCase() || "U"}
+  </button>
+
+  {avatarMenuOpen && (
+    <div className="absolute right-0 mt-2 w-40 bg-white border rounded-lg shadow-lg overflow-hidden">
+
+   <button
+  onClick={() => username && window.open(`/${username}`, "_blank")}
+  className="w-full text-left px-4 py-2 hover:bg-gray-100 text-sm"
+>
+  View Profile
+</button>
+      <button
+        onClick={handleLogout}
+        className="w-full text-left px-4 py-2 hover:bg-gray-100 text-sm"
+      >
+        Logout
+      </button>
+
+    </div>
+  )}
+
+</div>
     {/* Toggle Button */}
     <button
       onClick={() => setPanelOpen(true)}

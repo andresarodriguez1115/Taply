@@ -18,11 +18,12 @@ import { motion } from "framer-motion";export default function NetworkingLayout(
 const [visualsOpen, setVisualsOpen] = useState(false);
 const [mounted, setMounted] = useState(false);
 const [portfolioImage, setPortfolioImage] = useState(null);
-const [localProfileImage, setLocalProfileImage] = useState(null);
 const [resumeImage, setResumeImage] = useState(null);
 const [programImage, setProgramImage] = useState(null);
 const [profileScale, setProfileScale] = useState(1);
 const [profilePos, setProfilePos] = useState({ x: 0, y: 0 });
+const [dragging, setDragging] = useState(false);
+const [startPos, setStartPos] = useState({ x: 0, y: 0 });
 useEffect(() => {
   setMounted(true);
 }, []);
@@ -35,18 +36,31 @@ const handleResumeUpload = (e) => {
   const file = e.target.files[0];
   if (file) setResumeImage(URL.createObjectURL(file));
 };
+const profileMouseDown = (e) => {
+  setDragging(true);
+  setStartPos({
+    x: e.clientX - profilePos.x,
+    y: e.clientY - profilePos.y,
+  });
+};
 
+const profileMouseMove = (e) => {
+  if (!dragging) return;
+
+  setProfilePos({
+    x: e.clientX - startPos.x,
+    y: e.clientY - startPos.y,
+  });
+};
+
+const profileMouseUp = () => {
+  setDragging(false);
+};
 const handleProgramUpload = (e) => {
   const file = e.target.files[0];
   if (file) setProgramImage(URL.createObjectURL(file));
 };
-const handleLocalProfileUpload = (e) => {
-  const file = e.target.files[0];
-  if (file) {
-    setLocalProfileImage(URL.createObjectURL(file));
-  }
-  
-};
+
   return (
 <div
   style={{
@@ -60,37 +74,76 @@ const handleLocalProfileUpload = (e) => {
 ><div className="w-full max-w-[650px] px-6 pt-20 pb-24 text-center">
         {/* ===== PROFILE IMAGE ===== */}
         <div className="flex justify-center mb-8 relative">
-          <div className="relative w-56 h-56 rounded-full overflow-hidden bg-white shadow-xl">
-{localProfileImage ? (
-  <img
-    src={localProfileImage}
-    className="w-full h-full object-cover"
+<div
+  className="relative w-56 h-56 rounded-full overflow-hidden bg-white shadow-xl cursor-grab group"
+  onMouseDown={profileMouseDown}
+  onMouseMove={profileMouseMove}
+  onMouseUp={profileMouseUp}
+  onMouseLeave={profileMouseUp}
+>
+
+{profileImage ? (
+  <motion.img
+    src={profileImage}
+    className="absolute inset-0 w-full h-full object-cover"
+    style={{
+      scale: profileScale,
+      translateX: profilePos.x,
+      translateY: profilePos.y,
+    }}
+    draggable={false}
   />
 ) : (
-              <div className="w-full h-full flex items-center justify-center text-gray-400 text-sm">
-                No Photo
-              </div>
-            )}
+  <div className="w-full h-full flex items-center justify-center text-gray-400 text-sm">
+    No Photo
+    
+  </div>
+)}
 
-{true && (              <>
-                <button
-                  onClick={() => fileInputRef.current.click()}
-                  className="absolute bottom-3 right-3 w-10 h-10 rounded-full bg-white border shadow flex items-center justify-center hover:scale-105 transition"
-                >
-                  📷
-                </button>
 
-                <input
-                  type="file"
-                  accept="image/*"
-                  ref={fileInputRef}
-                  onChange={handleLocalProfileUpload}
-                  className="hidden"
-                />
-              </>
-            )}
-          </div>
+{isEditing && profileImage && (
+  <div className="absolute top-3 left-1/2 -translate-x-1/2 bg-white/90 px-3 py-2 rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition">
+    <input
+      type="range"
+      min="0.5"
+      max="2"
+      step="0.01"
+      value={profileScale}
+      onChange={(e) => setProfileScale(Number(e.target.value))}
+      className="w-[110px]"
+    />
+    
+  </div>
+)}
+
+</div>
+{isEditing && (
+  <div className="absolute -bottom-7 left-1/2 -translate-x-1/2">
+    <label
+      className="
+        bg-black text-white
+        px-4 py-1.5
+        rounded-full
+        text-sm font-medium
+        shadow-lg
+        cursor-pointer
+        hover:bg-gray-900
+        transition
+      "
+    >
+      Change Photo
+
+  <input
+  type="file"
+  accept="image/*"
+  className="hidden"
+  onChange={handleProfileUpload}
+/>
+    </label>
+  </div>
+)}
         </div>
+ 
 
         {/* ===== NAME + TITLE ===== */}
 <h1 className="text-4xl font-semibold text-gray-900 tracking-tight">

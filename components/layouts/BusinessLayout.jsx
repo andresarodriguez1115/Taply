@@ -83,7 +83,7 @@ const [contactFields, setContactFields] = useState({
   // ---------------------------
 useEffect(() => {
   if (isEditing) {
-    setBgColor(loadFromLS("bgColor", backgroundColor || "#e9eef5"));
+    setBgColor(backgroundColor || "#e9eef5");
   }
 
   setCardColor(loadFromLS("cardColor", "#ffffff"));

@@ -1,77 +1,26 @@
 "use client";
 
-import React from "react";
 import { motion } from "framer-motion";
-import ProfileHeader from "../ProfileHeader";
 
-export default function SocialLayout({
-  bannerImage,
-  avatarImage,
-  name,
-  title,
-  instagram,
-  tiktok,
-  snapchat,
-  youtube,
-  linkedin,
-  isEditing,
-}) {
+export default function SocialLayout() {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 10 }}
+      initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.4 }}
-      className="w-full bg-white rounded-xl shadow-lg overflow-hidden border border-slate-200"
+      transition={{ duration: 0.35 }}
+      className="w-full bg-white rounded-xl shadow-lg border border-slate-200 p-12 text-center"
     >
-      {/* Profile Header */}
-      <ProfileHeader
-        bannerImage={bannerImage}
-        avatarImage={avatarImage}
-        name={name}
-        title={title}
-        isEditing={isEditing}
-      />
+      <h1 className="text-2xl font-bold text-slate-800 mb-3">
+        Social Mode
+      </h1>
 
-      {/* Social Section */}
-      <div className="p-6 space-y-5">
-        <h2 className="text-xl font-semibold text-slate-800">Social Links</h2>
+      <p className="text-slate-500 text-lg mb-4">
+        Coming Soon 🚀
+      </p>
 
-        {/* Instagram */}
-        <SocialLinkRow label="Instagram" value={instagram} />
-
-        {/* TikTok */}
-        <SocialLinkRow label="TikTok" value={tiktok} />
-
-        {/* Snapchat */}
-        <SocialLinkRow label="Snapchat" value={snapchat} />
-
-        {/* YouTube */}
-        <SocialLinkRow label="YouTube" value={youtube} />
-
-        {/* LinkedIn */}
-        <SocialLinkRow label="LinkedIn" value={linkedin} />
-      </div>
+      <p className="text-slate-400 text-sm">
+        We're building a new way to share your social presence.
+      </p>
     </motion.div>
-  );
-}
-
-/* COMPONENT — Social Link Row */
-function SocialLinkRow({ label, value }) {
-  return (
-    <div className="flex items-center justify-between bg-slate-50 p-4 rounded-lg border">
-      <div className="text-slate-700">{label}</div>
-
-      {value ? (
-        <a
-          href={value.startsWith("http") ? value : `https://${value}`}
-          target="_blank"
-          className="px-3 py-1 text-sm bg-purple-600 text-white rounded-md"
-        >
-          Visit
-        </a>
-      ) : (
-        <div className="text-slate-400 text-sm">Not provided</div>
-      )}
-    </div>
   );
 }
