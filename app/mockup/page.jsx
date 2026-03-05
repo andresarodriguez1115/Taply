@@ -786,7 +786,7 @@ return (
     </AnimatePresence>
 
     {/* RIGHT DISPLAY */}
-    <div className="w-full max-w-4xl pt-10 flex justify-center">
+    <div className="w-full max-w-4xl flex justify-center">
       <AnimatePresence mode="wait">
         <motion.div
           initial={{ opacity: 0, y: 10 }}
