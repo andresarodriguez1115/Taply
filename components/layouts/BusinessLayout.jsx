@@ -177,11 +177,11 @@ className={`w-full min-h-screen ${
   >
 
 <div
-className={`w-full min-h-screen px-4 ${
-  layout === "minimal"
-    ? ""
-    : "flex justify-center pt-6"
-}`}
+  className={`${
+    layout === "networking" || layout === "minimal"
+      ? "w-full"
+      : "w-full sm:w-[420px]"
+  }`}
 >
 
   
