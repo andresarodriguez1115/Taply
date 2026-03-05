@@ -237,16 +237,16 @@ animate={{ y: visualsOpen ? 0 : 392 }}
   </div>
 
   {/* Content */}
-  <div className="p-6 flex-1">
-<div className="grid grid-cols-4 gap-6">
+  <div className="p-6 flex-1 overflow-y-auto sm:overflow-visible touch-pan-y">
+<div className="grid grid-cols-2 sm:grid-cols-4 gap-6">
         {/* Layout */}
         <div>
           <p className="text-xs font-medium text-gray-500 mb-2">Layout</p>
-         <div className="rounded-xl border p-3 space-y-3">
+         <div className="rounded-xl border p-2 sm:p-2 sm:p-2 sm:p-3 space-y-3">
 
 <button
 onClick={() => setLayout?.("executive")}
-  className={`w-full p-3 rounded-lg border text-sm font-medium transition
+  className={`w-full p-2 sm:p-2 sm:p-2 sm:p-3 rounded-lg border text-sm font-medium transition
     ${layout === "executive"
       ? "border-blue-500 bg-blue-50"
       : "border-gray-200 hover:bg-gray-50"}`}
@@ -256,7 +256,7 @@ onClick={() => setLayout?.("executive")}
 
 <button
  onClick={() => setLayout?.("modern")}
-  className={`w-full p-3 rounded-lg border text-sm font-medium transition
+  className={`w-full p-2 sm:p-2 sm:p-2 sm:p-3 rounded-lg border text-sm font-medium transition
     ${layout === "modern"
       ? "border-blue-500 bg-blue-50"
       : "border-gray-200 hover:bg-gray-50"}`}
@@ -270,7 +270,7 @@ onClick={() => {
   setProfileScale?.(1);
   setProfilePos?.({ x: 0, y: 0 });
 }}
-  className={`w-full p-3 rounded-lg border text-sm font-medium transition
+  className={`w-full p-2 sm:p-2 sm:p-2 sm:p-3 rounded-lg border text-sm font-medium transition
     ${layout === "minimal"
       ? "border-blue-500 bg-blue-50"
       : "border-gray-200 hover:bg-gray-50"}`}
@@ -285,7 +285,7 @@ onClick={() => {
         {/* Colors */}
         <div>
           <p className="text-xs font-medium text-gray-500 mb-2">Colors</p>
-          <div className="rounded-xl border p-3 space-y-3">
+          <div className="rounded-xl border p-2 sm:p-2 sm:p-2 sm:p-3 space-y-3">
             <div className="flex justify-between items-center">
               <span className="text-sm">Background</span>
               <input
@@ -314,7 +314,7 @@ onClick={() => {
     Typography
   </p>
 
-  <div className="rounded-xl border p-3 space-y-4">
+  <div className="rounded-xl border p-2 sm:p-2 sm:p-2 sm:p-3 space-y-4">
 
     {/* Font */}
     <div>
@@ -388,7 +388,7 @@ onClick={() => {
         {/* Images */}
         <div>
           <p className="text-xs font-medium text-gray-500 mb-2">Images</p>
-          <div className="rounded-xl border p-3 text-sm text-gray-400">
+          <div className="rounded-xl border p-2 sm:p-2 sm:p-2 sm:p-3 text-sm text-gray-400">
             Image controls next
           </div>
         </div>
@@ -636,7 +636,7 @@ className="group flex items-center justify-between px-6 py-4 border-b border-gra
     target="_blank"
     className="flex items-center justify-between p-4 rounded-xl bg-white shadow-sm border hover:shadow-md transition"
   >
-    <div className="flex items-center gap-3">
+    <div className="flex items-center gap-2 sm:p-2 sm:p-2 sm:p-3">
       <div className="w-10 h-10 rounded-full bg-pink-100 flex items-center justify-center">
         <span className="text-pink-600 font-semibold">IG</span>
       </div>

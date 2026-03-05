@@ -38,7 +38,7 @@ fieldValues,
       style={{
         ...(fontFamily ? { fontFamily } : {})
       }}
-className="pt-8 pb-10 flex flex-col items-center w-full max-w-[380px] sm:max-w-[650px] mx-auto"    >
+className="pt-8 pb-10 flex flex-col items-center w-full max-w-[400px] sm:max-w-[650px] mx-auto"    >
 
       {/* BANNER */}
       <div
@@ -63,15 +63,14 @@ onMouseDown={bannerMouseDown}
 
         {isEditing && bannerImage && (
           <div className="absolute top-3 left-1/2 -translate-x-1/2 bg-white/90 px-3 py-2 rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition">
-            <input
-              type="range"
-              min="0.5"
-              max="2"
-              step="0.01"
-              value={bannerScale}
-              onChange={(e) => setBannerScale(Number(e.target.value))}
-              className="w-[110px]"
-            />
+<input
+  type="range"
+  min="0.5"
+  max="2"
+  step="0.01"
+  value={bannerScale}
+  onChange={(e) => setBannerScale(Number(e.target.value))}
+/>
           </div>
         )}
 
@@ -126,7 +125,7 @@ onTouchEnd={profileMouseUp}
               step="0.01"
               value={profileScale}
               onChange={(e) => setProfileScale(Number(e.target.value))}
-              className="w-[100px]"
+              className="w-[70px] sm:w-[110px]"
             />
           </div>
         )}
@@ -148,13 +147,13 @@ onTouchEnd={profileMouseUp}
 <div className="-mt-20 w-full sm:w-[650px] bg-white rounded-2xl shadow-md px-6 py-6">
   <div className="ml- 20 mt-16 sm:ml-[30px] sm:mt-16 text-left ">
   <h1
-  className="font-bold text-[16px] sm:text-[24px]"
+  className="font-bold text-[21px] sm:text-[24px]"
 >
             {name}
           </h1>
 
 <p
-  className="text-gray-500 mt-2 ml- text-[10px] sm:text-[12px]"
+  className="text-gray-500 mt-2 ml- text-[15px] sm:text-[12px]"
 >
   {title}
 </p>
@@ -185,16 +184,16 @@ Save To Contacts
   {fields?.phone && fieldValues?.phone && (
     <a
       href={`tel:${fieldValues.phone}`}
-className="w-[380px] sm:w-[650px] flex items-center justify-between pl-3 pr-4 py-2 sm:py-4 bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition"    >
+className="w-[400px] sm:w-[650px] flex items-center justify-between pl-3 pr-4 py-2 sm:py-4 bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition"    >
       <div className="flex items-center gap-4">
-        <div className="w-7 h-7 sm:w-10 sm:h-10 rounded-full bg-green-600 flex items-center justify-center">
+        <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-green-600 flex items-center justify-center">
 <Phone size={12} className="text-white sm:w-[16px] sm:h-[16px]" />
 </div>
 
         <div>
-<p className="text-[13px] sm:text-[17px] font-semibold text-gray-900">
+<p className="text-[16px] sm:text-[17px] font-semibold text-gray-900">
   Call
-</p>          <p className="text-[11px] sm:text-sm text-gray-500">
+</p>          <p className="text-[14px] sm:text-sm text-gray-500">
             {fieldValues.phone}
           </p>
         </div>
@@ -208,18 +207,18 @@ className="w-[380px] sm:w-[650px] flex items-center justify-between pl-3 pr-4 py
   {fields?.email && fieldValues?.email && (
     <a
       href={`mailto:${fieldValues.email}`}
-      className="w-[380px] sm:w-[650px] flex items-center justify-between pl-3 pr-4 py-2 sm:py-4 bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition"
+      className="w-[400px] sm:w-[650px] flex items-center justify-between pl-3 pr-4 py-2 sm:py-4 bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition"
     >
       <div className="flex items-center gap-4">
-        <div className="w-7 h-7 sm:w-10 sm:h-10 rounded-full bg-blue-600 flex items-center justify-center">
+        <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-blue-600 flex items-center justify-center">
 <Mail size={12} className="text-white sm:w-[16px] sm:h-[16px]" />
 
 </div>
 
         <div>
-<p className="text-[13px] sm:text-[17px] font-semibold text-gray-900">
+<p className="text-[16px] sm:text-[17px] font-semibold text-gray-900">
   Email
-</p>          <p className="text-[11px] sm:text-sm text-gray-500 truncate">
+</p>          <p className="text-[14px] sm:text-sm text-gray-500 truncate">
             {fieldValues.email}
           </p>
         </div>
@@ -234,18 +233,18 @@ className="w-[380px] sm:w-[650px] flex items-center justify-between pl-3 pr-4 py
   <a
     href={fieldValues.linkedin}
     target="_blank"
-    className="w-[380px] sm:w-[650px] flex items-center justify-between pl-3 pr-4 py-2 sm:py-4 bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition"
+    className="w-[400px] sm:w-[650px] flex items-center justify-between pl-3 pr-4 py-2 sm:py-4 bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition"
   >
     <div className="flex items-center gap-4">
-      <div className="w-7 h-7 sm:w-10 sm:h-10 rounded-full bg-indigo-600 flex items-center justify-center">
+      <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-indigo-600 flex items-center justify-center">
        <Linkedin size={12} className="text-white sm:w-[16px] sm:h-[16px]" />
 
       </div>
 
       <div>
-<p className="text-[13px] sm:text-[17px] font-semibold text-gray-900">
+<p className="text-[16px] sm:text-[17px] font-semibold text-gray-900">
   LinkedIn
-</p>        <p className="text-[11px] sm:text-sm text-gray-500 break-all">
+</p>        <p className="text-[14px] sm:text-sm text-gray-500 break-all">
           {fieldValues.linkedin}
         </p>
       </div>
@@ -260,18 +259,18 @@ className="w-[380px] sm:w-[650px] flex items-center justify-between pl-3 pr-4 py
   <a
     href={`https://instagram.com/${fieldValues.instagram}`}
     target="_blank"
-    className="w-[380px] sm:w-[650px] flex items-center justify-between pl-3 pr-4 py-2 sm:py-4 bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition"
+    className="w-[400px] sm:w-[650px] flex items-center justify-between pl-3 pr-4 py-2 sm:py-4 bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition"
   >
     <div className="flex items-center gap-4">
-<div className="w-7 h-7 sm:w-10 sm:h-10 rounded-full bg-pink-600 flex items-center justify-center">
+<div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-pink-600 flex items-center justify-center">
   <Instagram size={12} className="text-white sm:w-[16px] sm:h-[16px]" />
 </div>
 
       <div>
-        <p className="text-[13px] sm:text-[17px] font-semibold text-gray-900">
+        <p className="text-[16px] sm:text-[17px] font-semibold text-gray-900">
           Instagram
         </p>
-        <p className="text-[11px] sm:text-sm text-gray-500">
+        <p className="text-[14px] sm:text-sm text-gray-500">
           @{fieldValues.instagram}
         </p>
       </div>
