@@ -38,7 +38,7 @@ fieldValues,
       style={{
         ...(fontFamily ? { fontFamily } : {})
       }}
-className="pt-0 pb-10 flex flex-col items-center w-full max-w-[380px] sm:max-w-[650px] mx-auto"    >
+className="pt-8 pb-10 flex flex-col items-center w-full max-w-[380px] sm:max-w-[650px] mx-auto"    >
 
       {/* BANNER */}
       <div
@@ -93,7 +93,8 @@ onMouseDown={bannerMouseDown}
 
         {/* PROFILE IMAGE */}
         <div
-          className="w-[85px] h-[85px] sm:w-[170px] sm:h-[170px] rounded-full border-[2px] border-white overflow-hidden shadow-xl bg-gray-300 cursor-grab touch-none"
+          className="w-[100px] h-[100px] sm:w-[170px] sm:h-[170px] rounded-full border-[2px] border-white overflow-hidden shadow-xl bg-gray-300 cursor-grab touch-none"
+style={{ touchaction: "none" }}
           onMouseDown={profileMouseDown}
           onMouseMove={profileMouseMove}
           onMouseUp={profileMouseUp}
@@ -162,10 +163,15 @@ onTouchEnd={profileMouseUp}
       {/* SAVE CONTACT BUTTON */}
 <div className="mt-6 w-full sm:w-[600px] flex justify-center">
 <button
-  className="w-[95%] h-[45px] text-[10px] sm:w-full sm:h-[60px] sm:text-[16px] rounded-3xl bg-black text-white"
+  className="w-[95%] h-[48px] sm:w-full sm:h-[60px]
+  text-[13px] sm:text-[16px]
+  font-semibold tracking-wide
+  rounded-3xl bg-black text-white
+  flex items-center justify-center"
+  style={{ fontFamily: "Inter, sans-serif" }}
 >
-    Add To Contacts
-  </button>
+Save To Contacts
+</button>
 </div>
 {/* ================= CONTACT SECTION ================= */}
 {(fields?.phone ||
@@ -179,7 +185,7 @@ onTouchEnd={profileMouseUp}
   {fields?.phone && fieldValues?.phone && (
     <a
       href={`tel:${fieldValues.phone}`}
-className="w-[380px] sm:w-[650px] flex items-center justify-between px-6 py-1 sm:py-4 bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition"    >
+className="w-[380px] sm:w-[650px] flex items-center justify-between pl-3 pr-4 py-2 sm:py-4 bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition"    >
       <div className="flex items-center gap-4">
         <div className="w-7 h-7 sm:w-10 sm:h-10 rounded-full bg-green-600 flex items-center justify-center">
 <Phone size={12} className="text-white sm:w-[16px] sm:h-[16px]" />
@@ -202,7 +208,7 @@ className="w-[380px] sm:w-[650px] flex items-center justify-between px-6 py-1 sm
   {fields?.email && fieldValues?.email && (
     <a
       href={`mailto:${fieldValues.email}`}
-      className="w-[380px] sm:w-[650px] flex items-center justify-between px-6 py-1 sm:py-4 bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition"
+      className="w-[380px] sm:w-[650px] flex items-center justify-between pl-3 pr-4 py-2 sm:py-4 bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition"
     >
       <div className="flex items-center gap-4">
         <div className="w-7 h-7 sm:w-10 sm:h-10 rounded-full bg-blue-600 flex items-center justify-center">
@@ -228,7 +234,7 @@ className="w-[380px] sm:w-[650px] flex items-center justify-between px-6 py-1 sm
   <a
     href={fieldValues.linkedin}
     target="_blank"
-    className="w-[380px] sm:w-[650px] flex items-center justify-between px-6 py-1 sm:py-4 bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition"
+    className="w-[380px] sm:w-[650px] flex items-center justify-between pl-3 pr-4 py-2 sm:py-4 bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition"
   >
     <div className="flex items-center gap-4">
       <div className="w-7 h-7 sm:w-10 sm:h-10 rounded-full bg-indigo-600 flex items-center justify-center">
@@ -254,7 +260,7 @@ className="w-[380px] sm:w-[650px] flex items-center justify-between px-6 py-1 sm
   <a
     href={`https://instagram.com/${fieldValues.instagram}`}
     target="_blank"
-    className="w-[380px] sm:w-[650px] flex items-center justify-between px-6 py-1 sm:py-4 bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition"
+    className="w-[380px] sm:w-[650px] flex items-center justify-between pl-3 pr-4 py-2 sm:py-4 bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition"
   >
     <div className="flex items-center gap-4">
 <div className="w-7 h-7 sm:w-10 sm:h-10 rounded-full bg-pink-600 flex items-center justify-center">

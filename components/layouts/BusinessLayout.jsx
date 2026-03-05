@@ -115,20 +115,28 @@ useEffect(() => {
   const dragStart = useRef({ x: 0, y: 0 });
   const dragLast = useRef({ x: 0, y: 0 });
 
-  const profileMouseDown = (e) => {
-    if (!isEditing) return;
-    dragging.current = true;
-    dragStart.current = { x: e.clientX, y: e.clientY };
-    dragLast.current = { ...profilePos };
-  };
+const profileMouseDown = (e) => {
+  if (!isEditing) return;
 
-  const profileMouseMove = (e) => {
-    if (!dragging.current) return;
-    setProfilePos({
-      x: dragLast.current.x + (e.clientX - dragStart.current.x),
-      y: dragLast.current.y + (e.clientY - dragStart.current.y),
-    });
-  };
+  const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+  const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+
+  dragging.current = true;
+  dragStart.current = { x: clientX, y: clientY };
+  dragLast.current = { ...profilePos };
+};
+
+const profileMouseMove = (e) => {
+  if (!dragging.current) return;
+
+  const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+  const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+
+  setProfilePos({
+    x: dragLast.current.x + (clientX - dragStart.current.x),
+    y: dragLast.current.y + (clientY - dragStart.current.y),
+  });
+};
 
   const profileMouseUp = () => {
     dragging.current = false;
