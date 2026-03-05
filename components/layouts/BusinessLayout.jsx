@@ -175,7 +175,6 @@ className={`w-full min-h-screen ${
 }`}
 
   >
-2
 <div
   className={`w-full ${
     layout === "networking" || layout === "minimal"
