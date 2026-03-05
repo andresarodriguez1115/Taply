@@ -356,14 +356,21 @@ case "clients":
   return <ClientsLayout {...layoutProps} layout={layout} />;
 case "social":
   return <SocialLayout {...layoutProps} layout={layout} />;
-  case "networking":
+
+
+
+case "networking":
   return (
-<NetworkingLayout
-  {...layoutProps}
-  layout={layout}
-  backgroundColor={backgroundColor}
-/>
+    <NetworkingLayout
+      {...layoutProps}
+      layout={layout}
+      backgroundColor={backgroundColor}
+      profileImage={avatarUrl}
+      handleProfileUpload={handleAvatarUpload}
+    />
   );
+
+  
       default:
         return null;
     }

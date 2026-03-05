@@ -88,8 +88,13 @@ case "business": {
       return <ClientsLayout {...layoutProps} />;
     case "social":
       return <SocialLayout {...layoutProps} />;
-    case "networking":
-      return <NetworkingLayout {...layoutProps} />;
+case "networking":
+  return (
+    <NetworkingLayout
+      {...layoutProps}
+      profileImage={profile.avatar_url}
+    />
+  );
     default:
       return <BusinessLayout {...layoutProps} />;
   }

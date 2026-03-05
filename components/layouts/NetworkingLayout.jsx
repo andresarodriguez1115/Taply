@@ -75,8 +75,7 @@ const handleProgramUpload = (e) => {
         {/* ===== PROFILE IMAGE ===== */}
         <div className="flex justify-center mb-8 relative">
 <div
-  className="relative w-56 h-56 rounded-full overflow-hidden bg-white shadow-xl cursor-grab group"
-  onMouseDown={profileMouseDown}
+className="relative w-56 h-56 rounded-full overflow-hidden bg-gray-200 border-[2px] border-white shadow-lg cursor-grab group"  onMouseDown={profileMouseDown}
   onMouseMove={profileMouseMove}
   onMouseUp={profileMouseUp}
   onMouseLeave={profileMouseUp}
@@ -85,7 +84,7 @@ const handleProgramUpload = (e) => {
 {profileImage ? (
   <motion.img
     src={profileImage}
-    className="absolute inset-0 w-full h-full object-cover"
+    className="absolute inset-0 w-full h-full object-contain"
     style={{
       scale: profileScale,
       translateX: profilePos.x,
