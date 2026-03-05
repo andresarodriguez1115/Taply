@@ -1,0 +1,21 @@
+[1mdiff --git a/components/layouts/BusinessLayout.jsx b/components/layouts/BusinessLayout.jsx[m
+[1mindex 4c30d38..f09e85d 100644[m
+[1m--- a/components/layouts/BusinessLayout.jsx[m
+[1m+++ b/components/layouts/BusinessLayout.jsx[m
+[36m@@ -177,11 +177,11 @@[m [mclassName={`w-full min-h-screen ${[m
+   >[m
+ [m
+ <div[m
+[31m-className={`w-full min-h-screen px-4 ${[m
+[31m-  layout === "minimal"[m
+[31m-    ? ""[m
+[31m-    : "flex justify-center pt-6"[m
+[31m-}`}[m
+[32m+[m[32m  className={`${[m
+[32m+[m[32m    layout === "networking" || layout === "minimal"[m
+[32m+[m[32m      ? "w-full"[m
+[32m+[m[32m      : "w-full sm:w-[420px]"[m
+[32m+[m[32m  }`}[m
+ >[m
+ [m
+   [m

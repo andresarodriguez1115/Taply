@@ -171,7 +171,7 @@ useEffect(() => {
 className={`w-full min-h-screen ${
   layout === "minimal"
     ? ""
-    : "flex justify-center pt-6"
+    : "flex justify-center sm:pt-6"
 } ${visualsOpen ? "pb-[380px]" : "pb-10"}`}
 
   >
@@ -180,7 +180,7 @@ className={`w-full min-h-screen ${
   className={`${
     layout === "networking" || layout === "minimal"
       ? "w-full"
-      : "w-full sm:w-[420px]"
+      : "w-full max-w-[420px]"
   }`}
 >
 
