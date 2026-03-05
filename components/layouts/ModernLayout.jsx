@@ -150,7 +150,7 @@ className="group w-full h-[175px] bg-gray-200 rounded-3xl relative overflow-hidd
       {/* NAME */}
       <div className="mt-6 text-center">
 <h1
-  className="text-2xl font-semibold"
+  className="text-xl sm:text-2xl font-semibold"
 style={
   nameSize !== 22
     ? { fontSize: `${nameSize}px` }

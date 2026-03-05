@@ -171,16 +171,16 @@ useEffect(() => {
 className={`w-full min-h-screen ${
   layout === "minimal"
     ? ""
-    : "flex sm:justify-center sm:pt-6"
+    : "flex justify-center pt-4 sm:pt-6"
 }`}
 
   >
 <div
-  className={`w-full ${
-    layout === "networking" || layout === "minimal"
-      ? ""
-      : "sm:max-w-[420px] mx-auto"
-  }`}
+className={`w-full ${
+  layout === "networking" || layout === "minimal"
+    ? ""
+    : "sm:max-w-[420px] mx-auto"
+}`}
 >
 
   
@@ -491,7 +491,7 @@ fieldValues={fieldValues}
    fields?.email ||
    fields?.linkedin ||
    fields?.instagram) && (
-  <div className="space-y-6">
+  <div className="space-y-4 sm:space-y-6">
 
     {/* Primary CTA */}
 <button
