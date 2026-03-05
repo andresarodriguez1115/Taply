@@ -162,11 +162,7 @@ onTouchEnd={profileMouseUp}
       {/* SAVE CONTACT BUTTON */}
 <div className="mt-6 w-full sm:w-[600px] flex justify-center">
 <button
-  className="w-[95%] h-[48px] sm:w-full sm:h-[60px]
-  text-[13px] sm:text-[16px]
-  font-semibold tracking-wide
-  rounded-3xl bg-black text-white
-  flex items-center justify-center"
+  className="w-[95%] h-[48px] sm:w-full sm:h-[60px] text-[13px] sm:text-[16px] font-semibold tracking-wide rounded-3xl bg-black text-white flex items-center justify-center"
   style={{ fontFamily: "Inter, sans-serif" }}
 >
 Save To Contacts
