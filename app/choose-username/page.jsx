@@ -39,7 +39,8 @@ export default function ChooseUsername() {
       return;
     }
 
-    const { data: existing } = await supabase
+    const { data: existing } = 
+    await supabase
       .from("profiles")
       .select("id")
       .eq("username", cleanUsername)
@@ -58,7 +59,7 @@ export default function ChooseUsername() {
       .update({ username: cleanUsername })
       .eq("id", userData.user.id);
 
-    router.push(`/${cleanUsername}`);
+    router.push("/mockup");
   };
 
   // 🟢 Smooth loading screen
