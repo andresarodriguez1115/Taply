@@ -95,7 +95,7 @@ await supabase.from("profiles").insert({
     // Otherwise load profile
     setName(data.name || "")
     setTitle(data.title || "")
-setBackgroundColor(data.bg_color || "#295cc3");
+setBackgroundColor(data.bg_color || "#f3f4f6");
 setNetworkingBackground(data.networking_bg || "#1f2937");
     setMode(data.mode || "business")
 setFields(data.fields || {})
