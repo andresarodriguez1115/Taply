@@ -145,23 +145,23 @@ onChange={(e) => setProfileScale && setProfileScale(Number(e.target.value))}
 
 {/* CONTACT CARD */}
 <div className="px-6 mt-6 max-w-2xl mx-auto">
-  <div className="bg-[#f8f8f8] border border-gray-300 rounded-3xl shadow-[0_10px_25px_rgba(0,0,0,0.12)] p-8">
+  <div className="bg-[#f8f8f8] border border-gray-300 rounded-3xl shadow-[0_10px_25px_rgba(0,0,0,0.12)] p-6">
 
     {/* Header */}
-    <div className="flex items-center gap-3 mb-6 sm:mb-10">
-     <div className="w-[52px] h-[52px] sm:w-[72px] sm:h-[72px] bg-black text-white rounded-full flex items-center justify-center">
+    <div className="flex items-center gap-3 mb-6 sm:mb-6">
+     <div className="w-[44px] h-[44px] sm:w-[56px] sm:h-[56px] bg-black text-white rounded-full flex items-center justify-center">
   <IdCard size={24} className="text-white" />
 </div>
       <h2 className="text-lg sm:text-2xl font-semibold">Contact Information</h2>
     </div>
 
-    <div className="border-t border-gray-400 mb-6 sm:mb-10" />
+    <div className="border-t border-gray-400 mb-6 sm:mb-6" />
 
     {/* Call */}
     {fieldValues?.phone && (
-      <div className="flex items-center gap-4 mb-10">
-    <div className="w-[52px] h-[52px] sm:w-[72px] sm:h-[72px] rounded-full bg-black flex items-center justify-center">
-  <Phone size={22} className="text-white" />
+      <div className="flex items-center gap-4 mb-6">
+    <div className="w-[44px] h-[44px] sm:w-[56px] sm:h-[56px] rounded-full bg-black flex items-center justify-center">
+  <Phone size={18} className="text-white" />
 </div>
         <div>
           <p className="text-lg sm:text-2xl font-semibold">Call</p>
@@ -174,9 +174,9 @@ onChange={(e) => setProfileScale && setProfileScale(Number(e.target.value))}
 
     {/* Email */}
     {fieldValues?.email && (
-      <div className="flex items-center gap-4 mb-10">
-      <div className="w-[52px] h-[52px] sm:w-[72px] sm:h-[72px] rounded-full bg-black flex items-center justify-center">
-  <Mail size={22} className="text-white" />
+      <div className="flex items-center gap-4 mb-6">
+      <div className="w-[44px] h-[44px] sm:w-[56px] sm:h-[56px] rounded-full bg-black flex items-center justify-center">
+  <Mail size={18} className="text-white" />
 </div>
         <div>
           <p className="text-lg sm:text-2xl font-semibold">Email</p>
@@ -189,9 +189,9 @@ onChange={(e) => setProfileScale && setProfileScale(Number(e.target.value))}
 
     {/* LinkedIn */}
 {fieldValues?.linkedin && (
-  <div className="flex items-center gap-4 mb-10">
-   <div className="w-[52px] h-[52px] sm:w-[72px] sm:h-[72px] rounded-full bg-black flex items-center justify-center">
-  <Linkedin size={22} className="text-white" />
+  <div className="flex items-center gap-4 mb-6">
+   <div className="w-[44px] h-[44px] sm:w-[56px] sm:h-[56px] rounded-full bg-black flex items-center justify-center">
+  <Linkedin size={18} className="text-white" />
 </div>
         <div>
           <p className="text-lg sm:text-2xl font-semibold">LinkedIn</p>
@@ -204,8 +204,8 @@ onChange={(e) => setProfileScale && setProfileScale(Number(e.target.value))}
 {/* Instagram */}
 {fieldValues?.instagram && (
   <div className="flex items-center gap-4">
-    <div className="w-[52px] h-[52px] sm:w-[72px] sm:h-[72px] shadow-md bg-black text-white rounded-full flex items-center justify-center">
-      <Instagram size={22} />
+    <div className="w-[44px] h-[44px] sm:w-[56px] sm:h-[56px] shadow-md bg-black text-white rounded-full flex items-center justify-center">
+      <Instagram size={18} />
     </div>
     <div>
       <p className="text-lg sm:text-2xl font-semibold">Instagram</p>

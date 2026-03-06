@@ -210,7 +210,7 @@ className={`w-full ${
     initial={false}
 animate={{ y: visualsOpen ? 0 : 392 }}
     transition={{ duration: 0.35, ease: "easeOut" }}
-    className="fixed bottom-0 left-0 w-full bg-white shadow-[0_-8px_30px_rgba(0,0,0,0.08)] z-50"
+    className="visual-studio fixed bottom-0 left-0 w-full bg-white shadow-[0_-8px_30px_rgba(0,0,0,0.08)] z-50"
     style={{ height: 380 }}
   >
    {/* Bottom Handle */}

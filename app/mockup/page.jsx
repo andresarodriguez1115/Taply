@@ -2,6 +2,8 @@
 
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { driver } from "driver.js";
+import "driver.js/dist/driver.css";
 import { useRouter } from "next/navigation"
 import supabase from "@/lib/supabase"
 // Layouts
@@ -111,7 +113,7 @@ setFieldValues({
 
 setAvatarUrl(data.avatar_url || null)
 setBannerUrl(data.banner_url || null)
-setLayout(data.layout || "modern");
+setLayout(data.layout || "executive");
 setProfileScale(data.avatar_scale ?? 1);
 setProfilePos({
   x: data.avatar_x ?? 0,
@@ -196,7 +198,7 @@ const avatarMenuRef = useRef(null)
   // -----------------------------
   const [mode, setMode] = useState("business");
   const [layout, setLayout] = useState("executive");
-
+const [runTutorial, setRunTutorial] = useState(false);
   // -----------------------------
   // SIDEBAR VISIBILITY
   // -----------------------------
@@ -293,6 +295,69 @@ useEffect(() => {
     document.removeEventListener("mousedown", handleClickOutside)
   }
 }, [])
+useEffect(() => {
+  const seen = localStorage.getItem("taplyTutorialSeen");
+
+  if (!seen) {
+
+    const startTutorial = () => {
+      const visualStudio = document.querySelector(".visual-studio");
+
+      if (!visualStudio) {
+        setTimeout(startTutorial, 200);
+        return;
+      }
+
+   const driverObj = driver({
+  showProgress: true,
+
+  onDestroyed: () => {
+    document.querySelector("button")?.click();
+  },
+
+  steps: [
+          {
+            element: ".edit-toggle",
+            popover: {
+              title: "Edit Mode",
+              description: "Switch between Edit and Preview here.",
+              side: "bottom"
+            }
+          },
+          {
+            element: ".sidebar-panel",
+            popover: {
+              title: "Control Panel",
+              description: "Customize your Taply profile here.",
+              side: "right"
+            }
+          },
+          {
+            element: ".visual-studio",
+            popover: {
+              title: "Contact Fields",
+              description: "This is your Visual Studio. Add phone, email, social links, and more here.",
+              side: "right"
+            }
+          },
+          {
+            element: ".save-profile",
+            popover: {
+              title: "Save Profile",
+              description: "Click here to save your changes.",
+              side: "right"
+            }
+          }
+        ]
+      });
+
+      driverObj.drive();
+      localStorage.setItem("taplyTutorialSeen", "true");
+    };
+
+    startTutorial();
+  }
+}, []);
   // -----------------------------
   // MODES
   // -----------------------------
@@ -392,7 +457,7 @@ case "networking":
         return null;
     }
   };
-
+;
   const PLACEHOLDERS = {
     phone: "Phone number",
     email: "Email address",
@@ -404,6 +469,8 @@ case "networking":
 
 return (
   <div className="w-full min-h-screen flex justify-center relative">
+
+
 {/* AVATAR MENU */}
 <div ref={avatarMenuRef} className="absolute top-6 right-6 z-50">
 
@@ -463,10 +530,10 @@ return (
             animate={{ x: 0 }}
             exit={{ x: -320 }}
             transition={{ duration: 0.3, ease: "easeOut" }}
-            className="fixed left-6 top-10 h-[85vh] w-[280px] 
-           bg-white rounded-2xl shadow-2xl 
-           p-6 space-y-6 z-50
-           overflow-y-auto scrollbar-hide"
+   className="sidebar-panel fixed left-4 top-8 h-[75vh] w-[240px] 
+bg-white rounded-2xl shadow-2xl 
+p-4 space-y-4 z-50
+overflow-y-auto scrollbar-hide"
           >
             <h2 className="text-lg font-bold">taply.now</h2>
 
@@ -488,8 +555,8 @@ return (
 
             <div className="flex gap-3 justify-center">
               <button
-                onClick={() => setIsEditing(true)}
-                className={`px-4 py-2 rounded-lg border ${
+  onClick={() => setIsEditing(true)}
+  className={`edit-toggle px-4 py-2 rounded-lg border ${
                   isEditing
                     ? "bg-blue-100 border-blue-400 text-blue-700"
                     : "bg-gray-100"
@@ -511,7 +578,7 @@ return (
 <button
   onClick={handleSave}
   disabled={saving}
-  className={`w-full py-2 rounded-lg mt-3 transition ${
+  className={`save-profile w-full py-2 rounded-lg mt-3 transition ${
     saving
       ? "bg-gray-400 text-white"
       : saveSuccess
@@ -539,9 +606,9 @@ return (
                 </div>
 {mode === "business" && (
 <div className="space-y-3">
-  <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wide">
-    Contact Fields
-  </h3>
+<h3 className="visual-studio text-sm font-semibold text-gray-500 uppercase tracking-wide">
+Contact Fields
+</h3>
 
  {/* PHONE */}
 <motion.div
