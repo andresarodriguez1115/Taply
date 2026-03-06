@@ -25,6 +25,7 @@ const [bannerUrl, setBannerUrl] = useState(null);
   const [saving, setSaving] = useState(false)
 const [saveSuccess, setSaveSuccess] = useState(false)
 const [backgroundColor, setBackgroundColor] = useState("#f3f4f6");
+const [networkingBackground, setNetworkingBackground] = useState("#1f2937");
 const [username, setUsername] = useState(null)
 // ==============================
 // IMAGE POSITIONING STATE
@@ -92,11 +93,23 @@ await supabase.from("profiles").insert({
     // Otherwise load profile
     setName(data.name || "")
     setTitle(data.title || "")
-    setBackgroundColor(data.bg_color || "#295cc3");
+setBackgroundColor(data.bg_color || "#295cc3");
+setNetworkingBackground(data.networking_bg || "#1f2937");
     setMode(data.mode || "business")
-    setFields(data.fields || {})
-    setFieldValues(data.field_values || {})
-    setAvatarUrl(data.avatar_url || null)
+setFields(data.fields || {})
+
+setFieldValues({
+  phone: "",
+  email: "",
+  linkedin: "",
+  instagram: "",
+  website: "",
+  bio: "",
+  buttons: [],
+  ...(data.field_values || {})
+})
+
+setAvatarUrl(data.avatar_url || null)
 setBannerUrl(data.banner_url || null)
 setLayout(data.layout || "modern");
 setProfileScale(data.avatar_scale ?? 1);
@@ -115,14 +128,15 @@ setBannerPos({
   loadProfile()
 }, [router])
 
-  const [fieldValues, setFieldValues] = useState({
-    phone: "",
-    email: "",
-    linkedin: "",
-    instagram: "",
-    website: "",
-    bio: "",
-  });
+const [fieldValues, setFieldValues] = useState({
+  phone: "",
+  email: "",
+  linkedin: "",
+  instagram: "",
+  website: "",
+  bio: "",
+  buttons: []
+});
 const handleSave = async () => {
   setSaving(true)
   setSaveSuccess(false)
@@ -144,6 +158,7 @@ const handleSave = async () => {
     fields,
     field_values: fieldValues,
     bg_color: backgroundColor,
+networking_bg: networkingBackground,
     avatar_scale: profileScale,
     avatar_x: profilePos.x,
     avatar_y: profilePos.y,
@@ -364,9 +379,11 @@ case "networking":
     <NetworkingLayout
       {...layoutProps}
       layout={layout}
-      backgroundColor={backgroundColor}
+      backgroundColor={networkingBackground}
+      setBackgroundColor={setNetworkingBackground}
       profileImage={avatarUrl}
       handleProfileUpload={handleAvatarUpload}
+      setFieldValues={setFieldValues}
     />
   );
 
@@ -516,12 +533,12 @@ return (
                   <input
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
-                    className="w-full px-3 py-2 border rounded-lg"
+                    className="w-full px-3 py-1.5 border rounded-lg text-sm"
                     placeholder="Your title"
                   />
                 </div>
 {mode === "business" && (
-<div className="space-y-5">
+<div className="space-y-3">
   <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wide">
     Contact Fields
   </h3>
@@ -690,90 +707,161 @@ return (
       />
     )}
   </AnimatePresence>
+</motion.div>{/* PHONE */}
+<motion.div
+layout
+className={`rounded-xl border p-3 transition ${
+fields.phone
+? "bg-blue-50 border-blue-200"
+: "bg-gray-50 border-gray-200"
+}`}
+>
+
+<div className="flex items-center justify-between">
+<span className="text-sm font-medium">Phone</span>
+
+<button
+onClick={() =>
+fields.phone ? removeField("phone") : addField("phone")
+}
+className={`w-5 h-5 rounded-full border transition ${
+fields.phone
+? "bg-blue-500 border-blue-500"
+: "bg-white border-gray-300"
+}`}
+ />
+</div>
+
+<AnimatePresence>
+{fields.phone && (
+<motion.input
+initial={{ opacity: 0, height: 0 }}
+animate={{ opacity: 1, height: "auto" }}
+exit={{ opacity: 0, height: 0 }}
+transition={{ duration: 0.25 }}
+className="mt-3 w-full px-3 py-2 rounded-lg border bg-white"
+placeholder="Phone number"
+value={fieldValues.phone}
+onChange={(e) => updateField("phone", e.target.value)}
+/>
+)}
+</AnimatePresence>
+
 </motion.div>
 </div>
 )}
 {mode === "networking" && (
-<div className="space-y-5">
-  <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wide">
-    Networking Fields
-  </h3>
+<div className="space-y-3">
 
-  {/* PHONE */}
-  <motion.div
-    layout
-    className={`rounded-xl border p-3 transition ${
-      fields.phone
-        ? "bg-blue-50 border-blue-200"
-        : "bg-gray-50 border-gray-200"
-    }`}
-  >
-    <div className="flex items-center justify-between">
-      <span className="text-sm font-medium">Phone</span>
+<h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wide">
+Networking Fields
+</h3>
 
-      <button
-        onClick={() =>
-          fields.phone ? removeField("phone") : addField("phone")
-        }
-        className={`w-5 h-5 rounded-full border transition ${
-          fields.phone
-            ? "bg-blue-500 border-blue-500"
-            : "bg-white border-gray-300"
-        }`}
-      />
-    </div>
-  </motion.div>
+{/* PHONE */}
+<div className="rounded-xl border px-3 py-2 bg-gray-50">
 
-  {/* LOCATION */}
-  <motion.div
-    layout
-    className={`rounded-xl border p-3 transition ${
-      fields.bio
-        ? "bg-blue-50 border-blue-200"
-        : "bg-gray-50 border-gray-200"
-    }`}
-  >
-    <div className="flex items-center justify-between">
-      <span className="text-sm font-medium">Location</span>
+<p className="text-sm font-medium mb-2">Phone</p>
 
-      <button
-        onClick={() =>
-          fields.bio ? removeField("bio") : addField("bio")
-        }
-        className={`w-5 h-5 rounded-full border transition ${
-          fields.bio
-            ? "bg-blue-500 border-blue-500"
-            : "bg-white border-gray-300"
-        }`}
-      />
-    </div>
-  </motion.div>
+<input
+className="w-full px-3 py-1.5 border rounded-lg text-sm"
+placeholder="Phone number"
+value={fieldValues.phone || ""}
+onChange={(e) => updateField("phone", e.target.value)}
+/>
 
-  {/* PORTFOLIO */}
-  <motion.div
-    layout
-    className={`rounded-xl border p-3 transition ${
-      fields.website
-        ? "bg-blue-50 border-blue-200"
-        : "bg-gray-50 border-gray-200"
-    }`}
-  >
-    <div className="flex items-center justify-between">
-      <span className="text-sm font-medium">Portfolio</span>
+</div>
 
-      <button
-        onClick={() =>
-          fields.website ? removeField("website") : addField("website")
-        }
-        className={`w-5 h-5 rounded-full border transition ${
-          fields.website
-            ? "bg-blue-500 border-blue-500"
-            : "bg-white border-gray-300"
-        }`}
-      />
-    </div>
-  </motion.div>
 
+{/* LOCATION */}
+<div className="rounded-xl border px-3 py-2 bg-gray-50">
+
+<p className="text-sm font-medium mb-2">Location</p>
+
+<input
+className="w-full px-3 py-1.5 border rounded-lg text-sm"
+placeholder="City or address"
+value={fieldValues.bio || ""}
+onChange={(e) => updateField("bio", e.target.value)}
+/>
+
+</div>
+{/* EMAIL */}
+<div className="rounded-xl border px-3 py-2 bg-gray-50">
+
+<p className="text-sm font-medium mb-2">Email</p>
+
+<input
+className="w-full px-3 py-1.5 border rounded-lg text-sm"
+placeholder="Email address"
+value={fieldValues.email || ""}
+onChange={(e) => updateField("email", e.target.value)}
+/>
+
+</div>
+
+{/* DYNAMIC BUTTONS */}
+<div className="rounded-xl border border-gray-200 p-4 bg-gray-50 space-y-4">
+
+<p className="text-sm font-semibold text-gray-700">
+Buttons
+</p>
+
+{(fieldValues.buttons || []).map((btn, i) => (
+
+<div
+key={i}
+className="bg-white border border-gray-200 rounded-xl p-4 shadow-sm space-y-3"
+>
+
+<div className="flex justify-between items-center">
+<p className="text-xs font-medium text-gray-500">
+Button {i + 1}
+</p>
+
+<button
+onClick={()=>{
+const updated=[...(fieldValues.buttons || [])]
+updated.splice(i,1)
+setFieldValues({...fieldValues,buttons:updated})
+}}
+className="text-xs text-red-500 hover:text-red-600"
+>
+Remove
+</button>
+
+</div>
+
+<input
+className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm
+focus:outline-none focus:ring-2 focus:ring-blue-400"
+placeholder="Button title"
+value={btn.title || ""}
+onChange={(e)=>{
+const updated=[...(fieldValues.buttons || [])]
+updated[i].title=e.target.value
+setFieldValues({...fieldValues,buttons:updated})
+}}
+/>
+
+<input
+className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm
+focus:outline-none focus:ring-2 focus:ring-blue-400"
+placeholder="https://example.com"
+value={btn.url || ""}
+onChange={(e)=>{
+const updated=[...(fieldValues.buttons || [])]
+updated[i].url=e.target.value
+setFieldValues({...fieldValues,buttons:updated})
+}}
+/>
+
+</div>
+
+))}
+
+
+
+</div>
 </div>
 )}
 

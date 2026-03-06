@@ -146,20 +146,33 @@ const profileMouseMove = (e) => {
   const bannerStart = useRef({ x: 0, y: 0 });
   const bannerLast = useRef({ x: 0, y: 0 });
 
-  const bannerMouseDown = (e) => {
-    if (!isEditing) return;
-    bannerDragging.current = true;
-    bannerStart.current = { x: e.clientX, y: e.clientY };
-    bannerLast.current = { ...bannerPos };
-  };
+const bannerMouseDown = (e) => {
+  if (!isEditing) return;
 
-  const bannerMouseMove = (e) => {
-    if (!bannerDragging.current) return;
-    setBannerPos({
-      x: bannerLast.current.x + (e.clientX - bannerStart.current.x),
-      y: bannerLast.current.y + (e.clientY - bannerStart.current.y),
-    });
-  };
+  if (e.cancelable) e.preventDefault();
+
+  const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+  const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+
+  bannerDragging.current = true;
+  bannerStart.current = { x: clientX, y: clientY };
+  bannerLast.current = { ...safeBannerPos };
+};
+
+const bannerMouseMove = (e) => {
+  if (!bannerDragging.current) return;
+
+  // THIS LINE FIXES MOBILE
+  if (e.cancelable) e.preventDefault();
+
+  const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+  const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+
+  setBannerPos({
+    x: bannerLast.current.x + (clientX - bannerStart.current.x),
+    y: bannerLast.current.y + (clientY - bannerStart.current.y),
+  });
+};
 
   const bannerMouseUp = () => {
     bannerDragging.current = false;
@@ -461,10 +474,10 @@ titleSize={titleSize}
     bannerImage={bannerUrl}
     profileImage={avatarUrl}
 
-    profileScale={profileScale}
-    profilePos={profilePos}
-    bannerScale={bannerScale}
-    bannerPos={bannerPos}
+    profileScale={safeProfileScale}
+    profilePos={safeProfilePos}
+    bannerScale={safeBannerScale}
+    bannerPos={safeBannerPos}
 
     profileMouseDown={profileMouseDown}
     profileMouseMove={profileMouseMove}

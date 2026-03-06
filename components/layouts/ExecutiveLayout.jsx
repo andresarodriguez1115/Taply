@@ -44,25 +44,32 @@ const [saved, setSaved] = useState(false);
 className="pt-8 pb-10 flex flex-col items-center w-full max-w-[400px] sm:max-w-[650px] mx-auto"    >
 
       {/* BANNER */}
-      <div
-className="group w-full h-[170px] sm:w-[650px] sm:h-[260px] bg-gray-200 rounded-3xl relative overflow-hidden cursor-grab border-[3px] border-white px-1"
+<div
+className="group w-full h-[170px] sm:w-[650px] sm:h-[260px] bg-gray-200 rounded-3xl relative overflow-hidden cursor-grab border-[3px] border-white px-1 select-none"
+style={{ touchAction: "none" }}
+
 onMouseDown={bannerMouseDown}
-        onMouseMove={bannerMouseMove}
-        onMouseUp={bannerMouseUp}
-        onMouseLeave={bannerMouseUp}
-      >
-        {bannerImage && (
-          <motion.img
-            src={bannerImage}
-            className="absolute inset-0 w-full h-full object-cover"
-            style={{
-              scale: bannerScale,
-              translateX: bannerPos.x,
-              translateY: bannerPos.y,
-            }}
-            draggable={false}
-          />
-        )}
+onMouseMove={bannerMouseMove}
+onMouseUp={bannerMouseUp}
+onMouseLeave={bannerMouseUp}
+
+onTouchStart={bannerMouseDown}
+onTouchMove={bannerMouseMove}
+onTouchEnd={bannerMouseUp}
+>
+
+{bannerImage && (
+  <motion.img
+    src={bannerImage}
+    className="absolute inset-0 w-full h-full object-cover"
+style={{
+  scale: bannerScale,
+  translateX: bannerPos.x,
+  translateY: bannerPos.y,
+}}
+    draggable={false}
+  />
+)}
 
         {isEditing && bannerImage && (
           <div className="absolute top-3 left-1/2 -translate-x-1/2 bg-white/90 px-3 py-2 rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition">
@@ -96,7 +103,7 @@ onMouseDown={bannerMouseDown}
         {/* PROFILE IMAGE */}
         <div
           className="w-[100px] h-[100px] sm:w-[170px] sm:h-[170px] rounded-full border-[2px] border-white overflow-hidden shadow-xl bg-gray-300 cursor-grab touch-none"
-style={{ touchaction: "none" }}
+style={{ touchAction: "none" }}
           onMouseDown={profileMouseDown}
           onMouseMove={profileMouseMove}
           onMouseUp={profileMouseUp}

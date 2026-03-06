@@ -4,14 +4,16 @@ import { useState } from "react"
 import supabase from "@/lib/supabase"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
-import { motion } from "framer-motion"
+import { motion, AnimatePresence } from "framer-motion"
 
 export default function LoginPage() {
   const router = useRouter()
+
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
+  const [open, setOpen] = useState(false)
 
   const handleLogin = async (e) => {
     e.preventDefault()
@@ -30,57 +32,96 @@ export default function LoginPage() {
     }
 
     setLoading(false)
-   router.replace("/mockup")
+    router.replace("/mockup")
   }
 
-
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <motion.div
-  initial={{ opacity: 0, y: 20 }}
-  animate={{ opacity: 1, y: 0 }}
-  transition={{ duration: 0.35 }}
-  className="bg-white p-8 rounded-2xl shadow-md w-[400px]"
+    <div className="min-h-screen bg-gray-100 flex flex-col justify-between">
+
+      {/* CENTER LOGO */}
+      <div className="flex flex-1 items-center justify-center">
+        <h1 className="text-4xl font-bold">Taply</h1>
+      </div>
+
+      {/* BOTTOM LOGIN BUTTON */}
+      <div className="p-6">
+        <button
+          onClick={() => setOpen(true)}
+          className="w-full bg-black text-white py-4 rounded-xl text-lg"
+        >
+          Login
+        </button>
+      </div>
+
+      {/* LOGIN MODAL */}
+      <AnimatePresence>
+        {open && (
+          <motion.div
+            initial={{ y: 500 }}
+            animate={{ y: 0 }}
+            exit={{ y: 500 }}
+            transition={{ duration: 0.35 }}
+            className="fixed bottom-0 left-0 w-full bg-white rounded-t-3xl p-6 shadow-xl"
+          >
+
+            <h2 className="text-xl font-bold mb-4 text-center">
+              Login
+            </h2>
+
+            <form onSubmit={handleLogin} className="space-y-4">
+
+              <input
+                type="email"
+                placeholder="Email"
+                className="w-full border p-3 rounded-lg"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+
+              <input
+                type="password"
+                placeholder="Password"
+                className="w-full border p-3 rounded-lg"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+
+              {error && (
+                <p className="text-red-500 text-sm">{error}</p>
+              )}
+
+              <button
+                disabled={loading}
+                className="w-full bg-black text-white p-3 rounded-lg"
+              >
+                {loading ? "Loading..." : "Login"}
+              </button>
+
+        <button
+  type="button"
+  onClick={() => {
+    setOpen(false)
+    router.push("/signup")
+  }}
+  className="w-full border p-3 rounded-lg"
 >
-        <h1 className="text-2xl font-bold mb-6 text-center">Taply Login</h1>
+  Create Account
+</button>
 
-        <form className="space-y-4">
-          <input
-            type="email"
-            placeholder="Email"
-            className="w-full border p-3 rounded-lg"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
+              <button
+                type="button"
+                onClick={() => setOpen(false)}
+                className="w-full text-gray-500 mt-2"
+              >
+                Cancel
+              </button>
 
-          <input
-            type="password"
-            placeholder="Password"
-            className="w-full border p-3 rounded-lg"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
+            </form>
 
-          {error && (
-            <p className="text-red-500 text-sm">{error}</p>
-          )}
-<button
-  onClick={handleLogin}
-  disabled={loading}
-className="w-full bg-black text-white p-3 rounded-lg mb-4"
->
-            {loading ? "Loading..." : "Login"}
-          </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
-<Link href="/signup">
-  <button
-    className="w-full border p-3 rounded-lg mt-3"
-  >
-    Create Account
-  </button>
-</Link>
-        </form>
-     </motion.div>
     </div>
   )
 }

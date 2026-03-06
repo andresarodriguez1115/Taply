@@ -1,42 +1,100 @@
 "use client";
 
+import supabase from "@/lib/supabase";
 import { Phone, Mail, MapPin, MessageSquare, Share2, Download } from "lucide-react";
 import { useRef, useState, useEffect } from "react";
-import { motion } from "framer-motion";export default function NetworkingLayout({
+import { motion } from "framer-motion";
+export default function NetworkingLayout({
   name,
   title,
   profileImage,
   fields,
   fieldValues,
+  setFieldValues,
   isEditing,
   handleProfileUpload,
   backgroundColor,
+  setBackgroundColor,
 }) {
 
   const fileInputRef = useRef(null);
-  const [bgColor, setBgColor] = useState(backgroundColor || "#f3f4f6");
+  const [bgColor, setBgColor] = useState(backgroundColor || "#1f2937");
 const [visualsOpen, setVisualsOpen] = useState(false);
 const [mounted, setMounted] = useState(false);
 const [portfolioImage, setPortfolioImage] = useState(null);
 const [resumeImage, setResumeImage] = useState(null);
 const [programImage, setProgramImage] = useState(null);
-const [profileScale, setProfileScale] = useState(1);
-const [profilePos, setProfilePos] = useState({ x: 0, y: 0 });
+const [nameColor, setNameColor] = useState(() => {
+  if (typeof window !== "undefined") {
+    return localStorage.getItem("taply-networking-name-color") || "#111827";
+  }
+  return "#111827";
+});
+
+const [titleColor, setTitleColor] = useState(() => {
+  if (typeof window !== "undefined") {
+    return localStorage.getItem("taply-networking-title-color") || "#6b7280";
+  }
+  return "#6b7280";
+});
+const [profileScale, setProfileScale] = useState(() => {
+  if (typeof window !== "undefined") {
+    return Number(localStorage.getItem("taply-networking-profile-scale")) || 1;
+  }
+  return 1;
+});
+
+
+const [link1Title, setLink1Title] = useState("Visit My Website");
+const [link1Url, setLink1Url] = useState("");
+
+const [link2Title, setLink2Title] = useState("Look at my Portfolio");
+const [link2Url, setLink2Url] = useState("");
+
+const [link3Title, setLink3Title] = useState("Get to know my Program");
+const [link3Url, setLink3Url] = useState("");
+const [profilePos, setProfilePos] = useState(() => {
+  if (typeof window !== "undefined") {
+    const saved = localStorage.getItem("taply-networking-profile-pos");
+    return saved ? JSON.parse(saved) : { x: 0, y: 0 };
+  }
+  return { x: 0, y: 0 };
+});
 const [dragging, setDragging] = useState(false);
 const [startPos, setStartPos] = useState({ x: 0, y: 0 });
 useEffect(() => {
   setMounted(true);
 }, []);
+
 const handlePortfolioUpload = (e) => {
   const file = e.target.files[0];
   if (file) setPortfolioImage(URL.createObjectURL(file));
 };
+
+useEffect(() => {
+  if (typeof window !== "undefined") {
+    localStorage.setItem(
+      "taply-networking-profile-pos",
+      JSON.stringify(profilePos)
+    );
+  }
+}, [profilePos]);
+useEffect(() => {
+  if (typeof window !== "undefined") {
+    localStorage.setItem(
+      "taply-networking-profile-scale",
+      profileScale
+    );
+  }
+}, [profileScale]);
 
 const handleResumeUpload = (e) => {
   const file = e.target.files[0];
   if (file) setResumeImage(URL.createObjectURL(file));
 };
 const profileMouseDown = (e) => {
+  if (!isEditing) return;
+
   setDragging(true);
   setStartPos({
     x: e.clientX - profilePos.x,
@@ -45,7 +103,7 @@ const profileMouseDown = (e) => {
 };
 
 const profileMouseMove = (e) => {
-  if (!dragging) return;
+  if (!isEditing || !dragging) return;
 
   setProfilePos({
     x: e.clientX - startPos.x,
@@ -54,6 +112,7 @@ const profileMouseMove = (e) => {
 };
 
 const profileMouseUp = () => {
+  if (!isEditing) return;
   setDragging(false);
 };
 const handleProgramUpload = (e) => {
@@ -61,7 +120,9 @@ const handleProgramUpload = (e) => {
   if (file) setProgramImage(URL.createObjectURL(file));
 };
 
-  return (
+if (!mounted) return null;
+
+return (
 <div
   style={{
     background: bgColor,
@@ -71,18 +132,41 @@ const handleProgramUpload = (e) => {
   className={`w-full min-h-screen flex justify-center ${
     visualsOpen ? "pt-6 pb-[380px]" : "py-10"
   }`}
-><div className="w-full max-w-[650px] px-6 pt-20 pb-24 text-center">
+><div className="w-full max-w-[650px] px-6 pt-6 sm:pt-20 pb-24 text-center">
         {/* ===== PROFILE IMAGE ===== */}
-        <div className="flex justify-center mb-8 relative">
+        <div className="flex justify-center mb-6 sm:mb-8 relative">
 <div
-className="relative w-56 h-56 rounded-full overflow-hidden bg-gray-200 border-[2px] border-white shadow-lg cursor-grab group"  onMouseDown={profileMouseDown}
-  onMouseMove={profileMouseMove}
-  onMouseUp={profileMouseUp}
-  onMouseLeave={profileMouseUp}
+className="relative w-52 h-52 sm:w-56 sm:h-56 rounded-full overflow-hidden bg-gray-200 border-[2px] border-white shadow-lg cursor-grab group"  
+onMouseDown={isEditing ? profileMouseDown : undefined}
+onMouseMove={isEditing ? profileMouseMove : undefined}
+onMouseUp={isEditing ? profileMouseUp : undefined}
+onMouseLeave={isEditing ? profileMouseUp : undefined}
+
+onTouchStart={(e)=>{
+  if(!isEditing) return;
+  const touch = e.touches[0];
+  setDragging(true);
+  setStartPos({
+    x: touch.clientX - profilePos.x,
+    y: touch.clientY - profilePos.y,
+  });
+}}
+
+onTouchMove={(e)=>{
+  if(!isEditing || !dragging) return;
+  const touch = e.touches[0];
+  setProfilePos({
+    x: touch.clientX - startPos.x,
+    y: touch.clientY - startPos.y,
+  });
+}}
+
+onTouchEnd={()=> isEditing && setDragging(false)}
 >
 
 {profileImage ? (
   <motion.img
+  suppressHydrationWarning
     src={profileImage}
     className="absolute inset-0 w-full h-full object-contain"
     style={{
@@ -119,16 +203,12 @@ className="relative w-56 h-56 rounded-full overflow-hidden bg-gray-200 border-[2
 {isEditing && (
   <div className="absolute -bottom-7 left-1/2 -translate-x-1/2">
     <label
-      className="
-        bg-black text-white
-        px-4 py-1.5
-        rounded-full
-        text-sm font-medium
-        shadow-lg
-        cursor-pointer
-        hover:bg-gray-900
-        transition
-      "
+  className="
+  text-sm text-gray-600
+  cursor-pointer
+  hover:text-gray-900
+  transition
+"
     >
       Change Photo
 
@@ -145,71 +225,94 @@ className="relative w-56 h-56 rounded-full overflow-hidden bg-gray-200 border-[2
  
 
         {/* ===== NAME + TITLE ===== */}
-<h1 className="text-4xl font-semibold text-gray-900 tracking-tight">
+<h1
+  className="text-3xl sm:text-4xl font-semibold tracking-tight"
+  style={{ color: nameColor }}
+>
           {name}
         </h1>
 
-<p className="text-lg text-gray-600 mt-3">
+<p
+  className="text-lg mt-2"
+  style={{ color: titleColor }}
+>
           {title}
         </p>
 
  
 
-        {/* ===== CONTACT CIRCLES ===== */}
-        <div className="flex justify-center gap-5 mt-10">
+ {/* ===== CONTACT CIRCLES ===== */}
+{mounted && (
+<div className="flex justify-center gap-2 mt-4">
 
-          <div
-            className="w-16 h-16 rounded-full 
-                       bg-[#e6e6e6] 
-                       border border-gray-500 
-                       flex items-center justify-center
-                       hover:scale-105 transition"
-          >
-            <Phone size={22} className="text-gray-700" />
-          </div>
+<a
+href={fieldValues?.phone ? `tel:${fieldValues.phone}` : "#"}
+className="w-14 h-14 sm:w-10 sm:h-10 rounded-full
+bg-white border border-gray-200
+shadow-[0_10px_25px_rgba(0,0,0,0.08)]
+flex items-center justify-center
+hover:shadow-[0_15px_35px_rgba(0,0,0,0.12)]
+hover:scale-105
+transition-all duration-300"
+>
+<Phone size={22} className="text-gray-700" />
+</a>
 
-          <div
-            className="w-16 h-16 rounded-full 
-                       bg-[#e6e6e6] 
-                       border border-gray-500 
-                       flex items-center justify-center
-                       hover:scale-105 transition"
-          >
-            <MessageSquare size={22} className="text-gray-700" />
-          </div>
+<a
+href={fieldValues?.phone ? `sms:${fieldValues.phone}` : "#"}
+className="w-14 h-14 sm:w-10 sm:h-10 rounded-full
+bg-white border border-gray-200
+shadow-[0_10px_25px_rgba(0,0,0,0.08)]
+flex items-center justify-center
+hover:shadow-[0_15px_35px_rgba(0,0,0,0.12)]
+hover:scale-105
+transition-all duration-300"
+>
+<MessageSquare size={22} className="text-gray-700" />
+</a>
 
-          <div
-            className="w-16 h-16 rounded-full 
-                       bg-[#e6e6e6] 
-                       border border-gray-500 
-                       flex items-center justify-center"
-          >
-            <MapPin size={22} className="text-gray-700" />
-          </div>
+<a
+href={fieldValues?.location ? `https://maps.google.com/?q=${fieldValues.location}` : "#"}
+className="w-14 h-14 sm:w-10 sm:h-10 rounded-full
+bg-white border border-gray-200
+shadow-[0_10px_25px_rgba(0,0,0,0.08)]
+flex items-center justify-center
+hover:shadow-[0_15px_35px_rgba(0,0,0,0.12)]
+hover:scale-105
+transition-all duration-300"
+>
+<MapPin size={22} className="text-gray-700" />
+</a>
 
-          <div
-            className="w-16 h-16 rounded-full 
-                       bg-[#e6e6e6] 
-                       border border-gray-500 
-                       flex items-center justify-center
-                       hover:scale-105 transition"
-          >
-            <Mail size={22} className="text-gray-700" />
-          </div>
+<a
+href={fieldValues?.email ? `mailto:${fieldValues.email}` : "#"}
+className="w-14 h-14 sm:w-10 sm:h-10 rounded-full
+bg-white border border-gray-200
+shadow-[0_10px_25px_rgba(0,0,0,0.08)]
+flex items-center justify-center
+hover:shadow-[0_15px_35px_rgba(0,0,0,0.12)]
+hover:scale-105
+transition-all duration-300"
+>
+<Mail size={22} className="text-gray-700" />
+</a>
 
-        </div>
+</div>
+)}
 
     {/* ===== ACTION BUTTONS ===== */}
-<div className="flex justify-center gap-4 mt-8">
+{mounted && (
+<div className="flex justify-center gap-2 mt-6">
 
   {/* ADD TO CONTACTS */}
   <button
-    className="flex items-center gap-2 px-6 py-3 rounded-full 
-               bg-white/80 backdrop-blur-md 
-               border border-gray-400 
-               shadow-sm hover:shadow-md 
-               transition-all duration-200 
-               text-gray-800 font-medium"
+className="flex items-center gap-2 px-6 py-3 rounded-full 
+           bg-white 
+           border border-gray-200
+           shadow-[0_12px_30px_rgba(0,0,0,0.08)]
+           hover:shadow-[0_18px_40px_rgba(0,0,0,0.12)]
+           transition-all duration-300
+           text-sm text-gray-800 font-semibold"
   >
     <Download size={18} />
     Add to Contacts
@@ -217,12 +320,13 @@ className="relative w-56 h-56 rounded-full overflow-hidden bg-gray-200 border-[2
 
   {/* SHARE */}
   <button
-    className="flex items-center gap-2 px-6 py-3 rounded-full 
-               bg-white/80 backdrop-blur-md 
-               border border-gray-400 
-               shadow-sm hover:shadow-md 
-               transition-all duration-200 
-               text-gray-800 font-medium"
+className="flex items-center gap-2 px-6 py-3 rounded-full 
+           bg-white 
+           border border-gray-200
+           shadow-[0_12px_30px_rgba(0,0,0,0.08)]
+           hover:shadow-[0_18px_40px_rgba(0,0,0,0.12)]
+           transition-all duration-300
+           text-sm text-gray-800 font-semibold"
   >
     <Share2 size={18} />
     Share
@@ -230,22 +334,21 @@ className="relative w-56 h-56 rounded-full overflow-hidden bg-gray-200 border-[2
   
 
 </div>
+)}
 {/* ===== PERSONAL CTA CARDS ===== */}
-<div className="mt-16 space-y-6 flex flex-col items-center">
-<BigLinkCard 
-  title="Visit My Website" 
-  image={portfolioImage}
+<div className="mt-10 space-y-6 flex flex-col items-center">
+
+{(fieldValues?.buttons || []).map((btn, i) => (
+
+<BigLinkCard
+key={i}
+title={btn.title}
+url={btn.url}
+image={btn.image}
 />
 
-<BigLinkCard 
-  title="Look at my Portfolio" 
-  image={resumeImage}
-/>
+))}
 
-<BigLinkCard 
-  title="Get to know my Program" 
-  image={programImage}
-/>
 {/* ===== FOOTER ===== */}
 <div className="mt-20 pt-10 border-t border-gray-200 text-center">
   <p className="text-sm text-gray-500">
@@ -257,7 +360,8 @@ className="relative w-56 h-56 rounded-full overflow-hidden bg-gray-200 border-[2
 </div>
 </div>
       </div>
-      {mounted && (
+      
+    {isEditing && (
   <motion.div
     initial={false}
     animate={{ y: visualsOpen ? 0 : 392 }}
@@ -297,8 +401,8 @@ className="relative w-56 h-56 rounded-full overflow-hidden bg-gray-200 border-[2
         </button>
       </div>
 
-      <div className="p-6 flex-1">
-        <div className="grid grid-cols-2 gap-6">
+      <div className="p-6 flex-1 overflow-y-auto sm:overflow-visible touch-pan-y">
+        <div className="grid grid-cols- gap-6">
 
           {/* Colors */}
           <div>
@@ -306,17 +410,40 @@ className="relative w-56 h-56 rounded-full overflow-hidden bg-gray-200 border-[2
               Colors
             </p>
 
-            <div className="rounded-xl border p-3 space-y-3">
-              <div className="flex justify-between items-center">
-                <span className="text-sm">Background</span>
-                <input
-                  type="color"
-                  value={bgColor}
-                  onChange={(e) => setBgColor(e.target.value)}
-                />
-              </div>
-            </div>
-            {/* Images */}
+  <div className="rounded-xl border p-3 space-y-3">
+
+  <div className="flex justify-between items-center">
+    <span className="text-sm">Background</span>
+    <input
+      type="color"
+      value={bgColor}
+      onChange={(e) => {
+  setBgColor(e.target.value);
+  setBackgroundColor(e.target.value);
+}}
+    />
+  </div>
+
+  <div className="flex justify-between items-center">
+    <span className="text-sm">Name</span>
+    <input
+      type="color"
+      value={nameColor}
+      onChange={(e) => setNameColor(e.target.value)}
+    />
+  </div>
+
+  <div className="flex justify-between items-center">
+    <span className="text-sm">Title</span>
+    <input
+      type="color"
+      value={titleColor}
+      onChange={(e) => setTitleColor(e.target.value)}
+    />
+  </div>
+
+</div>
+{/* Images */}
 <div>
   <p className="text-xs font-medium text-gray-500 mb-2">
     Images
@@ -324,38 +451,51 @@ className="relative w-56 h-56 rounded-full overflow-hidden bg-gray-200 border-[2
 
   <div className="rounded-xl border p-3 space-y-4">
 
-    {/* Portfolio */}
-    <div>
-      <p className="text-sm mb-1">Portfolio Card</p>
-  <input
-  type="file"
-  accept="image/*"
-  onChange={handlePortfolioUpload}
-  className="text-xs file:mr-3 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-gray-100 file:text-gray-700 hover:file:bg-gray-200"
-/>
-    </div>
+{/* Button Logos */}
+{(fieldValues?.buttons || []).map((btn, i) => (
 
-    {/* Resume */}
-    <div>
-      <p className="text-sm mb-1">Resume Card</p>
-<input
-  type="file"
-  accept="image/*"
-  onChange={handleResumeUpload}
-  className="text-xs file:mr-3 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-gray-100 file:text-gray-700 hover:file:bg-gray-200"
-/>
-    </div>
+  <div key={i}>
+    <p className="text-sm mb-1">
+      Button {i + 1} Logo
+    </p>
 
-    {/* Program */}
-    <div>
-      <p className="text-sm mb-1">Program Card</p>
-<input
-  type="file"
-  accept="image/*"
-  onChange={handleResumeUpload}
-  className="text-xs file:mr-3 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-gray-100 file:text-gray-700 hover:file:bg-gray-200"
-/>
-    </div>
+    <input
+      type="file"
+      accept="image/*"
+      className="text-xs file:mr-3 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-gray-100 file:text-gray-700 hover:file:bg-gray-200"
+onChange={async (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+
+  const fileName = `button-${Date.now()}-${file.name}`;
+
+  const { data, error } = await supabase.storage
+    .from("button-logos")
+    .upload(fileName, file);
+
+  if (error) {
+    console.error(error);
+    return;
+  }
+
+  const { data: publicUrl } = supabase.storage
+    .from("button-logos")
+    .getPublicUrl(fileName);
+
+  const updated = [...(fieldValues?.buttons || [])];
+
+  updated[i].image = publicUrl.publicUrl;
+
+  setFieldValues({
+    ...fieldValues,
+    buttons: updated
+  });
+}}
+    />
+
+  </div>
+
+))}
 
   </div>
 </div>
@@ -380,10 +520,13 @@ function LinkCard({ title }) {
     </div>
   );
 }
-function BigLinkCard({ title, image }) {
+function BigLinkCard({ title, image, url }) {
   return (
-    <div className="w-full bg-white rounded-3xl 
-                    px-6 py-7
+    <a
+href={url || "#"}
+target="_blank"
+className="w-full bg-white rounded-3xl 
+                    px-4 py-4
                     shadow-[0_12px_30px_rgba(0,0,0,0.08)]
                     hover:shadow-[0_18px_40px_rgba(0,0,0,0.12)]
                     transition-all duration-300 
@@ -420,6 +563,6 @@ function BigLinkCard({ title, image }) {
         →
       </div>
 
-    </div>
+   </a>
   );
 }

@@ -92,6 +92,7 @@ case "networking":
   return (
     <NetworkingLayout
       {...layoutProps}
+      backgroundColor={profile.networking_bg || profile.bg_color}
       profileImage={profile.avatar_url}
     />
   );
