@@ -33,9 +33,39 @@ fieldValues,
   titleSize,
   cardRadius
 }) {
-  const dragX = useMotionValue(0);
-const fillWidth = useTransform(dragX, [0, 240], ["0px", "500px"]);
+
 const [saved, setSaved] = useState(false);
+const saveContact = () => {
+
+  const vCard = `
+BEGIN:VCARD
+VERSION:3.0
+FN:${name}
+TITLE:${title}
+TEL:${fieldValues?.phone || ""}
+EMAIL:${fieldValues?.email || ""}
+URL:${fieldValues?.linkedin || ""}
+NOTE:Shared via Taply
+END:VCARD
+`;
+
+  const blob = new Blob([vCard], { type: "text/vcard" });
+  const url = window.URL.createObjectURL(blob);
+
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = `${name}.vcf`;
+
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+
+  setSaved(true);
+
+  setTimeout(() => {
+    setSaved(false);
+  }, 2000);
+};
   return (
     <div
       style={{
@@ -175,47 +205,16 @@ onTouchEnd={profileMouseUp}
 </p>
         </div>
       </div>
-      {/* SAVE CONTACT BUTTON */}
+{/* SAVE CONTACT BUTTON */}
 <div className="mt-6 w-full sm:w-[600px] flex justify-center">
-<div className="w-[95%] sm:w-full h-[48px] sm:h-[60px] bg-black rounded-3xl relative overflow-hidden flex items-center">
 
-  {/* GREEN PROGRESS */}
-  <motion.div
-    style={{ width: fillWidth }}
-    className="absolute left-0 top-0 h-full bg-gradient-to-r from-green-500 to-green-400"
-  />
+<button
+  onClick={saveContact}
+  className="w-[95%] sm:w-full h-[48px] sm:h-[60px] bg-black text-white rounded-3xl font-semibold text-[14px] sm:text-[16px] tracking-wide shadow-md hover:opacity-90 active:scale-[0.98] transition flex items-center justify-center"
+>
+  {saved ? "✓ Contact Saved" : "Save Contact"}
+</button>
 
-  {/* TEXT */}
-  <span className="absolute w-full text-center text-white text-[13px] sm:text-[16px] font-semibold tracking-wide pointer-events-none">
-    {saved ? "✓ Contact Saved" : "Slide to Save Contact"}
-  </span>
-
-  {/* SLIDER */}
-  <motion.div
-    drag="x"
-    style={{ x: dragX }}
-    dragConstraints={{ left: 0, right: 240 }}
-    whileTap={{ scale: 1.1 }}
-    onDragEnd={() => {
-  const x = dragX.get();
-
-  if (x > 200) {
-    setSaved(true);
-
-    setTimeout(() => {
-      dragX.set(0);
-      setSaved(false);
-    }, 1800);
-  } else {
-    dragX.set(0);
-  }
-}}
-    className="w-[44px] h-[44px] sm:w-[52px] sm:h-[52px] bg-white rounded-full ml-2 flex items-center justify-center cursor-grab shadow-md"
-  >
-  
-  </motion.div>
-
-</div>
 </div>
 {/* ================= CONTACT SECTION ================= */}
 {(fields?.phone ||

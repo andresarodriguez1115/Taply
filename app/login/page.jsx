@@ -44,7 +44,7 @@ export default function LoginPage() {
       </div>
 
       {/* BOTTOM LOGIN BUTTON */}
-      <div className="p-6">
+      <div className="p-6 pb-20">
         <button
           onClick={() => setOpen(true)}
           className="w-full bg-black text-white py-4 rounded-xl text-lg"

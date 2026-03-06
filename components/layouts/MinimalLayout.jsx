@@ -42,10 +42,9 @@ useEffect(() => {
   if (!saved) return;
 
   const data = JSON.parse(saved);
-
-  if (data.scale !== undefined) {
-    setProfileScale(data.scale);
-  }
+if (data.scale !== undefined && setProfileScale) {
+  setProfileScale(data.scale);
+}
 
   if (data.pos) {
     profilePos.x = data.pos.x;
@@ -73,7 +72,7 @@ className="absolute top-3 left-1/2 -translate-x-1/2
       max="2"
       step="0.01"
 value={profileScale}
-onChange={(e) => setProfileScale(Number(e.target.value))}
+onChange={(e) => setProfileScale && setProfileScale(Number(e.target.value))}
       className="w-[120px]"
     />
   </div>
@@ -133,7 +132,7 @@ onChange={(e) => setProfileScale(Number(e.target.value))}
 
     
 {/* NAME SECTION */}
-<div className="text-center mt-12">
+<div className="text-center mt-4">
   <h1 className="text-4xl sm:text-5xl font-bold text-black">
     {name}
   </h1>
@@ -145,7 +144,7 @@ onChange={(e) => setProfileScale(Number(e.target.value))}
 
 
 {/* CONTACT CARD */}
-<div className="px-6 mt-12 max-w-2xl mx-auto">
+<div className="px-6 mt-6 max-w-2xl mx-auto">
   <div className="bg-[#f8f8f8] border border-gray-300 rounded-3xl shadow-[0_10px_25px_rgba(0,0,0,0.12)] p-8">
 
     {/* Header */}
