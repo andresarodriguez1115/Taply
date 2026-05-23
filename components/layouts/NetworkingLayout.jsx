@@ -389,9 +389,10 @@ function LinkCard({ title }) {
   );
 }
 function BigLinkCard({ title, image, url, profileId }) {
+  const safeUrl = url ? (url.startsWith("http") ? url : `https://${url}`) : "#";
   return (
     <a
-href={url || "#"}
+href={safeUrl}
 target="_blank"
 onClick={() => logEvent(profileId, "tap")}
 className="w-full bg-white rounded-3xl 
