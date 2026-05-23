@@ -48,6 +48,7 @@ export default function BusinessLayout({
   setBannerScale,
   bannerPos,
   setBannerPos,
+  profileId,
 })
  {
   // ---------------------------
@@ -77,6 +78,8 @@ const [contactFields, setContactFields] = useState({
   phone: false,
   email: false,
   linkedin: false,
+  instagram: false,
+  website: false,
 });
   // ---------------------------
   // Load LocalStorage
@@ -205,207 +208,7 @@ className={`w-full ${
 >
 
   
-{isEditing && mounted && (
-  <motion.div
-    initial={false}
-animate={{ y: visualsOpen ? 0 : 392 }}
-    transition={{ duration: 0.35, ease: "easeOut" }}
-    className="visual-studio fixed bottom-0 left-0 w-full bg-white shadow-[0_-8px_30px_rgba(0,0,0,0.08)] z-50"
-    style={{ height: 380 }}
-  >
-   {/* Bottom Handle */}
-<button
-  onClick={() => setVisualsOpen(!visualsOpen)}
-  className="
-    absolute -top-12 left-1/2 -translate-x-1/2
-    bg-white
-    px-6 py-2
-    rounded-t-lg
-    shadow
-    text-sm font-medium
-    border border-gray-200
-    hover:bg-gray-50
-    transition
-  "
->
-  {visualsOpen ? "Close Studio" : "Visuals Studio"}
-</button>
 
-
-    {/* Content */}
-<div className="max-w-[900px] mx-auto h-full flex flex-col">
-
-  {/* Top Bar */}
-  <div className="flex items-center justify-between px-6 py-4 border-b">
-    <p className="text-sm font-semibold tracking-wide">
-      Visuals Studio
-    </p>
-
-    <button
-      onClick={() => setVisualsOpen(false)}
-      className="text-sm text-gray-500 hover:text-gray-800 transition"
-    >
-      Close
-    </button>
-  </div>
-
-  {/* Content */}
-  <div className="p-6 flex-1 overflow-y-auto sm:overflow-visible touch-pan-y">
-<div className="grid grid-cols-2 sm:grid-cols-4 gap-6">
-        {/* Layout */}
-        <div>
-          <p className="text-xs font-medium text-gray-500 mb-2">Layout</p>
-         <div className="rounded-xl border p-2 sm:p-2 sm:p-2 sm:p-3 space-y-3">
-
-<button
-onClick={() => setLayout?.("executive")}
-  className={`w-full p-2 sm:p-2 sm:p-2 sm:p-3 rounded-lg border text-sm font-medium transition
-    ${layout === "executive"
-      ? "border-blue-500 bg-blue-50"
-      : "border-gray-200 hover:bg-gray-50"}`}
->
-  Executive
-</button>
-
-<button
-onClick={() => setLayout?.("minimal")}
-  className={`w-full p-2 sm:p-2 sm:p-2 sm:p-3 rounded-lg border text-sm font-medium transition
-    ${layout === "minimal"
-      ? "border-blue-500 bg-blue-50"
-      : "border-gray-200 hover:bg-gray-50"}`}
->
-  Minimal
-</button>
-
-<button
- onClick={() => setLayout?.("modern")}
-  className={`w-full p-2 sm:p-2 sm:p-2 sm:p-3 rounded-lg border text-sm font-medium transition
-    ${layout === "modern"
-      ? "border-blue-500 bg-blue-50"
-      : "border-gray-200 hover:bg-gray-50"}`}
->
-  Modern
-</button>
-
-</div>
-
-        </div>
-
-        {/* Colors */}
-        <div>
-          <p className="text-xs font-medium text-gray-500 mb-2">Colors</p>
-          <div className="rounded-xl border p-2 sm:p-2 sm:p-2 sm:p-3 space-y-3">
-            <div className="flex justify-between items-center">
-              <span className="text-sm">Background</span>
-              <input
-                type="color"
-                value={bgColor}
-                onChange={(e) => {
-  setBgColor(e.target.value);
-  setBackgroundColor(e.target.value);
-}}
-              />
-            </div>
-
-            <div className="flex justify-between items-center">
-              <span className="text-sm">Card</span>
-              <input
-                type="color"
-                value={cardColor}
-                onChange={(e) => setCardColor(e.target.value)}
-              />
-            </div>
-          </div>
-        </div>
-{/* Typography */}
-<div>
-  <p className="text-xs font-medium text-gray-500 mb-2">
-    Typography
-  </p>
-
-  <div className="rounded-xl border p-2 sm:p-2 sm:p-2 sm:p-3 space-y-4">
-
-    {/* Font */}
-    <div>
-      <p className="text-sm mb-1">Font</p>
-      <select
-  value={fontFamily}
-  onChange={(e) => setFontFamily(e.target.value)}
-  className="w-full border rounded-lg px-2 py-1 text-sm"
->
-  <option value="">Default (Sans)</option>
-  <option value="sans-serif">Sans</option>
-  <option value="Inter">Inter</option>
-  <option value="serif">Serif</option>
-  <option value="monospace">Monospace</option>
-</select>
-
-    </div>
-
-    {/* Name Size */}
-<div>
-  <p className="text-sm mb-1">Name Size</p>
-  <div className="flex items-center gap-2">
-    <input
-      type="number"
-      min="18"
-      max="40"
-      value={nameSize}
-      onChange={(e) => setNameSize(Number(e.target.value))}
-      className="w-full border rounded-lg px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-    />
-    <span className="text-xs text-gray-500">px</span>
-  </div>
-</div>
-
-
-{/* Title Size */}
-<div>
-  <p className="text-sm mb-1">Title Size</p>
-  <div className="flex items-center gap-2">
-    <input
-      type="number"
-      min="12"
-      max="24"
-      value={titleSize}
-      onChange={(e) => setTitleSize(Number(e.target.value))}
-      className="w-full border rounded-lg px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-    />
-    <span className="text-xs text-gray-500">px</span>
-  </div>
-</div>
-
-{/* Card Radius */}
-<div>
-  <p className="text-sm mb-1">Card Radius</p>
-  <div className="flex items-center gap-2">
-    <input
-      type="number"
-      min="0"
-      max="60"
-      value={cardRadius}
-      onChange={(e) => setCardRadius(Number(e.target.value))}
-      className="w-full border rounded-lg px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-    />
-    <span className="text-xs text-gray-500">px</span>
-  </div>
-</div>
-
-  </div>
-</div>
-
-        {/* Images */}
-        <div>
-          <p className="text-xs font-medium text-gray-500 mb-2">Images</p>
-          <div className="rounded-xl border p-2 sm:p-2 sm:p-2 sm:p-3 text-sm text-gray-400">
-            Image controls next
-          </div>
-        </div>
-      </div>
-    </div>
-    </div>
-  </motion.div>
-)}
 
 
 
@@ -455,13 +258,13 @@ titleSize={titleSize}
   fieldValues={fieldValues}
   isEditing={isEditing}
   handleProfileUpload={handleAvatarUpload}
-
   profileScale={safeProfileScale}
   profilePos={safeProfilePos}
   setProfileScale={setProfileScale}
   profileMouseDown={profileMouseDown}
   profileMouseMove={profileMouseMove}
   profileMouseUp={profileMouseUp}
+  profileId={profileId}
 />
 )}
 
@@ -497,8 +300,9 @@ titleSize={titleSize}
     nameSize={nameSize}
     titleSize={titleSize}
     cardRadius={cardRadius}
-    fields={fields}
+fields={fields}
 fieldValues={fieldValues}
+profileId={profileId}
   />
 )}
 
@@ -507,7 +311,8 @@ fieldValues={fieldValues}
   (fields?.phone ||
    fields?.email ||
    fields?.linkedin ||
-   fields?.instagram) && (
+  fields?.instagram ||
+fields?.website) && (
   <div className="space-y-4 sm:space-y-6">
 
     {/* Primary CTA */}
@@ -661,6 +466,7 @@ className="group flex items-center justify-between px-6 py-4 border-b border-gra
     <span className="text-gray-400">›</span>
   </a>
 )}
+
     </div>
   </div>
 )}

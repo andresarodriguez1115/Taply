@@ -1,0 +1,12 @@
+{
+  "formatVersion": 1,
+  "passTypeIdentifier": "pass.now.taply",
+  "serialNumber": "taply-pass",
+  "teamIdentifier": "F9HCVMCSWC",
+  "organizationName": "Taply",
+  "description": "Taply Digital Business Card",
+  "foregroundColor": "rgb(255,255,255)",
+  "backgroundColor": "rgb(0,0,0)",
+  "labelColor": "rgb(180,180,180)",
+  "generic": {}
+}

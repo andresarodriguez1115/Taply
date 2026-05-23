@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import { logEvent } from "@/lib/logEvent";
 import { motion, useMotionValue, useTransform } from "framer-motion";
 import { Phone, Mail, ChevronRight, Linkedin, Instagram } from "lucide-react";
 export default function ExecutiveLayout({  name,
@@ -18,25 +19,23 @@ fieldValues,
   profileMouseDown,
   profileMouseMove,
   profileMouseUp,
-
   bannerMouseDown,
   bannerMouseMove,
   bannerMouseUp,
-
   handleProfileUpload,
   handleBannerUpload,
-
   setProfileScale,
   setBannerScale,
   fontFamily,
   nameSize,
   titleSize,
-  cardRadius
+  cardRadius,
+  profileId,
 }) {
 
 const [saved, setSaved] = useState(false);
 const saveContact = () => {
-
+  logEvent(profileId, "save");
   const vCard = `
 BEGIN:VCARD
 VERSION:3.0
@@ -218,9 +217,12 @@ onTouchEnd={profileMouseUp}
 </div>
 {/* ================= CONTACT SECTION ================= */}
 {(fields?.phone ||
-   fields?.email ||
-   fields?.linkedin ||
-   fields?.instagram) && (<div className="mt-6 space-y-4 flex flex-col items-center">  
+ fields?.email ||
+ fields?.linkedin ||
+ fields?.instagram ||
+ fields?.website)
+   
+   && (<div className="mt-6 space-y-4 flex flex-col items-center">  
   
   
   
@@ -228,6 +230,7 @@ onTouchEnd={profileMouseUp}
   {fields?.phone && fieldValues?.phone && (
     <a
       href={`tel:${fieldValues.phone}`}
+      onClick={() => logEvent(profileId, "tap")}
 className="w-[400px] sm:w-[650px] flex items-center justify-between pl-3 pr-4 py-2 sm:py-4 bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition"    >
       <div className="flex items-center gap-4">
         <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-green-600 flex items-center justify-center">
@@ -251,6 +254,7 @@ className="w-[400px] sm:w-[650px] flex items-center justify-between pl-3 pr-4 py
   {fields?.email && fieldValues?.email && (
     <a
       href={`mailto:${fieldValues.email}`}
+      onClick={() => logEvent(profileId, "tap")}
       className="w-[400px] sm:w-[650px] flex items-center justify-between pl-3 pr-4 py-2 sm:py-4 bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition"
     >
       <div className="flex items-center gap-4">
@@ -275,8 +279,9 @@ className="w-[400px] sm:w-[650px] flex items-center justify-between pl-3 pr-4 py
   {/* LINKEDIN */}
 {fields?.linkedin && fieldValues?.linkedin && (
   <a
-    href={fieldValues.linkedin}
+    href={fieldValues.linkedin.startsWith("http") ? fieldValues.linkedin : `https://linkedin.com/in/${fieldValues.linkedin}`}
     target="_blank"
+    onClick={() => logEvent(profileId, "tap")}
     className="w-[400px] sm:w-[650px] flex items-center justify-between pl-3 pr-4 py-2 sm:py-4 bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition"
   >
     <div className="flex items-center gap-4">
@@ -303,6 +308,7 @@ className="w-[400px] sm:w-[650px] flex items-center justify-between pl-3 pr-4 py
   <a
     href={`https://instagram.com/${fieldValues.instagram}`}
     target="_blank"
+    onClick={() => logEvent(profileId, "tap")}
     className="w-[400px] sm:w-[650px] flex items-center justify-between pl-3 pr-4 py-2 sm:py-4 bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition"
   >
     <div className="flex items-center gap-4">
@@ -323,6 +329,42 @@ className="w-[400px] sm:w-[650px] flex items-center justify-between pl-3 pr-4 py
     <ChevronRight size={14} className="text-gray-300 sm:w-[18px] sm:h-[18px]" />
   </a>
 )}
+{/* WEBSITE */}
+{fields?.website && fieldValues?.website && (
+  <a
+    href={
+      fieldValues.website.startsWith("http")
+        ? fieldValues.website
+        : `https://${fieldValues.website}`
+    }
+    target="_blank"
+    rel="noopener noreferrer"
+    className="w-[400px] sm:w-[650px] flex items-center justify-between pl-3 pr-4 py-2 sm:py-4 bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition"
+  >
+    <div className="flex items-center gap-4">
+      <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-cyan-600 flex items-center justify-center">
+        <span className="text-white text-[12px] sm:text-[16px]">
+          🌐
+        </span>
+      </div>
+
+      <div>
+        <p className="text-[16px] sm:text-[17px] font-semibold text-gray-900">
+          Website
+        </p>
+
+        <p className="text-[14px] sm:text-sm text-gray-500 break-all">
+          {fieldValues.website}
+        </p>
+      </div>
+    </div>
+
+    <ChevronRight
+      size={14}
+      className="text-gray-300 sm:w-[18px] sm:h-[18px]"
+    />
+  </a>
+)}
 </div>
 
 )}
@@ -332,17 +374,7 @@ className="w-[400px] sm:w-[650px] flex items-center justify-between pl-3 pr-4 py
 
 
 
-<div className="mt-60 text-center select-none">
-  <p className="text-xl font-light text-gray-700">
-    taply<span className="font-semibold text-blue-600">.now</span>
-  </p>
 
-  <div className="w-12 h-[1px] bg-gray-300 mx-auto my-3"></div>
-
-  <p className="text-xs text-gray-400 tracking-widest uppercase">
-    MAKE CONNECTIONS COUNT
-  </p>
-</div>
     </div>
     
   );

@@ -1,7 +1,10 @@
 "use client";
 
-import { Phone, Mail, Instagram, Linkedin, IdCard } from "lucide-react";
+import { Phone, Mail, Instagram, Linkedin, Globe } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
+import { logEvent } from "@/lib/logEvent";
+
+
 import { motion } from "framer-motion";
 export default function MinimalLayout({
   name,
@@ -12,14 +15,14 @@ export default function MinimalLayout({
   fieldValues,
   isEditing,
   handleProfileUpload,
-
   profileScale,
   profilePos,
   setProfileScale,
   profileMouseDown,
   profileMouseMove,
   profileMouseUp,
-}) 
+  profileId,
+})
 {
 
 useEffect(() => {
@@ -58,11 +61,11 @@ if (data.scale !== undefined && setProfileScale) {
       {/* FULL WIDTH IMAGE */}
 <div className="relative w-full max-w-5xl mx-auto aspect-[1/.9] sm:aspect-[1/0.8] overflow-hidden group">
 {isEditing && profileImage && (
-  <div
-className="absolute top-3 left-1/2 -translate-x-1/2 
-           bg-white/90 px-3 py-2 rounded-full shadow-lg
-           sm:opacity-0 sm:group-hover:opacity-100
-           opacity-100 transition
+<div
+className="absolute bottom-4 left-1/2 -translate-x-1/2 
+           bg-white/90 px-4 py-2 rounded-full shadow-lg
+           opacity-0 group-hover:opacity-100
+           transition
            z-20"
 >
 
@@ -99,7 +102,7 @@ onChange={(e) => setProfileScale && setProfileScale(Number(e.target.value))}
 />
 
 {isEditing && (
-  <label className="absolute top-4 right-4 bg-black text-white text-xs px-3 py-1 rounded cursor-pointer">
+  <label className="absolute bottom-4 right-4 bg-black text-white text-xs px-4 py-2 rounded-full cursor-pointer shadow-md z-20">
     Change Photo
     <input
       type="file"
@@ -145,79 +148,108 @@ onChange={(e) => setProfileScale && setProfileScale(Number(e.target.value))}
 
 {/* CONTACT CARD */}
 <div className="px-6 mt-6 max-w-2xl mx-auto">
-  <div className="bg-[#f8f8f8] border border-gray-300 rounded-3xl shadow-[0_10px_25px_rgba(0,0,0,0.12)] p-6">
+<div className="bg-white border border-gray-200 rounded-3xl shadow-[0_10px_25px_rgba(0,0,0,0.08)] p-6 divide-y divide-gray-100">
 
-    {/* Header */}
-    <div className="flex items-center gap-3 mb-6 sm:mb-6">
-     <div className="w-[44px] h-[44px] sm:w-[56px] sm:h-[56px] bg-black text-white rounded-full flex items-center justify-center">
-  <IdCard size={24} className="text-white" />
-</div>
-      <h2 className="text-lg sm:text-2xl font-semibold">Contact Information</h2>
+    <div className="flex items-center gap-3 mb-6">
+      <div className="w-[44px] h-[44px] bg-gray-100 rounded-full flex items-center justify-center flex-shrink-0">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#374151" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      </div>
+      <h2 className="text-lg font-semibold">Contact Information</h2>
     </div>
 
-    <div className="border-t border-gray-400 mb-6 sm:mb-6" />
 
-    {/* Call */}
-    {fieldValues?.phone && (
-      <div className="flex items-center gap-4 mb-6">
-    <div className="w-[44px] h-[44px] sm:w-[56px] sm:h-[56px] rounded-full bg-black flex items-center justify-center">
-  <Phone size={18} className="text-white" />
-</div>
-        <div>
-          <p className="text-lg sm:text-2xl font-semibold">Call</p>
-          <p className="text-sm sm:text-lg text-gray-600">
-            {fieldValues?.phone}
-          </p> 
-        </div>
-      </div>
+    {fields?.phone && fieldValues?.phone && (
+
+      <>
+        <a href={`tel:${fieldValues.phone}`} onClick={() => logEvent(profileId, "tap")} className="flex items-center gap-4 py-4">          <div className="w-[44px] h-[44px] rounded-full flex items-center justify-center flex-shrink-0" style={{ background: "#22c55e" }}>
+            <Phone size={18} className="text-white" />
+          </div>
+          <div className="flex-1">
+            <p className="text-base font-semibold">Call</p>
+            <p className="text-sm text-gray-400">{fieldValues.phone}</p>
+          </div>
+          <span className="text-gray-300 text-lg">›</span>
+        </a>
+        
+      </>
     )}
 
-    {/* Email */}
-    {fieldValues?.email && (
-      <div className="flex items-center gap-4 mb-6">
-      <div className="w-[44px] h-[44px] sm:w-[56px] sm:h-[56px] rounded-full bg-black flex items-center justify-center">
-  <Mail size={18} className="text-white" />
-</div>
-        <div>
-          <p className="text-lg sm:text-2xl font-semibold">Email</p>
-          <p className="text-sm sm:text-lg text-gray-600 break-all">
-            {fieldValues?.email}
-          </p>
-        </div>
-      </div>
+    {fields?.email && fieldValues?.email && (
+      <>
+        <a href={`mailto:${fieldValues.email}`} onClick={() => logEvent(profileId, "tap")} className="flex items-center gap-4 py-4">
+
+          <div className="w-[44px] h-[44px] rounded-full flex items-center justify-center flex-shrink-0" style={{ background: "#3b82f6" }}>
+            <Mail size={18} className="text-white" />
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="text-base font-semibold">Email</p>
+            <p className="text-sm text-gray-400 truncate">{fieldValues.email}</p>
+          </div>
+          <span className="text-gray-300 text-lg">›</span>
+        </a>
+        
+      </>
     )}
 
-    {/* LinkedIn */}
-{fieldValues?.linkedin && (
-  <div className="flex items-center gap-4 mb-6">
-   <div className="w-[44px] h-[44px] sm:w-[56px] sm:h-[56px] rounded-full bg-black flex items-center justify-center">
-  <Linkedin size={18} className="text-white" />
-</div>
-        <div>
-          <p className="text-lg sm:text-2xl font-semibold">LinkedIn</p>
-          <p className="text-sm sm:text-lg text-gray-600">
-            {fieldValues?.linkedin}
-          </p>
-        </div>
-      </div>
+    {fields?.linkedin && fieldValues?.linkedin && (
+      <>
+        <a href={fieldValues.linkedin.startsWith("http") ? fieldValues.linkedin : `https://linkedin.com/in/${fieldValues.linkedin}`} target="_blank" onClick={() => logEvent(profileId, "tap")} className="flex items-center gap-4 py-4">
+          <div className="w-[44px] h-[44px] rounded-full flex items-center justify-center flex-shrink-0" style={{ background: "#6366f1" }}>
+            <Linkedin size={18} className="text-white" />
+          </div>
+          <div className="flex-1">
+            <p className="text-base font-semibold">LinkedIn</p>
+            <p className="text-sm text-gray-400 truncate">@{fieldValues.linkedin.replace(/.*linkedin\.com\/in\//,"")}</p>          </div>
+          <span className="text-gray-300 text-lg">›</span>
+        </a>
+        
+      </>
     )}
-{/* Instagram */}
-{fieldValues?.instagram && (
-  <div className="flex items-center gap-4">
-    <div className="w-[44px] h-[44px] sm:w-[56px] sm:h-[56px] shadow-md bg-black text-white rounded-full flex items-center justify-center">
-      <Instagram size={18} />
-    </div>
-    <div>
-      <p className="text-lg sm:text-2xl font-semibold">Instagram</p>
-      <a
-        href={`https://instagram.com/${fieldValues.instagram}`}
-        target="_blank"
-        className="text-sm sm:text-lg text-gray-600"
-      >
-        @{fieldValues.instagram}
+
+    {fields?.instagram && fieldValues?.instagram && (      <a href={`https://instagram.com/${fieldValues.instagram}`} target="_blank" onClick={() => logEvent(profileId, "tap")} className="flex items-center gap-4 py-4">    
+        <div className="w-[44px] h-[44px] rounded-full flex items-center justify-center flex-shrink-0" style={{ background: "#ec4899" }}>
+          <Instagram size={18} className="text-white" />
+        </div>
+        <div className="flex-1">
+          <p className="text-base font-semibold">Instagram</p>
+          <p className="text-sm text-gray-400">@{fieldValues.instagram}</p>
+        </div>
+        <span className="text-gray-300 text-lg">›</span>
       </a>
-    </div>
-  </div>
+    )}
+{fields?.website && fieldValues?.website && (
+  <>
+    
+
+    <a
+      href={
+        fieldValues.website.startsWith("http")
+          ? fieldValues.website
+          : `https://${fieldValues.website}`
+      }
+      target="_blank"
+      rel="noopener noreferrer"
+      onClick={() => logEvent(profileId, "tap")}
+      className="flex items-center gap-4 py-4"
+    >
+      <div
+        className="w-[44px] h-[44px] rounded-full flex items-center justify-center flex-shrink-0"
+        style={{ background: "#06b6d4" }}
+      >
+        <Globe size={18} className="text-white" />
+      </div>
+
+      <div className="flex-1 min-w-0">
+        <p className="text-base font-semibold">Website</p>
+
+        <p className="text-sm text-gray-400 truncate">
+          {fieldValues.website}
+        </p>
+      </div>
+
+      <span className="text-gray-300 text-lg">›</span>
+    </a>
+  </>
 )}
   </div>
 </div>

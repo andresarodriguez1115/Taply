@@ -17,8 +17,11 @@ export default function LoginPage() {
   const [error, setError] = useState(null)
 
   const [open, setOpen] = useState(false)
+  
   const [mode, setMode] = useState("login")
-
+const [firstName, setFirstName] = useState("")
+const [lastName, setLastName] = useState("")
+const [username, setUsername] = useState("")
 
 
   const handleLogin = async (e) => {
@@ -26,6 +29,7 @@ export default function LoginPage() {
 
     setLoading(true)
     setError(null)
+    localStorage.removeItem("has_chosen")
 
     const { error } = await supabase.auth.signInWithPassword({
       email,
@@ -39,7 +43,7 @@ export default function LoginPage() {
     }
 
     setLoading(false)
-    router.replace("/mockup")
+    router.replace("/home")
   }
 
 
@@ -55,202 +59,224 @@ export default function LoginPage() {
     setLoading(true)
     setError(null)
 
-    const { data, error } = await supabase.auth.signUp({
-      email,
-      password,
-    })
-
+const { data, error } = await supabase.auth.signUp({
+  email,
+  password,
+  options: {
+    data: {
+      first_name: firstName,
+      last_name: lastName,
+      username: username.toLowerCase(),
+    },
+  },
+});
+console.log("SIGNUP DATA:", data);
     if (error) {
       setError(error.message)
       setLoading(false)
       return
     }
+const userId = data?.user?.id;
+await supabase.auth.updateUser({
+  data: {
+    first_name: firstName,
+    last_name: lastName,
+    username: username.toLowerCase(),
+  },
+});
+if (!userId) {
+  setError("Signup worked but user not returned. Try logging in.");
+  setLoading(false);
+  return;
+}
 
-    if (data?.user) {
-      router.replace("/choose-username")
-    }
 
+
+router.replace("/home");
     setLoading(false)
   }
 
 
 
-  return (
-    <div className="min-h-screen bg-gray-100 flex flex-col justify-between">
+return (
+  <div className="min-h-screen flex items-center justify-center bg-[#fafaf9] px-4">
+
+    <div className="w-full max-w-md bg-white rounded-2xl shadow-md p-8">
 
       {/* LOGO */}
-      <div className="flex flex-1 items-center justify-center">
-        <h1 className="text-4xl font-bold">Taply</h1>
+      <div className="flex flex-col items-center mb-6">
+        <img
+  src="/taply-logo.svg"
+  className="h-14 mb-4 object-contain contrast-125 saturate-125"
+/>
+        <h1 className="text-xl font-semibold">
+          {mode === "login" ? "Log in to Taply" : "Create your account"}
+        </h1>
       </div>
 
+      {/* LOGIN */}
+      {mode === "login" && (
+        <form onSubmit={handleLogin} className="space-y-4">
 
+          <input
+            type="email"
+            placeholder="Email address"
+            value={email}
+            onChange={(e)=>setEmail(e.target.value)}
+            className="w-full border border-gray-200 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
 
-      {/* LOGIN BUTTON */}
-      <div className="p-6">
-        <button
-          onClick={() => setOpen(true)}
-          className="w-full bg-black text-white py-4 rounded-xl text-lg"
-        >
-          Login
-        </button>
+          <input
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={(e)=>setPassword(e.target.value)}
+            className="w-full border border-gray-200 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+
+          {error && <p className="text-red-500 text-sm">{error}</p>}
+
+          <button
+            disabled={loading}
+            className="w-full bg-blue-600 text-white py-3 rounded-lg font-medium"
+          >
+            {loading ? "Loading..." : "Continue"}
+          </button>
+
+          <p className="text-center text-sm text-gray-600">
+            Don’t have an account?{" "}
+            <span
+              onClick={()=>setMode("signup")}
+              className="text-blue-600 cursor-pointer"
+            >
+              Sign up
+            </span>
+          </p>
+
+        </form>
+      )}
+
+      {/* SIGNUP */}
+      {mode === "signup" && (
+        <form onSubmit={handleSignup} className="space-y-4">
+
+          <input
+            type="text"
+            placeholder="First Name"
+            value={firstName}
+            onChange={(e)=>setFirstName(e.target.value)}
+            className="w-full border border-gray-200 p-3 rounded-lg"
+          />
+
+          <input
+            type="text"
+            placeholder="Last Name"
+            value={lastName}
+            onChange={(e)=>setLastName(e.target.value)}
+            className="w-full border border-gray-200 p-3 rounded-lg"
+          />
+
+          <input
+            type="text"
+            placeholder="Username"
+            value={username}
+            onChange={(e)=>setUsername(e.target.value)}
+            className="w-full border border-gray-200 p-3 rounded-lg"
+          />
+
+          <input
+            type="email"
+            placeholder="Email"
+            value={email}
+            onChange={(e)=>setEmail(e.target.value)}
+            className="w-full border border-gray-200 p-3 rounded-lg"
+          />
+
+          <input
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={(e)=>setPassword(e.target.value)}
+            className="w-full border border-gray-200 p-3 rounded-lg"
+          />
+
+          <input
+            type="password"
+            placeholder="Confirm Password"
+            value={confirmPassword}
+            onChange={(e)=>setConfirmPassword(e.target.value)}
+            className="w-full border border-gray-200 p-3 rounded-lg"
+          />
+
+          {error && <p className="text-red-500 text-sm">{error}</p>}
+
+          <button
+            disabled={loading}
+            className="w-full bg-blue-600 text-white py-3 rounded-lg font-medium"
+          >
+            {loading ? "Loading..." : "Create Account"}
+          </button>
+
+          <p className="text-center text-sm text-gray-600">
+            Already have an account?{" "}
+            <span
+              onClick={()=>setMode("login")}
+              className="text-blue-600 cursor-pointer"
+            >
+              Log in
+            </span>
+          </p>
+
+        </form>
+      )}
+
+      {/* DIVIDER */}
+      <div className="flex items-center gap-3 my-6">
+        <div className="flex-1 h-[1px] bg-gray-200" />
+        <span className="text-gray-400 text-sm">OR</span>
+        <div className="flex-1 h-[1px] bg-gray-200" />
       </div>
 
-
-
-      {/* AUTH SHEET */}
-      <AnimatePresence>
-        {open && (
-
-          <div className="fixed bottom-0 left-0 w-full bg-white rounded-t-3xl p-6 shadow-xl">
-
-            {/* drag handle */}
-            <div className="w-10 h-1 bg-gray-300 rounded-full mx-auto mb-5"/>
-
-
-            <AnimatePresence mode="wait">
-
-
-              {/* LOGIN FORM */}
-
-              {mode === "login" && (
-
-              <motion.div
-  key="login"
-  initial={{ opacity: 0, scale: 0.98 }}
-  animate={{ opacity: 1, scale: 1 }}
-  exit={{ opacity: 0, scale: 0.98 }}
-  transition={{ duration: 0.15, ease: "easeOut" }}
+      {/* SOCIAL */}
+      <div className="space-y-3">
+<button
+  onClick={async () => {
+    await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: {
+        redirectTo: "http://localhost:3000/home"
+,
+      },
+    })
+  }}
+  className="w-full border border-gray-200 rounded-lg py-3 px-4 hover:bg-gray-50 flex items-center gap-3"
 >
-
-                  <h2 className="text-xl font-bold mb-4 text-center">
-                    Login
-                  </h2>
-
-                  <form onSubmit={handleLogin} className="space-y-4">
-
-                    <input
-                      type="email"
-                      placeholder="Email"
-                      className="w-full border p-3 rounded-lg"
-                      value={email}
-                      onChange={(e)=>setEmail(e.target.value)}
-                    />
-
-                    <input
-                      type="password"
-                      placeholder="Password"
-                      className="w-full border p-3 rounded-lg"
-                      value={password}
-                      onChange={(e)=>setPassword(e.target.value)}
-                    />
-
-                    {error && (
-                      <p className="text-red-500 text-sm">{error}</p>
-                    )}
-
-                    <button
-                      disabled={loading}
-                      className="w-full bg-black text-white p-3 rounded-lg"
-                    >
-                      {loading ? "Loading..." : "Login"}
-                    </button>
-
-                    <button
-                      type="button"
-                      onClick={()=>setMode("signup")}
-                      className="w-full border p-3 rounded-lg"
-                    >
-                      Create Account
-                    </button>
-
-                    <button
-                      type="button"
-                      onClick={()=>setOpen(false)}
-                      className="w-full text-gray-500"
-                    >
-                      Cancel
-                    </button>
-
-                  </form>
-
-                </motion.div>
-              )}
-
-
-
-              {/* SIGNUP FORM */}
-
-              {mode === "signup" && (
-
-              <motion.div
-  key="login"
-  initial={{ opacity: 0, scale: 0.98 }}
-  animate={{ opacity: 1, scale: 1 }}
-  exit={{ opacity: 0, scale: 0.98 }}
-  transition={{ duration: 0.15, ease: "easeOut" }}
+  <div className="w-5 h-5 flex items-center justify-center">
+  <img src="/google.png" className="w-5 h-5" />
+</div>
+  <span className="text-[15px] font-medium text-gray-900">Continue with Google</span>
+</button>
+     
+       
+  <button
+  onClick={async () => {
+    await supabase.auth.signInWithOAuth({
+      provider: "apple",
+      options: {
+        redirectTo: "http://localhost:3000/home"
+,
+      },
+    })
+  }}
+  className="w-full border border-gray-200 rounded-lg py-3 px-4 hover:bg-gray-50 flex items-center gap-3"
 >
-
-                  <h2 className="text-xl font-bold mb-4 text-center">
-                    Create Account
-                  </h2>
-
-                  <form onSubmit={handleSignup} className="space-y-4">
-
-                    <input
-                      type="email"
-                      placeholder="Email"
-                      className="w-full border p-3 rounded-lg"
-                      value={email}
-                      onChange={(e)=>setEmail(e.target.value)}
-                    />
-
-                    <input
-                      type="password"
-                      placeholder="Password"
-                      className="w-full border p-3 rounded-lg"
-                      value={password}
-                      onChange={(e)=>setPassword(e.target.value)}
-                    />
-
-                    <input
-                      type="password"
-                      placeholder="Confirm Password"
-                      className="w-full border p-3 rounded-lg"
-                      value={confirmPassword}
-                      onChange={(e)=>setConfirmPassword(e.target.value)}
-                    />
-
-                    {error && (
-                      <p className="text-red-500 text-sm">{error}</p>
-                    )}
-
-                    <button
-                      disabled={loading}
-                      className="w-full bg-black text-white p-3 rounded-lg"
-                    >
-                      {loading ? "Loading..." : "Create Account"}
-                    </button>
-
-                    <button
-                      type="button"
-                      onClick={()=>setMode("login")}
-                      className="w-full border p-3 rounded-lg"
-                    >
-                      Back to Login
-                    </button>
-
-                  </form>
-
-                </motion.div>
-              )}
-
-            </AnimatePresence>
-
-          </div>
-
-        )}
-      </AnimatePresence>
+  <div className="w-5 h-5 flex items-center justify-center">
+  <img src="/apple.svg" className="w-4 h-5 mt-[1px]" />
+</div>
+  <span className="text-[15px] font-medium text-gray-900">Continue with Apple</span>
+</button>
+      </div>
 
     </div>
-  )
-}
+  </div>
+)}

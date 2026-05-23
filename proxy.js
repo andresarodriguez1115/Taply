@@ -25,7 +25,7 @@ export function proxy(request) {
 
 export const config = {
   matcher: [
-    "/mockup/:path*",
+    "/builder/:path*",
     "/choose-username/:path*",
   ],
 };
