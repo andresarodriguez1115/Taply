@@ -1,5 +1,6 @@
 "use client";
 
+import { Suspense } from "react";
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronDown } from "lucide-react";
@@ -17,11 +18,11 @@ import ModernLayout from "@/components/layouts/ModernLayout.jsx";
 import MinimalLayout from "@/components/layouts/MinimalLayout.jsx";
 import { useSearchParams } from "next/navigation";
 
-export default function Page() {
+function BuilderPageInner() {
   const [avatarUrl, setAvatarUrl] = useState(null);
 const [bannerUrl, setBannerUrl] = useState(null);
   // -----------------------------
-  // BASIC PROFILE FIELDS
+  // BASIC PROFILE FIELDS}
   // -----------------------------
   const [name, setName] = useState("Your Name");
   const [title, setTitle] = useState("Your Title / Position");
@@ -1851,5 +1852,17 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
 </AnimatePresence>
 </div>
   );
+}
+
+export default function Page() {
+  return (
+    <Suspense fallback={
+      <div className="w-full h-screen flex items-center justify-center bg-white">
+        <div className="w-10 h-10 border-4 border-gray-200 border-t-blue-500 rounded-full animate-spin" />
+      </div>
+    }>
+      <BuilderPageInner />
+    </Suspense>
+  )
 }
 

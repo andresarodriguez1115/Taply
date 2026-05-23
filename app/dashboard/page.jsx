@@ -1,4 +1,5 @@
 "use client";
+import { Suspense } from "react";
 import { useEffect, useState } from "react";
 import supabase from "@/lib/supabase";
 import { QrCode, Link, Wallet, Share2 } from "lucide-react";
