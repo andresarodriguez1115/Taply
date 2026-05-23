@@ -1,5 +1,4 @@
 "use client";
-import { Suspense } from "react";
 import { useEffect, useState } from "react";
 import supabase from "@/lib/supabase";
 import { QrCode, Link, Wallet, Share2 } from "lucide-react";
@@ -27,7 +26,7 @@ const [walletLogoUrl, setWalletLogoUrl] = useState(null);
 const [walletTextColor, setWalletTextColor] = useState("rgb(255,255,255)");
 const [showTutorial, setShowTutorial] = useState(false);
 const handleShowQR = async (profileUsername) => {
-  const url = `https://taply.n/${profileUsername}`;
+  const url = `https://taply.now/${profileUsername}`;
   const dataUrl = await QRCode.toDataURL(url, { width: 300, margin: 2 });
   setQrModal(dataUrl);
   setQrOpen(true);
