@@ -17,6 +17,7 @@ import ExecutiveLayout from "@/components/layouts/ExecutiveLayout.jsx";
 import ModernLayout from "@/components/layouts/ModernLayout.jsx";
 import MinimalLayout from "@/components/layouts/MinimalLayout.jsx";
 import { useSearchParams } from "next/navigation";
+import BuilderTutorial from "@/components/BuilderTutorial"
 
 function BuilderPageInner() {
   const [avatarUrl, setAvatarUrl] = useState(null);
@@ -329,6 +330,7 @@ const avatarMenuRef = useRef(null)
   const [showTemplatePicker, setShowTemplatePicker] = useState(false);
   const [layout, setLayout] = useState("executive");
 const [runTutorial, setRunTutorial] = useState(false);
+const [showBuilderTutorial, setShowBuilderTutorial] = useState(false)
   // -----------------------------
   // SIDEBAR VISIBILITY
   // -----------------------------
@@ -351,9 +353,10 @@ const handleDrag = (e) => {
   setStudioHeight(newHeight);
 };
 useEffect(() => {
-  // 🆕 If it's a NEW profile (no id)
   if (!profileId) {
     setStudioOpen(true);
+    const done = localStorage.getItem("taply_builder_tutorial_done");
+    if (!done) setTimeout(() => setShowBuilderTutorial(true), 1000);
   }
 }, [profileId]);
 const [activeTab, setActiveTab] = useState("layout");
@@ -722,6 +725,7 @@ return (
 {/* FLOATING SAVE BUTTON */}
 {isEditing && (
   <button
+    data-tutorial="save-btn"
     onClick={handleSave}
     className="
       fixed
@@ -823,7 +827,7 @@ return (
     animate={{ opacity: 1, y: 0 }}
     exit={{ opacity: 0, y: -10 }}
     transition={{ duration: 0.25 }}
-    className="w-full max-w-3xl"
+   className="w-full max-w-3xl" data-tutorial="preview"
   >
     {renderLayout()}
   </motion.div>
@@ -864,10 +868,11 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
 </div>
 
       {/* TABS */}
-      <div className="flex gap-3 px-4 py-3 border-b">
+<div className="flex gap-3 px-4 py-3 border-b">
         {["layout", "content", "design"].map((tab) => (
           <button
             key={tab}
+            data-tutorial={tab === "content" ? "content-tab" : tab === "design" ? "design-tab" : undefined}
             onClick={() => setActiveTab(tab)}
             className={`px-4 py-2 rounded-full text-base font-medium ${
               activeTab === tab
@@ -917,12 +922,12 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
         </button>
       ))}
       <label className="flex flex-col items-center gap-1 cursor-pointer group">
-        <div className="w-14 h-14 rounded-xl border-2 border-dashed border-gray-200 flex items-center justify-center overflow-hidden transition group-hover:border-gray-400"
+        <div className="w-14 h-14 rounded-xl border-2 border-dashed border-gray-200 flex items-center justify-center overflow-hidden transition group-hover:border-gray-400 relative"
           style={{ background: !["#f3f4f6","#dbeafe","#ede9fe","#fce7f3","#d1fae5","#fef9c3","#1e293b"].includes(backgroundColor) && !backgroundColor.startsWith("radial-gradient") ? backgroundColor : "white" }}>
           <span className="text-gray-400 text-base">+</span>
+          <input type="color" value={backgroundColor} onChange={(e) => setBackgroundColor(e.target.value)} className="absolute inset-0 opacity-0 w-full h-full cursor-pointer" />
         </div>
         <span className="text-[9px] text-gray-400">Custom</span>
-        <input type="color" value={backgroundColor} onChange={(e) => setBackgroundColor(e.target.value)} className="hidden" />
       </label>
     </div>
 
@@ -975,11 +980,11 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
         </button>
       ))}
       <label className="flex flex-col items-center gap-1 cursor-pointer group">
-        <div className="w-14 h-14 rounded-xl border-2 border-dashed border-gray-200 flex items-center justify-center overflow-hidden transition group-hover:border-gray-400" style={{ background: !["#f3f4f6","#dbeafe","#ede9fe","#fce7f3","#d1fae5","#fef9c3","#1e293b"].includes(backgroundColor) && !backgroundColor.startsWith("radial-gradient") ? backgroundColor : "white" }}>
+        <div className="w-14 h-14 rounded-xl border-2 border-dashed border-gray-200 flex items-center justify-center overflow-hidden transition group-hover:border-gray-400 relative" style={{ background: !["#f3f4f6","#dbeafe","#ede9fe","#fce7f3","#d1fae5","#fef9c3","#1e293b"].includes(backgroundColor) && !backgroundColor.startsWith("radial-gradient") ? backgroundColor : "white" }}>
           <span className="text-gray-400 text-base">+</span>
+          <input type="color" value={backgroundColor} onChange={(e) => setBackgroundColor(e.target.value)} className="absolute inset-0 opacity-0 w-full h-full cursor-pointer" />
         </div>
         <span className="text-[9px] text-gray-400">Custom</span>
-        <input type="color" value={backgroundColor} onChange={(e) => setBackgroundColor(e.target.value)} className="hidden" />
       </label>
     </div>
     <div className="h-px bg-gray-100 mb-3" />
@@ -1028,11 +1033,11 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
         </button>
       ))}
       <label className="flex flex-col items-center gap-1 cursor-pointer group">
-        <div className="w-14 h-14 rounded-xl border-2 border-dashed border-gray-200 flex items-center justify-center overflow-hidden transition group-hover:border-gray-400" style={{ background: !["#f3f4f6","#dbeafe","#ede9fe","#fce7f3","#d1fae5","#fef9c3","#1e293b"].includes(backgroundColor) && !backgroundColor.startsWith("radial-gradient") ? backgroundColor : "white" }}>
+        <div className="w-14 h-14 rounded-xl border-2 border-dashed border-gray-200 flex items-center justify-center overflow-hidden transition group-hover:border-gray-400 relative" style={{ background: !["#f3f4f6","#dbeafe","#ede9fe","#fce7f3","#d1fae5","#fef9c3","#1e293b"].includes(backgroundColor) && !backgroundColor.startsWith("radial-gradient") ? backgroundColor : "white" }}>
           <span className="text-gray-400 text-base">+</span>
+          <input type="color" value={backgroundColor} onChange={(e) => setBackgroundColor(e.target.value)} className="absolute inset-0 opacity-0 w-full h-full cursor-pointer" />
         </div>
         <span className="text-[9px] text-gray-400">Custom</span>
-        <input type="color" value={backgroundColor} onChange={(e) => setBackgroundColor(e.target.value)} className="hidden" />
       </label>
     </div>
     <div className="h-px bg-gray-100 mb-3" />
@@ -1083,12 +1088,12 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
             </button>
           ))}
           <label className="flex flex-col items-center gap-1 cursor-pointer group">
-            <div className="w-14 h-14 rounded-xl border-2 border-dashed border-gray-200 flex items-center justify-center overflow-hidden transition group-hover:border-gray-400"
+            <div className="w-14 h-14 rounded-xl border-2 border-dashed border-gray-200 flex items-center justify-center overflow-hidden transition group-hover:border-gray-400 relative"
               style={{ background: !["#f3f4f6","#dbeafe","#ede9fe","#fce7f3","#d1fae5","#fef9c3","#1e293b"].includes(networkingBackground) && !networkingBackground.startsWith("radial-gradient") ? networkingBackground : "white" }}>
               <span className="text-gray-400 text-base">+</span>
+              <input type="color" value={networkingBackground} onChange={(e) => setNetworkingBackground(e.target.value)} className="absolute inset-0 opacity-0 w-full h-full cursor-pointer" />
             </div>
             <span className="text-[9px] text-gray-400">Custom</span>
-            <input type="color" value={networkingBackground} onChange={(e) => setNetworkingBackground(e.target.value)} className="hidden" />
           </label>
         </div>
 
@@ -1628,8 +1633,8 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
     {mode === "business" && (
       <>
 {/* IDENTITY */}
-<div className="mb-6">
-  <p className="text-base font-bold text-gray-800 mb-3">Identity</p>
+<div className="mb-6" data-tutorial="identity-section">
+<p className="text-base font-bold text-gray-800 mb-3">Identity</p>
   <div className="space-y-3 border p-3 rounded-xl">
     <div className="flex justify-between items-center">
       <span className="text-sm">Full Name</span>
@@ -1653,8 +1658,8 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
 </div>
 
         {/* ADD FIELDS */}
-<div>
-  <p className="text-base font-bold text-gray-800 mb-3">Contact Fields</p>
+<div data-tutorial="contact-fields">
+<p className="text-base font-bold text-gray-800 mb-3">Contact Fields</p>
   <div className="space-y-3">
     {["phone", "email", "linkedin", "instagram", "website"].map((field) => {
       const isActive = fields[field];
@@ -1714,7 +1719,7 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
 
       {/* LAYOUT TAB */}
 {activeTab === "layout" && (
-  <div className="space-y-3">
+  <div className="space-y-3" data-tutorial="mode-selector">
     <p className="text-base font-bold text-gray-800 mb-3"
 >Select a mode</p>{[
 { id: "business", label: "Business", color: "#2563eb", iconBg: "#eff6ff", desc: "Professional card with contact fields",
@@ -1738,6 +1743,7 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
                 setOpenMode(null);
               }
             }}
+
             className={`w-full p-3 rounded-2xl text-left transition border ${
               isActive
                 ? "bg-white text-black border-2 border-black"
@@ -1850,6 +1856,15 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
   )}
 </AnimatePresence>
 </AnimatePresence>
+{showBuilderTutorial && (
+  <BuilderTutorial
+    onComplete={() => setShowBuilderTutorial(false)}
+    onOpenStudio={() => setStudioOpen(true)}
+    onGoToContent={() => setActiveTab("content")}
+    onGoToDesign={() => setActiveTab("design")}
+    onCloseStudio={() => setStudioOpen(false)}
+  />
+)}
 </div>
   );
 }

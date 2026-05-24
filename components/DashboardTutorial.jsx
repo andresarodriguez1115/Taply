@@ -28,13 +28,6 @@ const STEPS = [
     desc: "Tap here to build a card. Pick from Business, University, Networking, or Social mode.",
     position: "top",
   },
-
-{
-    id: "wallet",
-    title: "Apple Wallet",
-    desc: "Generate a native Apple Wallet pass from your active profile for instant lock screen access.",
-    position: "top",
-  },
 {
     id: "addwallet",
     title: "Add to Wallet",
