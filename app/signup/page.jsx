@@ -244,8 +244,7 @@ return (
     await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
-        redirectTo: "http://localhost:3000/home"
-,
+redirectTo: `${window.location.origin}/home`,
       },
     })
   }}
@@ -263,8 +262,7 @@ return (
     await supabase.auth.signInWithOAuth({
       provider: "apple",
       options: {
-        redirectTo: "http://localhost:3000/home"
-,
+redirectTo: `${window.location.origin}/home`,
       },
     })
   }}
