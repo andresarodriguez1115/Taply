@@ -22,7 +22,7 @@ const [qrOpen, setQrOpen] = useState(false);
 const [stats, setStats] = useState({ views: 0, taps: 0, saves: 0, saveRate: 0 });
 const [walletCustomizerOpen, setWalletCustomizerOpen] = useState(false);
 const [walletBgColor, setWalletBgColor] = useState("rgb(0,0,0)");
-const [walletLogoUrl, setWalletLogoUrl] = useState(null);
+const [walletLogoUrl, setWalletLogoUrl] = useState("/taply-logo.svg");
 const [walletTextColor, setWalletTextColor] = useState("rgb(255,255,255)");
 const [showTutorial, setShowTutorial] = useState(false);
 const handleShowQR = async (profileUsername) => {
@@ -138,7 +138,7 @@ if (profileIds.length > 0) {
 setLoading(false);
 setReady(true);
 const tutorialDone = localStorage.getItem("taply_tutorial_done");
-if (!tutorialDone) setShowTutorial(true);
+if (!tutorialDone) setTimeout(() => setShowTutorial(true), 500);
     };
 
     getUser();
@@ -504,8 +504,7 @@ shadow-[0_8px_30px_rgba(0,0,0,0.08)] ring-2 ring-white/100">
             username: username,
             photoUrl: activeProfile.avatar_url || null,
             bgColor: walletBgColor,
-            logoUrl: walletLogoUrl,
-            textColor: walletTextColor,
+            logoUrl: walletLogoUrl?.startsWith("/") ? `${window.location.origin}${walletLogoUrl}` : walletLogoUrl,            textColor: walletTextColor,
           }),
         });
 
@@ -648,7 +647,7 @@ shadow-[0_8px_30px_rgba(0,0,0,0.08)] ring-2 ring-white/100">
             ) : (
               <div className="w-8 h-8 rounded bg-gray-100 flex items-center justify-center text-[10px] text-gray-400">Logo</div>
             )}
-            <span className="text-sm text-gray-500">{walletLogoUrl ? "Change logo" : "Upload company logo"}</span>
+            <span className="text-sm text-gray-500">{walletLogoUrl && walletLogoUrl !== "/taply-logo.svg" ? "Change logo" : "Upload company logo"}</span>
             <input type="file" accept="image/*" className="hidden" onChange={async (e) => {
               const file = e.target.files[0];
               if (!file) return;
@@ -660,7 +659,7 @@ shadow-[0_8px_30px_rgba(0,0,0,0.08)] ring-2 ring-white/100">
               setWalletLogoUrl(data.publicUrl);
             }} />
           </label>
-          {walletLogoUrl && <button onClick={() => setWalletLogoUrl(null)} className="text-xs text-red-400 mt-1">Remove logo</button>}
+          {walletLogoUrl && walletLogoUrl !== "/taply-logo.svg" && <button onClick={() => setWalletLogoUrl("/taply-logo.svg")} className="text-xs text-red-400 mt-1">Remove logo</button>}
         </div>
       </div>
     </motion.div>

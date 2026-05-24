@@ -1,7 +1,7 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
 @keyframes gradient-x {
   0% { background-position: 0% 50%; }
   25% { background-position: 100% 50%; }
@@ -14,20 +14,11 @@
   background-size: 200% 200%;
   animation: gradient-x 8s ease infinite;
 }
-html {
-  color-scheme: light;
-}
-root {
 
+:root {
+  color-scheme: light only;
   --background: #ffffff;
   --foreground: #171717;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
 }
 
 html,
@@ -54,5 +45,3 @@ a {
   color: inherit;
   text-decoration: none;
 }
-
-

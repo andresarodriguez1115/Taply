@@ -92,7 +92,7 @@ export default function LandingPage() {
             className="bg-black text-white py-4 rounded-2xl text-[1.05rem] font-semibold shadow-lg hover:scale-[1.02] active:scale-[0.97] transition">
             Create your Taply card →
           </button>
-          <button className="bg-white border border-gray-200 py-4 rounded-2xl flex items-center justify-center gap-2 text-gray-800 text-[1.05rem] font-semibold shadow-sm hover:bg-gray-50 transition">
+          <button onClick={() => window.open("/how-it-works", "_blank")} className="bg-white border border-gray-200 py-4 rounded-2xl flex items-center justify-center gap-2 text-gray-800 text-[1.05rem] font-semibold shadow-sm hover:bg-gray-50 transition">
             See how it works <Play size={18} />
           </button>
         </div>
