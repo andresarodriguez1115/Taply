@@ -19,8 +19,8 @@ const [ready, setReady] = useState(false);
 const [mounted, setMounted] = useState(false);
 const [qrModal, setQrModal] = useState(null);
 const [qrOpen, setQrOpen] = useState(false);
-const [stats, setStats] = useState({ views: 0, taps: 0, saves: 0, saveRate: 0 });
-const [walletCustomizerOpen, setWalletCustomizerOpen] = useState(false);
+const [statsLoading, setStatsLoading] = useState(true);
+const [stats, setStats] = useState({ views: 0, taps: 0, saves: 0, saveRate: 0 });const [walletCustomizerOpen, setWalletCustomizerOpen] = useState(false);
 const [walletBgColor, setWalletBgColor] = useState("rgb(0,0,0)");
 const [walletLogoUrl, setWalletLogoUrl] = useState("/taply-logo.svg");
 const [walletTextColor, setWalletTextColor] = useState("rgb(255,255,255)");
@@ -133,8 +133,10 @@ if (profileIds.length > 0) {
   const saveRate = taps > 0 ? Math.round((saves / taps) * 100) : 0;
 
   setStats({ views, taps, saves, saveRate });
+  setStatsLoading(false);
 }
 
+setStatsLoading(false);
 setLoading(false);
 setReady(true);
 const tutorialDone = localStorage.getItem("taply_tutorial_done");
@@ -158,18 +160,18 @@ bg-white/60 backdrop-blur-xl border border-white/30
 shadow-[0_8px_30px_rgba(0,0,0,0.08)] ring-2 ring-white/100">
 
     {/* LEFT */}
-    <div className="flex items-center gap-2">
-      <span className="text-lg font-semibold text-gray-900">
+    <div className="flex items-center gap-1.5">
+      <span className="text-[18px] font-bold text-gray-900 tracking-tight">
         Taply
       </span>
-
+      <span className="text-[18px] text-gray-300 font-light">/</span>
 <div className="flex items-center gap-1.5">
-<span className="text-base text-gray-500 relative top-[1.4px]">
-  {ready ? `/${username}` : "/..."}
+<span className="text-[18px] text-gray-500 font-medium">
+  {ready ? username : "..."}
 </span>
 
 {ready && profiles.length > 0 && profiles.some(p => p.is_active) && (
-  <span className="w-2 h-2 bg-green-500 rounded-full relative top-[1.4px]"></span>
+  <span className="w-2 h-2 bg-green-500 rounded-full"></span>
 )}
 </div>
 
@@ -277,7 +279,11 @@ shadow-[0_8px_30px_rgba(0,0,0,0.08)] ring-2 ring-white/100">
             { num: stats.taps, label: "Taps" },
             { num: `${stats.saveRate}%`, label: "Save rate" },
           ].map(({ num, label }) => (
-            <div key={label} className="flex-1 bg-[#f0f4ff] rounded-xl px-2 py-3 text-center">          <div className="text-[26px] font-bold text-blue-600">{num}</div>
+            <div key={label} className="flex-1 bg-[#f0f4ff] rounded-xl px-2 py-3 text-center">          {statsLoading ? (
+  <div className="text-[26px] font-bold text-blue-300">···</div>
+) : (
+  <div className="text-[26px] font-bold text-blue-600">{num}</div>
+)}
               <div className="text-[11px] text-gray-400 uppercase tracking-[0.06em] mt-0.5">{label}</div>
             </div>
           ))}
@@ -286,10 +292,16 @@ shadow-[0_8px_30px_rgba(0,0,0,0.08)] ring-2 ring-white/100">
         {/* CTA */}
         <button
           data-tutorial="create"
-          onClick={() => router.push("/builder")}
-          className="w-full bg-black text-white text-[14px] font-semibold py-3 rounded-2xl"
+          onClick={() => {
+            if (profiles.length >= 3) {
+              alert("You've reached the maximum of 3 profiles. Delete one to create a new one.");
+              return;
+            }
+            router.push("/builder");
+          }}
+          className={`w-full text-[14px] font-semibold py-3 rounded-2xl transition ${profiles.length >= 3 ? "bg-gray-100 text-gray-400 cursor-not-allowed" : "bg-black text-white"}`}
         >
-          + Create new profile
+          {profiles.length >= 3 ? "Max profiles reached" : "+ Create new profile"}
         </button>
       </div>
 
@@ -676,28 +688,48 @@ shadow-[0_8px_30px_rgba(0,0,0,0.08)] ring-2 ring-white/100">
   <div className="grid grid-cols-2 gap-3">
     {[
       {
-        icon: <div className="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center"><QrCode size={22} className="text-blue-600" /></div>,
+        icon: <div className="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center"><QrCode size={27} className="text-blue-600" /></div>,
         label: "QR Code",
         arrowColor: "text-blue-600",
-        onClick: () => {},
+        onClick: () => {
+          const active = profiles.find(p => p.is_active);
+          if (active) handleShowQR(active.username);
+          else alert("Set a profile as Active first!");
+        },
       },
       {
-        icon: <div className="w-10 h-10 rounded-xl bg-green-50 flex items-center justify-center"><Link size={22} className="text-green-600" /></div>,
+        icon: <div className="w-10 h-10 rounded-xl bg-green-50 flex items-center justify-center"><Link size={27} className="text-green-600" /></div>,
         label: "Copy Link",
         arrowColor: "text-green-600",
-        onClick: () => { if (!mounted) return; navigator.clipboard.writeText(`${window.location.origin}/${username}`); },
+        onClick: () => {
+          if (!mounted) return;a
+          navigator.clipboard.writeText(`${window.location.origin}/${username}`);
+          alert("Link copied!");
+        },
       },
       {
-        icon: <div className="w-10 h-10 rounded-xl bg-orange-50 flex items-center justify-center"><Share2 size={22} className="text-orange-500" /></div>,
+        icon: <div className="w-10 h-10 rounded-xl bg-orange-50 flex items-center justify-center"><Share2 size={27} className="text-orange-500" /></div>,
         label: "Share",
         arrowColor: "text-orange-500",
-        onClick: () => {},
+        onClick: () => {
+          if (!mounted) return;
+          if (navigator.share) {
+            navigator.share({
+              title: `${userName}'s Taply`,
+              text: "Check out my digital card!",
+              url: `${window.location.origin}/${username}`,
+            });
+          } else {
+            navigator.clipboard.writeText(`${window.location.origin}/${username}`);
+            alert("Link copied!");
+          }
+        },
       },
       {
-        icon: <div className="w-10 h-10 rounded-xl bg-purple-50 flex items-center justify-center"><QrCode size={22} className="text-purple-500" /></div>,
+        icon: <div className="w-10 h-10 rounded-xl bg-purple-50 flex items-center justify-center"><QrCode size={27} className="text-purple-500" /></div>,
         label: "Tap Mode",
         arrowColor: "text-purple-500",
-        onClick: () => { if (!mounted) return; router.push(`/${username}`); },
+        onClick: () => { if (!mounted) return; window.open(`/${username}`, "_blank"); },
       },
     ].map(({ icon, label, arrowColor, onClick }) => (
       <motion.div
@@ -705,12 +737,14 @@ shadow-[0_8px_30px_rgba(0,0,0,0.08)] ring-2 ring-white/100">
         whileTap={{ scale: 0.96 }}
         whileHover={{ y: -3 }}
         onClick={onClick}
-        className="bg-white/70 backdrop-blur-md p-4 rounded-2xl border border-white/40 shadow-[0_8px_30px_rgba(0,0,0,0.08)] flex flex-col gap-3 h-[100px] cursor-pointer"
+        className="bg-white/70 backdrop-blur-md p-4 rounded-2xl border border-white/40 shadow-[0_8px_30px_rgba(0,0,0,0.08)] flex flex-col gap-3 h-[150px] cursor-pointer"
       >
-        {icon}
-        <div className="flex items-center justify-between">
-          <p className="text-[15px] font-semibold text-gray-900 tracking-tight">{label}</p>
-          <span className={`w-7 h-7 flex items-center justify-center rounded-full text-sm font-medium ${arrowColor}`} style={{ background: arrowColor.replace("text-", "").replace("blue-600","#eff6ff").replace("green-600","#f0fdf4").replace("orange-500","#fff7ed").replace("purple-500","#faf5ff") }}>→</span>
+        <div className="flex-1 flex flex-col justify-between">
+          {icon}
+          <div className="flex items-center justify-between">
+            <p className="text-[18px] font-semibold text-gray-900 tracking-tight">{label}</p>
+            <span className={`w-7 h-7 flex items-center justify-center rounded-full text-sm font-medium ${arrowColor}`} style={{ background: arrowColor.replace("text-", "").replace("blue-600","#eff6ff").replace("green-600","#f0fdf4").replace("orange-500","#fff7ed").replace("purple-500","#faf5ff") }}>→</span>
+          </div>
         </div>
       </motion.div>
     ))}

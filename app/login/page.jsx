@@ -109,10 +109,10 @@ export default function LandingPage() {
               opacity: { duration: 0.6 }, y: { duration: 0.6 },
               rotateY: { duration: 6, repeat: Infinity, ease: "easeInOut", times: [0, 0.38, 0.5, 0.88, 1], delay: 1.5 },
             }}
-            style={{ width: "100%", height: "100%", position: "relative", transformStyle: "preserve-3d" }}
+            style={{ width: "100%", height: "100%", position: "relative", transformStyle: "preserve-3d", WebkitTransformStyle: "preserve-3d" }}
           >
             {/* FRONT */}
-            <div style={{ position: "absolute", width: "100%", height: "100%", backfaceVisibility: "hidden", WebkitBackfaceVisibility: "hidden" }}>
+            <div style={{ position: "absolute", width: "100%", height: "100%", backfaceVisibility: "hidden", WebkitBackfaceVisibility: "hidden", isolation: "isolate" }}>
               <div className="relative" style={{ width: "100%", height: "100%", background: "#0f0f0f", borderRadius: 44, padding: 3, boxShadow: "0 0 0 1px rgba(255,255,255,0.07), 0 40px 100px rgba(0,0,0,0.28), 0 10px 30px rgba(0,0,0,0.14), inset 0 1px 0 rgba(255,255,255,0.12)" }}>
                 <div className="absolute right-[-3px] top-[100px] w-[3px] h-[58px] bg-[#1a1a1a] rounded-r-sm" />
                 <div className="absolute left-[-3px] top-[78px] w-[3px] h-[34px] bg-[#1a1a1a] rounded-l-sm" />
@@ -140,7 +140,7 @@ export default function LandingPage() {
                     </div>
                     <div className="flex flex-col gap-1.5 px-2.5 mt-2 pb-4">
                       {[
-                        { label: "Call", sub: "(561) 419-4363", color: "#22c55e", icon: "+" },
+                        { label: "Call", sub: "(561) 419-4363", color: "#22c55e", icon: <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.58 3.38 2 2 0 0 1 3.55 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.5a16 16 0 0 0 6 6l.91-.91a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg> },
                         { label: "Email", sub: "andres@taply.now", color: "#3b82f6", icon: "@" },
                         { label: "LinkedIn", sub: "andresarodriguez", color: "#6366f1", icon: "in" },
                         { label: "Instagram", sub: "@andres_rodriguez", color: "#ec4899", icon: "ig" },
