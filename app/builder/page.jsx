@@ -1166,6 +1166,70 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
       </div>
     </div>
 
+    {/* GPA & GRAD YEAR */}
+    <div className="mb-6">
+      <p className="text-base font-bold text-gray-800 mb-3">Academic Info</p>
+      <div className="space-y-3">
+        {[
+          { key: "uni_gpa", label: "GPA", placeholder: "e.g. 3.8 / 4.0" },
+          { key: "uni_grad_year", label: "Grad Year", placeholder: "e.g. Class of 2026" },
+        ].map(({ key, label, placeholder }) => {
+          const isActive = !!(fieldValues?.[key]);
+          return (
+            <div key={key} className={`p-3 rounded-xl border transition ${isActive ? "bg-blue-50 border-blue-400" : "bg-gray-50"}`}>
+              <div className="flex justify-between items-center">
+                <span className="text-sm">{label}</span>
+                <button
+                  onClick={() => setFieldValues((prev) => ({ ...prev, [key]: isActive ? "" : " " }))}
+                  className={`w-5 h-5 rounded-full border ${isActive ? "bg-blue-500 border-blue-500" : "bg-white border-gray-300"}`}
+                />
+              </div>
+              {isActive && (
+                <input
+                  value={fieldValues?.[key]?.trim() === "" ? "" : fieldValues?.[key] || ""}
+                  onChange={(e) => setFieldValues((prev) => ({ ...prev, [key]: e.target.value }))}
+                  placeholder={placeholder}
+                  className="w-full mt-2 border border-gray-200 rounded-xl px-3 py-2.5 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-black/10"
+                />
+              )}
+            </div>
+          );
+        })}
+      </div>
+    </div>
+
+    {/* GPA & GRAD YEAR */}
+    <div className="mb-6">
+      <p className="text-base font-bold text-gray-800 mb-3">Academic Info</p>
+      <div className="space-y-3">
+        {[
+          { key: "uni_gpa", label: "GPA", placeholder: "e.g. 3.8 / 4.0" },
+          { key: "uni_grad_year", label: "Grad Year", placeholder: "e.g. Class of 2026" },
+        ].map(({ key, label, placeholder }) => {
+          const isActive = !!(fieldValues?.[key]);
+          return (
+            <div key={key} className={`p-3 rounded-xl border transition ${isActive ? "bg-blue-50 border-blue-400" : "bg-gray-50"}`}>
+              <div className="flex justify-between items-center">
+                <span className="text-sm">{label}</span>
+                <button
+                  onClick={() => setFieldValues((prev) => ({ ...prev, [key]: isActive ? "" : " " }))}
+                  className={`w-5 h-5 rounded-full border ${isActive ? "bg-blue-500 border-blue-500" : "bg-white border-gray-300"}`}
+                />
+              </div>
+              {isActive && (
+                <input
+                  value={fieldValues?.[key]?.trim() === "" ? "" : fieldValues?.[key] || ""}
+                  onChange={(e) => setFieldValues((prev) => ({ ...prev, [key]: e.target.value }))}
+                  placeholder={placeholder}
+                  className="w-full mt-2 border border-gray-200 rounded-xl px-3 py-2.5 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-black/10"
+                />
+              )}
+            </div>
+          );
+        })}
+      </div>
+    </div>
+
     {/* BIO */}
     <div className="mb-6">
       <p className="text-base font-bold text-gray-800 mb-3"

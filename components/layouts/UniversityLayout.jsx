@@ -160,34 +160,28 @@ useEffect(() => {
       {activeTab === "about" && (
         <div className="px-5 space-y-4 pb-20">
 {/* Stats */}
-<div className="grid grid-cols-3 gap-3">
-  <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 text-center">
-    <p className="text-2xl font-bold text-blue-500 leading-none">
-      {fieldValues?.uni_gpa || "3.8"}
-    </p>
-    <p className="text-[11px] uppercase tracking-wide text-gray-400 mt-1">
-      GPA
-    </p>
+{(fieldValues?.uni_gpa?.trim() || projects.length > 0 || fieldValues?.uni_grad_year?.trim()) && (
+  <div className="grid grid-cols-3 gap-3">
+    {fieldValues?.uni_gpa?.trim() && (
+      <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 text-center">
+        <p className="text-2xl font-bold text-blue-500 leading-none">{fieldValues.uni_gpa.trim()}</p>
+        <p className="text-[11px] uppercase tracking-wide text-gray-400 mt-1">GPA</p>
+      </div>
+    )}
+    {projects.length > 0 && (
+      <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 text-center">
+        <p className="text-2xl font-bold text-blue-500 leading-none">{projects.length}</p>
+        <p className="text-[11px] uppercase tracking-wide text-gray-400 mt-1">Projects</p>
+      </div>
+    )}
+    {fieldValues?.uni_grad_year?.trim() && (
+      <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 text-center">
+        <p className="text-2xl font-bold text-blue-500 leading-none">{fieldValues.uni_grad_year.trim()}</p>
+        <p className="text-[11px] uppercase tracking-wide text-gray-400 mt-1">Grad</p>
+      </div>
+    )}
   </div>
-
-  <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 text-center">
-    <p className="text-2xl font-bold text-blue-500 leading-none">
-      {projects.length || "4"}
-    </p>
-    <p className="text-[11px] uppercase tracking-wide text-gray-400 mt-1">
-      Projects
-    </p>
-  </div>
-
-  <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 text-center">
-    <p className="text-2xl font-bold text-blue-500 leading-none">
-      {fieldValues?.uni_grad || "'26"}
-    </p>
-    <p className="text-[11px] uppercase tracking-wide text-gray-400 mt-1">
-      Grad
-    </p>
-  </div>
-</div>
+)}
     {/* Bio */}
           <div>
             <p className="text-[15px] font-semibold text-gray-400 uppercase tracking-widest px-1 mb-2">About</p>            
