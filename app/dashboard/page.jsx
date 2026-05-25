@@ -88,13 +88,22 @@ useEffect(() => {
         return;
       }
       const { data: userData } = await supabase.auth.getUser();
+      console.log("USER METADATA:", JSON.stringify(userData?.user?.user_metadata))
+const fullName = 
+  userData?.user?.user_metadata?.full_name || 
+  userData?.user?.user_metadata?.name || 
+  ""
 const first =
   userData?.user?.user_metadata?.first_name ||
-  "User";
+  userData?.user?.user_metadata?.given_name ||
+  (fullName ? fullName.split(" ")[0] : "User");
 const last =
-  userData?.user?.user_metadata?.last_name || "";
+  userData?.user?.user_metadata?.last_name ||
+  userData?.user?.user_metadata?.family_name ||
+  (fullName ? fullName.split(" ").slice(1).join(" ") : "");
 const user_username =
   userData?.user?.user_metadata?.username ||
+  userData?.user?.user_metadata?.preferred_username ||
   userData?.user?.email?.split("@")[0];
 
 setUserName(first + (last ? " " + last : ""));

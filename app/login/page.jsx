@@ -13,7 +13,11 @@ export default function LandingPage() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
   const [menuOpen, setMenuOpen] = useState(false)
-
+const [phoneScreen, setPhoneScreen] = useState(0)
+useEffect(() => {
+  const interval = setInterval(() => setPhoneScreen(prev => (prev + 1) % 3), 4000)
+  return () => clearInterval(interval)
+}, [])
   const handleLogin = async (e) => {
     e.preventDefault()
     setLoading(true)
