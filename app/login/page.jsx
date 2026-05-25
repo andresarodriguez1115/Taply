@@ -647,16 +647,16 @@ export default function LandingPage() {
             transition={{ duration: 0.4, ease: [0.4, 0, 0.2, 1] }}>
             <div className="flex flex-col">
               {[
-                { label: "Features", href: "/features" },
-                { label: "How it works", href: "/how-it-works" },
-                { label: "Pricing", href: "/pricing" },
-                { label: "Demo", href: "/demo" },
-                { label: "Login", href: "/signup" },
-              ].map(({ label, href }, i) => (
+           { label: "Features", href: "/features", newTab: true },
+{ label: "How it works", href: "/how-it-works", newTab: true },
+{ label: "Pricing", href: "/pricing" },
+{ label: "Demo", href: "/demo" },
+{ label: "Login", href: "/signup" },
+              ].map(({ label, href, newTab }, i) => (
                 <motion.button key={label}
                   initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: i * 0.06 + 0.15 }}
-                  onClick={() => { setMenuOpen(false); router.push(href) }}
+                  onClick={() => { setMenuOpen(false); newTab ? window.open(href, "_blank") : router.push(href) }}
                   className="w-full flex items-center justify-between border-b border-gray-100 text-gray-900 active:bg-gray-50 transition"
                   style={{ fontSize: "1.25rem", fontWeight: 500, letterSpacing: "-0.02em", padding: "18px 24px" }}>
                   <span>{label}</span>
