@@ -216,7 +216,7 @@ if (profileId) {
   const { error: updateError } = await supabase
     .from("profiles")
     .update({
-      is_active: true,
+    
 
 
       name,
@@ -258,7 +258,14 @@ networking_y: networkingPos.y,
 setSaving(false)
 setSaveError("Please fill in your name and title before saving.")
 return
+
   }
+  const { data: existingProfiles } = await supabase
+  .from("profiles")              
+  .select("id")
+  .eq("user_id", userData.user.id);
+
+const shouldBeActive = existingProfiles.length === 0;
   const { error: insertError } = await supabase
     .from("profiles")
     .insert({
@@ -267,7 +274,7 @@ return
 
       user_id: userData.user.id,
 
-      is_active: true,
+      is_active: shouldBeActive,
 
 
       username: userData.user.user_metadata?.username,

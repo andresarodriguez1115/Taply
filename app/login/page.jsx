@@ -607,11 +607,20 @@ useEffect(() => {
           <span>Create your Taply Card →</span>
           <span>→</span>
         </button>
-        <div className="flex items-center justify-center gap-6 mt-8">
-          {["No credit card required", "30 second setup", "Get started today"].map((t) => (
-            <span key={t} className="text-[11px] text-white/25 font-medium">{t}</span>
-          ))}
-        </div>
+  <div className="flex items-center justify-center gap-6 mt-8 flex-wrap">
+  {[
+    "Built for modern networking",
+    "Designed for every occasion",
+    "Your identity, unified",
+  ].map((t) => (
+    <span
+      key={t}
+      className="text-[11px] uppercase tracking-[0.18em] text-white/30 font-semibold"
+    >
+      {t}
+    </span>
+  ))}
+</div>
       </div>
 
       {/* ── FOOTER ── */}

@@ -66,7 +66,9 @@ export default function FeaturesPage() {
         </Link>
         <button onClick={() => router.push("/signup")}
           className="bg-black text-white text-[13px] font-semibold px-5 py-2.5 rounded-xl">
-          Get started free
+          Get started<p className="text-[15px] text-gray-500 mb-8">
+Built for modern networking and digital identity.
+</p>
         </button>
       </div>
 
@@ -153,7 +155,9 @@ export default function FeaturesPage() {
       {/* CTA */}
       <div className="px-6 py-14 border-t border-gray-100">
         <h2 className="text-[2rem] font-extrabold tracking-tight leading-[1.1] mb-3">Ready to try it?</h2>
-        <p className="text-[15px] text-gray-500 mb-8">Free to start. Takes 30 seconds. No credit card needed.</p>
+        <p className="text-[15px] text-gray-500 mb-8">
+Built for modern networking and digital identity.
+</p>
         <button onClick={() => router.push("/signup")}
           className="w-full bg-black text-white py-4 rounded-2xl text-[15px] font-bold flex items-center justify-between px-6">
           <span>Create your Taply card</span>

@@ -4,50 +4,33 @@ import { useEffect, useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 
 const STEPS = [
-  {
-    id: "hero",
-    title: "Welcome to Taply",
-    desc: "Your name, personal link, and stats all live here at the top of your dashboard.",
-    position: "bottom",
-  },
-{
-    id: "navlink",
-    title: "Your live link",
-    desc: "The green dot means your profile is active and live. Anyone who visits taply.now/username sees your card right now.",
-    position: "bottom",
-  },
-  {
-    id: "stats",
-    title: "Your stats",
-    desc: "Views, taps, and save rate update in real time as people visit your card.",
-    position: "bottom",
-  },
-  {
-    id: "create",
-    title: "Create your first profile",
-    desc: "Tap here to build a card. Pick from Business, University, Networking, or Social mode.",
-    position: "top",
-  },
-{
-    id: "addwallet",
-    title: "Add to Wallet",
-    desc: "Tap this to download your pass directly to Apple Wallet. Works instantly from your lock screen.",
-    position: "top-far",
-  },
-  {
-    id: "customize",
-    title: "Customize your pass",
-    desc: "Hit Customize to pick your card color, text color, and add your company logo before generating.",
-    position: "top-far",
-  },
+  { id: "hero", title: "Welcome to Taply", desc: "Your name, personal link, and stats all live here at the top of your dashboard.", position: "bottom" },
+  { id: "navlink", title: "Your live link", desc: "The green dot means your profile is active and live. Anyone who visits taply.now/username sees your card right now.", position: "bottom" },
+  { id: "stats", title: "Your stats", desc: "Views, taps, and save rate update in real time as people visit your card.", position: "bottom" },
+  { id: "create", title: "Create your first profile", desc: "Tap here to build a card. Pick from Business, University, Networking, or Social mode.", position: "top" },
+  { id: "addwallet", title: "Add to Wallet", desc: "Tap this to download your pass directly to Apple Wallet. Works instantly from your lock screen.", position: "top-far" },
+  { id: "customize", title: "Customize your pass", desc: "Hit Customize to pick your card color, text color, and add your company logo before generating.", position: "top-far" },
 ]
+
+const PAD = 8
 
 export default function DashboardTutorial({ onComplete }) {
   const [step, setStep] = useState(0)
+  const [displayStep, setDisplayStep] = useState(0) // delayed text
   const [rect, setRect] = useState(null)
   const [visible, setVisible] = useState(false)
+useEffect(() => {
 
-  const current = STEPS[step]
+  document.body.style.overflow = "hidden"
+  document.documentElement.style.overflow = "hidden"
+
+  return () => {
+    document.body.style.overflow = ""
+    document.documentElement.style.overflow = ""
+  }
+
+}, [])
+  const current = STEPS[displayStep]
 
   const getElement = (id) => {
     const map = {
@@ -56,7 +39,7 @@ export default function DashboardTutorial({ onComplete }) {
       stats: "[data-tutorial='stats']",
       create: "[data-tutorial='create']",
       profiles: "[data-tutorial='profiles']",
-   wallet: "[data-tutorial='wallet']",
+      wallet: "[data-tutorial='wallet']",
       username: "[data-tutorial='username']",
       customize: "[data-tutorial='customize']",
       addwallet: "[data-tutorial='addwallet']",
@@ -64,148 +47,143 @@ export default function DashboardTutorial({ onComplete }) {
     return document.querySelector(map[id])
   }
 
-  const updateRect = () => {
-    const el = getElement(current.id)
+const updateRect = (id) => {
+if (step === 4) {
+
+  const phoneFrame = document.querySelector("[data-phone-frame]")
+
+  if (phoneFrame) {
+    const p = phoneFrame.getBoundingClientRect()
+
+setRect({
+  top: window.innerHeight * 0.472,
+  left: p.left + 38,
+  width: 165,
+  height: 52,
+})
+    return
+  }
+}
+
+    const el = getElement(id)
     if (!el) return
+
     const r = el.getBoundingClientRect()
+
     setRect({
       top: r.top,
       left: r.left,
       width: r.width,
       height: r.height,
     })
-  }
+}
 
-useEffect(() => {
-    setVisible(false)
-    setRect(null)
-    const el = getElement(current.id)
+  useEffect(() => {
+    const el = getElement(STEPS[step].id)
     if (!el) return
     el.scrollIntoView({ behavior: "smooth", block: "center" })
-    const t1 = setTimeout(() => { updateRect(); setVisible(true) }, 500)
-    const t2 = setTimeout(() => { updateRect() }, 800)
+    const t1 = setTimeout(() => { updateRect(STEPS[step].id); setVisible(true) }, 0)
+    // delay text update until spotlight has moved
+    const t2 = setTimeout(() => setDisplayStep(step), 0)
     return () => { clearTimeout(t1); clearTimeout(t2) }
   }, [step])
 
-  useEffect(() => {
-    const update = () => updateRect()
-    window.addEventListener("resize", update)
-    window.addEventListener("scroll", update)
-    return () => {
-      window.removeEventListener("resize", update)
-      window.removeEventListener("scroll", update)
-    }
-  }, [step])
+useEffect(() => {
 
-const handleNext = () => {
-    if (step < STEPS.length - 1) {
-      setVisible(false)
-      setRect(null)
-      setTimeout(() => setStep(step + 1), 200)
-    } else {
-      localStorage.setItem("taply_tutorial_done", "1")
-      onComplete()
-    }
+  if (step === 4) return
+
+  const update = () => updateRect(STEPS[step].id)
+
+  window.addEventListener("resize", update)
+  window.addEventListener("scroll", update)
+
+  return () => {
+    window.removeEventListener("resize", update)
+    window.removeEventListener("scroll", update)
   }
 
-  const PAD = 8
+}, [step])
+  const handleNext = () => {
+    if (step < STEPS.length - 1) setStep(s => s + 1)
+    else { localStorage.setItem("taply_tutorial_done", "1"); onComplete() }
+  }
+
+  const handleSkip = () => {
+    localStorage.setItem("taply_tutorial_done", "1")
+    onComplete()
+  }
 
   if (!visible || !rect) return null
 
-const tooltipTop = current.position === "bottom"
+  const tooltipTop = current.position === "bottom"
     ? rect.top + rect.height + PAD + 12
     : current.position === "top-far"
     ? rect.top - PAD - 12 - 200
     : rect.top - PAD - 12 - 160
 
-  const tooltipLeft = Math.max(16, Math.min(rect.left, window.innerWidth - 320))
+  const tooltipWidth = Math.min(Math.max(rect.width + PAD * 2, 300), window.innerWidth - 32)
+  const tooltipLeft = Math.max(16, Math.min(rect.left, window.innerWidth - tooltipWidth - 16))
 
   return (
     <AnimatePresence>
-      <motion.div
-        key={step}
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        transition={{ duration: 0.2 }}
-        className="fixed inset-0 z-[9999]"
-        style={{ pointerEvents: "none" }}
-      >
-        {/* Dark overlay with cutout */}
-        <svg
-          style={{
-            position: "fixed",
-            top: 0,
-            left: 0,
-            width: "100vw",
-            height: "100vh",
-            pointerEvents: "auto",
-          }}
-        >
+      <motion.div className="fixed inset-0 z-[9999]" style={{ pointerEvents: "none" }}>
+        {/* Overlay */}
+        <motion.svg
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.25 }}
+          style={{ position: "fixed", top: 0, left: 0, width: "100vw", height: "100vh", pointerEvents: "auto" }}>
           <defs>
             <mask id="cut">
               <rect width="100%" height="100%" fill="white" />
-              <rect
-                x={rect.left - PAD}
-                y={rect.top - PAD}
-                width={rect.width + PAD * 2}
-                height={rect.height + PAD * 2}
-                rx="14"
-                fill="black"
+              <motion.rect
+                animate={{ x: rect.left - PAD, y: rect.top - PAD, width: rect.width + PAD * 2, height: rect.height + PAD * 2 }}
+                transition={{ duration: step === 0 ? 0 : 0.3, ease: "easeInOut" }}
+                rx="14" fill="black"
               />
             </mask>
           </defs>
-          <rect
-            width="100%"
-            height="100%"
-            fill="rgba(0,0,0,0.65)"
-            mask="url(#cut)"
-          />
-        </svg>
+          <rect width="100%" height="100%" fill="rgba(0,0,0,0.65)" mask="url(#cut)" />
+      </motion.svg>
 
         {/* Tooltip */}
         <motion.div
-          initial={{ opacity: 0, y: current.position === "bottom" ? -6 : 6 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.2, delay: 0.1 }}
-          style={{
-            position: "fixed",
-            top: tooltipTop,
-            left: tooltipLeft,
-            width: Math.min(rect.width + PAD * 2, window.innerWidth - 32),
-            maxWidth: 340,
-            zIndex: 10000,
-            pointerEvents: "auto",
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1, top: tooltipTop, left: tooltipLeft, width: tooltipWidth }}
+          transition={{ 
+            opacity: { duration: 0.25 },
+            scale: { duration: 0.25 },
+            top: { duration: step === 0 ? 0 : 0.3, ease: "easeInOut" },
+            left: { duration: step === 0 ? 0 : 0.3, ease: "easeInOut" },
+            width: { duration: step === 0 ? 0 : 0.3, ease: "easeInOut" },
           }}
+          style={{ position: "fixed", zIndex: 10000, pointerEvents: "auto" }}
         >
           <div className="bg-[#1a1a1a] rounded-2xl p-4 shadow-2xl">
-            {/* Step label */}
-            <p className="text-[11px] font-semibold text-white/40 mb-1 uppercase tracking-wider">
-              Step {step + 1} of {STEPS.length}
-            </p>
-            <p className="text-[15px] font-bold text-white mb-1">{current.title}</p>
-            <p className="text-[13px] text-white/55 leading-relaxed mb-4">{current.desc}</p>
-
+            <div className="flex items-center justify-between mb-1">
+              <p className="text-[11px] font-semibold text-white/40 uppercase tracking-wider">
+                Step {displayStep + 1} of {STEPS.length}
+              </p>
+              <button onClick={handleSkip} className="text-[11px] text-white/40 hover:text-white/70 transition" style={{ pointerEvents: "auto" }}>
+                Skip
+              </button>
+            </div>
+            {/* Animate text content change */}
+            <AnimatePresence mode="wait">
+              <motion.div key={displayStep} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.15 }}>
+                <p className="text-[15px] font-bold text-white mb-1">{current.title}</p>
+                <p className="text-[13px] text-white/55 leading-relaxed mb-4">{current.desc}</p>
+              </motion.div>
+            </AnimatePresence>
             <div className="flex items-center justify-between">
-              {/* Step dots */}
               <div className="flex gap-1.5">
                 {STEPS.map((_, i) => (
-                  <div
-                    key={i}
-                    className="rounded-full transition-all duration-300"
-                    style={{
-                      width: i === step ? 18 : 6,
-                      height: 6,
-                      background: i === step ? "white" : "rgba(255,255,255,0.2)",
-                    }}
-                  />
+                  <div key={i} className="rounded-full transition-all duration-300"
+                    style={{ width: i === displayStep ? 18 : 6, height: 6, background: i === displayStep ? "white" : "rgba(255,255,255,0.2)" }} />
                 ))}
               </div>
-
-              <button
-                onClick={handleNext}
-                className="bg-white text-black text-[13px] font-bold px-5 py-2 rounded-xl"
-              >
+              <button onClick={handleNext} style={{ pointerEvents: "auto" }}
+                className="bg-white text-black text-[13px] font-bold px-5 py-2 rounded-xl">
                 {step < STEPS.length - 1 ? "Next" : "Got it"}
               </button>
             </div>

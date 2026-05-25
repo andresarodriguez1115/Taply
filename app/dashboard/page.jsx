@@ -167,7 +167,10 @@ if (!tutorialDone) {
   </div>
 );
 return (
-    <div className="relative min-h-screen px-4 pt-0 pb-28 max-w-md mx-auto z-10 overflow-hidden bg-[#f7faff]">
+    <div
+  data-phone-frame
+  className="relative min-h-screen px-4 pt-0 pb-28 max-w-md mx-auto z-10 overflow-hidden bg-[#f7faff]"
+>
       <div className="sticky top-4 z-40 flex justify-center relative">
 
 {mounted && (
@@ -607,8 +610,6 @@ shadow-[0_8px_30px_rgba(0,0,0,0.08)] ring-2 ring-white/100">
     </button>
 
   </div>
-</motion.div>
-
 <AnimatePresence>
   {walletCustomizerOpen && (
     <motion.div
@@ -616,7 +617,7 @@ shadow-[0_8px_30px_rgba(0,0,0,0.08)] ring-2 ring-white/100">
       animate={{ height: "auto", opacity: 1 }}
       exit={{ height: 0, opacity: 0 }}
       transition={{ duration: 0.25 }}
-      className="overflow-hidden bg-white/80 backdrop-blur-md rounded-3xl border border-white/40 shadow-[0_12px_40px_rgba(0,0,0,0.12)] mt-3"
+      className="overflow-hidden bg-transparent mt-0"
     >
       <div className="px-6 py-5 space-y-4">
         <div>
@@ -712,6 +713,8 @@ shadow-[0_8px_30px_rgba(0,0,0,0.08)] ring-2 ring-white/100">
     </motion.div>
   )}
 </AnimatePresence>
+
+</motion.div>
 
   </>
 )}
