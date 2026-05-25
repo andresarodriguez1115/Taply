@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import QRCode from "qrcode";
 import DashboardTutorial from "@/components/DashboardTutorial";
+import ProfileCardTutorial from "@/components/ProfileCardTutorial"
 
 export default function Dashboard() {
 const [userName, setUserName] = useState("");
@@ -25,6 +26,8 @@ const [walletBgColor, setWalletBgColor] = useState("rgb(0,0,0)");
 const [walletLogoUrl, setWalletLogoUrl] = useState("/taply-logo.svg");
 const [walletTextColor, setWalletTextColor] = useState("rgb(255,255,255)");
 const [showTutorial, setShowTutorial] = useState(false);
+const [showProfileCardTutorial, setShowProfileCardTutorial] = useState(false)
+
 const handleShowQR = async (profileUsername) => {
   const url = `https://taply.now/${profileUsername}`;
   const dataUrl = await QRCode.toDataURL(url, { width: 300, margin: 2 });
@@ -111,7 +114,6 @@ let data = profilesData || [];
 
 
 setProfiles(data);
-
 const count = data.length;
 setLastCount(count);
 
@@ -140,7 +142,12 @@ setStatsLoading(false);
 setLoading(false);
 setReady(true);
 const tutorialDone = localStorage.getItem("taply_tutorial_done");
-if (!tutorialDone) setTimeout(() => setShowTutorial(true), 500);
+const profileCardDone = localStorage.getItem("taply_profile_card_tutorial_done")
+if (!tutorialDone) {
+  setTimeout(() => setShowTutorial(true), 500)
+} else if (data.length > 0 && !profileCardDone) {
+  setTimeout(() => setShowProfileCardTutorial(true), 800)
+}
     };
 
     getUser();
@@ -361,6 +368,7 @@ shadow-[0_8px_30px_rgba(0,0,0,0.08)] ring-2 ring-white/100">
   profiles.map((profile) => (
 <motion.div
   key={profile.id}
+  data-tutorial={profiles.indexOf(profile) === 0 ? "first-profile" : undefined}
   onClick={() => handleSetActive(profile.id)}
   whileHover={{ y: -4 }}
   whileTap={{ scale: 0.98 }}
@@ -397,9 +405,25 @@ shadow-[0_8px_30px_rgba(0,0,0,0.08)] ring-2 ring-white/100">
             {profile.mode ? profile.mode.charAt(0).toUpperCase() + profile.mode.slice(1) + " mode" : profile.title || "No title"}
           </p>
           <div className="flex gap-4 mt-2 text-sm">
-            <button onClick={(e) => { e.stopPropagation(); router.push(`/builder?id=${profile.id}`); }} className="text-blue-600 font-medium">Edit</button>
-            <button onClick={(e) => e.stopPropagation()} className="text-gray-600 flex items-center gap-1"><Share2 size={14} />Share</button>
-            <button onClick={(e) => { e.stopPropagation(); handleDelete(profile.id); }} className="text-red-500 font-medium">Delete</button>
+     <button data-tutorial={profiles.indexOf(profile) === 0 ? "profile-edit" : undefined} onClick={(e) => { e.stopPropagation(); router.push(`/builder?id=${profile.id}`); }} className="text-blue-600 font-medium">Edit</button>
+<button
+  data-tutorial={profiles.indexOf(profile) === 0 ? "profile-share" : undefined}
+  onClick={(e) => {
+    e.stopPropagation()
+    if (navigator.share) {
+      navigator.share({
+        title: `${profile.name}'s Taply`,
+        text: "Check out my digital card!",
+        url: `${window.location.origin}/${profile.username}`,
+      })
+    } else {
+      navigator.clipboard.writeText(`${window.location.origin}/${profile.username}`)
+      alert("Link copied!")
+    }
+  }}
+  className="text-gray-600 flex items-center gap-1"
+><Share2 size={14} />Share</button>
+<button data-tutorial={profiles.indexOf(profile) === 0 ? "profile-delete" : undefined} onClick={(e) => { e.stopPropagation(); handleDelete(profile.id); }} className="text-red-500 font-medium">Delete</button>
           </div>
         </div>
       </div>
@@ -407,6 +431,7 @@ shadow-[0_8px_30px_rgba(0,0,0,0.08)] ring-2 ring-white/100">
 {/* QR RIGHT - active only */}
 {profile.is_active && (
   <div
+    data-tutorial={profiles.indexOf(profile) === 0 ? "profile-qr" : undefined}
     onClick={(e) => { e.stopPropagation(); handleShowQR(profile.username); }}
     className="w-14 h-14 bg-blue-50 rounded-2xl flex items-center justify-center shadow-sm flex-shrink-0 cursor-pointer hover:bg-blue-100 transition">
     <QrCode size={30} className="text-blue-600" />
@@ -757,7 +782,12 @@ shadow-[0_8px_30px_rgba(0,0,0,0.08)] ring-2 ring-white/100">
 
 </div>
 
-    {showTutorial && <DashboardTutorial onComplete={() => setShowTutorial(false)} />}
+    {showTutorial && <DashboardTutorial onComplete={() => {
+  setShowTutorial(false)
+  const profileCardDone = localStorage.getItem("taply_profile_card_tutorial_done")
+  if (profiles.length > 0 && !profileCardDone) setTimeout(() => setShowProfileCardTutorial(true), 400)
+}} />}
+{showProfileCardTutorial && <ProfileCardTutorial onComplete={() => setShowProfileCardTutorial(false)} />}
 
     {/* QR MODAL */}
     <AnimatePresence>
