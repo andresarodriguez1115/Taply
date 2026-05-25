@@ -89,10 +89,10 @@ useEffect(() => {
       }
       const { data: userData } = await supabase.auth.getUser();
     
-const fullName = 
-  userData?.user?.user_metadata?.full_name || 
-  userData?.user?.user_metadata?.name || 
-  ""
+const rawFull = userData?.user?.user_metadata?.full_name
+const fullName = typeof rawFull === "string" ? rawFull : 
+  (typeof rawFull === "object" && rawFull !== null ? `${rawFull.firstName || ""} ${rawFull.lastName || ""}`.trim() : "") ||
+  userData?.user?.user_metadata?.name || ""
 const first =
   userData?.user?.user_metadata?.first_name ||
   userData?.user?.user_metadata?.given_name ||
