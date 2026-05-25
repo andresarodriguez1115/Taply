@@ -88,7 +88,7 @@ useEffect(() => {
         return;
       }
       const { data: userData } = await supabase.auth.getUser();
-      console.log("USER METADATA:", JSON.stringify(userData?.user?.user_metadata))
+    
 const fullName = 
   userData?.user?.user_metadata?.full_name || 
   userData?.user?.user_metadata?.name || 

@@ -67,7 +67,7 @@ export default function HomePage() {
             <div className="flex-1">
               <p className="text-lg font-bold text-gray-900">Digital Identity Card</p>
               <p className="text-sm text-gray-400 mt-0.5 leading-relaxed">Your digital presence, your way. Choose from Business, University, Networking, or Social modes and share everything about you in one tap.</p>
-              <span className="inline-block mt-2 text-[11px] font-semibold bg-blue-50 text-blue-600 px-3 py-1 rounded-full">FREE FOREVER</span>
+              <span className="inline-block mt-2 text-[11px] font-semibold bg-indigo-50 text-indigo-600 px-3 py-1 rounded-full">14-DAY FREE TRIAL</span>
             </div>
             {/* Visual */}
             <div className="flex-shrink-0 opacity-80">

@@ -74,7 +74,7 @@ export default function HowItWorksPage() {
             </div>
             <div className="bg-blue-600 rounded-xl px-4 py-3 text-white text-[13px] font-bold shrink-0">Claim</div>
           </div>
-          <p className="text-[11px] text-gray-400 mt-3">Free forever · No credit card</p>
+          <p className="text-[11px] text-gray-400 mt-3">No credit card</p>
         </div>
       )
     },
@@ -216,7 +216,7 @@ export default function HowItWorksPage() {
         </Link>
         <button onClick={() => router.push("/signup")}
           className="bg-black text-white text-[13px] font-semibold px-5 py-2.5 rounded-xl">
-          Get started free
+          Get started
         </button>
       </div>
 
@@ -254,7 +254,7 @@ export default function HowItWorksPage() {
             { q: "Does the other person need the Taply app?", a: "No. Your profile opens in any browser on any device — no app download needed." },
             { q: "Can I have more than one active profile?", a: "You can only have one active at a time, but you can switch instantly between any of your saved profiles." },
             { q: "Does my link change when I switch modes?", a: "Never. Your taply.now/username link is permanent — only what people see changes." },
-            { q: "Is it really free?", a: "Yes — create your card, set up profiles, and share for free. Premium features like analytics and Apple Wallet are coming soon." },
+            <p className="text-[15px] text-gray-500 mb-8">No credit card needed.</p>
           ].map(({ q, a }) => (
             <div key={q} className="border border-gray-100 rounded-2xl p-4 bg-white">
               <p className="text-[15px] font-bold mb-2">{q}</p>
@@ -267,7 +267,7 @@ export default function HowItWorksPage() {
       {/* CTA */}
       <div className="px-6 py-14 border-t border-gray-100">
         <h2 className="text-[2rem] font-extrabold tracking-tight leading-[1.1] mb-3">Ready in 30 seconds.</h2>
-        <p className="text-[15px] text-gray-500 mb-8">Free to start. No credit card needed.</p>
+        <p className="text-[15px] text-gray-500 mb-8">No credit card needed.</p>
         <button onClick={() => router.push("/signup")}
           className="w-full bg-black text-white py-4 rounded-2xl text-[15px] font-bold flex items-center justify-between px-6">
           <span>Create your Taply card</span>

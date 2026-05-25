@@ -595,7 +595,7 @@ useEffect(() => {
 
       
       {/* ── SECTION 6: CTA (black) ── */}
-<div className="px-6 py-16 text-center" style={{ background: "linear-gradient(135deg,#1d4ed8,#4f46e5)" }}>        <p className="text-sm font-semibold text-blue-400 tracking-wide mb-6">Get started free</p>
+<div className="px-6 py-16 text-center" style={{ background: "linear-gradient(135deg,#1d4ed8,#4f46e5)" }}>        <p className="text-sm font-semibold text-blue-400 tracking-wide mb-6">Get started</p>
         <h2 className="text-[2.6rem] font-black tracking-tighter leading-[1.05] text-white mb-4">
           Your identity.<br />One tap away.
         </h2>
@@ -604,11 +604,11 @@ useEffect(() => {
         </p>
         <button onClick={() => window.open("/signup", "_blank")}
           className="w-full bg-white text-black py-5 rounded-2xl text-[16px] font-black flex items-center justify-between px-6 hover:bg-gray-100 active:scale-[0.98] transition">
-          <span>Create your card — free</span>
+          <span>Create your Taply Card →</span>
           <span>→</span>
         </button>
         <div className="flex items-center justify-center gap-6 mt-8">
-          {["No credit card required", "30 second setup", "Free forever"].map((t) => (
+          {["No credit card required", "30 second setup", "Get started today"].map((t) => (
             <span key={t} className="text-[11px] text-white/25 font-medium">{t}</span>
           ))}
         </div>
