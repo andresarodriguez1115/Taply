@@ -29,6 +29,7 @@ const [bannerUrl, setBannerUrl] = useState(null);
   const [title, setTitle] = useState("Your Title / Position");
   const [saving, setSaving] = useState(false)
 const [saveSuccess, setSaveSuccess] = useState(false)
+const [saveError, setSaveError] = useState(null)
 const [backgroundColor, setBackgroundColor] = useState("#f3f4f6");
 const [networkingBackground, setNetworkingBackground] = useState("#f3f4f6");
 const [networkingNameColor, setNetworkingNameColor] = useState("#000000");
@@ -215,7 +216,8 @@ if (profileId) {
   const { error: updateError } = await supabase
     .from("profiles")
     .update({
-      is_active: false,
+      is_active: true,
+
 
       name,
       title,
@@ -253,9 +255,9 @@ networking_y: networkingPos.y,
 } else {
   // 🆕 CREATE NEW PROFILE — only if user explicitly came to create
   if (name === "Your Name" && title === "Your Title / Position") {
-    setSaving(false)
-    alert("Please fill in your name and title before saving.")
-    return
+setSaving(false)
+setSaveError("Please fill in your name and title before saving.")
+return
   }
   const { error: insertError } = await supabase
     .from("profiles")
@@ -265,7 +267,8 @@ networking_y: networkingPos.y,
 
       user_id: userData.user.id,
 
-      is_active: false,
+      is_active: true,
+
 
       username: userData.user.user_metadata?.username,
 
@@ -305,7 +308,7 @@ networking_y: networkingPos.y,
   setSaving(false)
 
   if (error) {
-    alert("Save failed ❌")
+   setSaveError("Save failed. Please try again.")
     console.log(error)
 } else {
   setSaveSuccess(true)
@@ -693,7 +696,11 @@ if (loadingProfile) {
 return (
   
   <div className="w-full min-h-screen flex justify-center relative">
-
+{saveError && (
+  <div className="fixed top-16 left-1/2 -translate-x-1/2 z-50 bg-red-500 text-white px-5 py-3 rounded-2xl shadow-xl text-sm font-medium whitespace-nowrap">
+    {saveError}
+  </div>
+)}
 {/* FLOATING BACK BUTTON */}
 {isEditing && (
   <button
