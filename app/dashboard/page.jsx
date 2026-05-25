@@ -442,6 +442,11 @@ shadow-[0_8px_30px_rgba(0,0,0,0.08)] ring-2 ring-white/100">
 )}
 
         </div>
+        {walletLogoUrl && walletLogoUrl !== "/taply-logo.svg" ? (
+  <img src={walletLogoUrl} className="w-8 h-8 object-contain rounded" />
+) : (
+  <div className="w-8 h-8 rounded bg-gray-100 flex items-center justify-center text-[10px] text-gray-400 font-medium">T</div>
+)}
       </div>
       {/* APPLE WALLET HEADER */}
 <div data-tutorial="wallet" className="mt-10 mb-3 relative z-20">
