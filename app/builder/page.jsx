@@ -277,8 +277,9 @@ const shouldBeActive = existingProfiles.length === 0;
       is_active: shouldBeActive,
 
 
-      username: userData.user.user_metadata?.username,
-
+username: userData.user.user_metadata?.username || 
+                userData.user.user_metadata?.preferred_username ||
+                userData.user.email?.split("@")[0],
       name,
       title,
       mode,
