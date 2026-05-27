@@ -845,7 +845,7 @@ shadow-[0_8px_30px_rgba(0,0,0,0.08)] ring-2 ring-white/100">
           image={cropImageSrc}
           crop={crop}
           zoom={zoom}
-          aspect={16 / 9}
+          aspect={3 / 1}
           onCropChange={setCrop}
           onZoomChange={setZoom}
           onCropComplete={(_, croppedPixels) => setCroppedAreaPixels(croppedPixels)}
