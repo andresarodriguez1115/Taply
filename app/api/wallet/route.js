@@ -38,15 +38,13 @@ console.log("logoUrl received:", logoUrl);
       }
       const logoBuffer = Buffer.from(await logoRes.arrayBuffer());
       const logo = await sharp(logoBuffer)
-        .resize(320, 100, { fit: "inside" })
-        .extend({ top: 0, bottom: 0, left: 0, right: 0, background: { r: 0, g: 0, b: 0, alpha: 0 } })
-        .resize(320, 100, { fit: "contain", background: { r: 0, g: 0, b: 0, alpha: 0 } })
+        .resize(280, 90, { fit: "inside" })
+        .extend({ top: 5, bottom: 5, left: 20, right: 20, background: { r: 0, g: 0, b: 0, alpha: 0 } })
         .png()
         .toBuffer();
       const logo2x = await sharp(logoBuffer)
-        .resize(640, 200, { fit: "inside" })
-        .extend({ top: 0, bottom: 0, left: 0, right: 0, background: { r: 0, g: 0, b: 0, alpha: 0 } })
-        .resize(640, 200, { fit: "contain", background: { r: 0, g: 0, b: 0, alpha: 0 } })
+        .resize(560, 180, { fit: "inside" })
+        .extend({ top: 10, bottom: 10, left: 40, right: 40, background: { r: 0, g: 0, b: 0, alpha: 0 } })
         .png()
         .toBuffer();
     pass.addBuffer("logo.png", logo);
