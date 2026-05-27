@@ -629,10 +629,21 @@ case "social":
   );
 
 
+case "networking":
+  return (
+<NetworkingLayout
+  {...layoutProps}
+  layout={layout}
+  backgroundColor={networkingBackground}
+  nameColor={networkingNameColor}
+  titleColor={networkingTitleColor}
+  setBackgroundColor={setNetworkingBackground}
+  profileImage={avatarUrl}
+  handleProfileUpload={handleAvatarUpload}
+  fieldValues={fieldValues}
+  setFieldValues={setFieldValues}
 
-return (
-    <a
-      href={isEditing ? undefined : safeUrl}
+profileScale={networkingScale}
 setProfileScale={setNetworkingScale}
 profilePos={networkingPos}
 setProfilePos={setNetworkingPos}
