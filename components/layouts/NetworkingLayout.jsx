@@ -358,16 +358,24 @@ className="flex items-center gap-2 px-6 py-3 rounded-full
 {(fieldValues?.buttons || [])
   .filter(Boolean)
   .map((btn, i) => (
-
-<BigLinkCard
-key={i}
-title={btn.title}
-url={btn.url}
-image={btn.image}
-profileId={profileId}
-/>
-
-))}
+    <BigLinkCard
+      key={i}
+      title={btn.title}
+      url={btn.url}
+      image={btn.image}
+      profileId={profileId}
+      isEditing={isEditing}
+      imgX={btn.imgX}
+      imgY={btn.imgY}
+      imgScale={btn.imgScale}
+      onImgChange={({ x, y, scale }) => {
+        if (!setFieldValues) return
+        const updated = [...(fieldValues?.buttons || [])]
+        updated[i] = { ...updated[i], imgX: x, imgY: y, imgScale: scale }
+        setFieldValues({ ...fieldValues, buttons: updated })
+      }}
+    />
+  ))}
 
 
 </div>
@@ -388,32 +396,67 @@ function LinkCard({ title }) {
     </div>
   );
 }
-function BigLinkCard({ title, image, url, profileId }) {
+function BigLinkCard({ title, image, url, profileId, isEditing, imgX, imgY, imgScale, onImgChange }) {
   const safeUrl = url ? (url.startsWith("http") ? url : `https://${url}`) : "#";
   return (
     <a
-href={safeUrl}
-target="_blank"
-onClick={() => logEvent(profileId, "tap")}
-className="w-full bg-white rounded-3xl 
-                    px-4 py-4
-                    shadow-[0_12px_30px_rgba(0,0,0,0.08)]
-                    hover:shadow-[0_18px_40px_rgba(0,0,0,0.12)]
-                    transition-all duration-300 
-                    flex items-center justify-between cursor-pointer">
-
+      href={isEditing ? undefined : safeUrl}
+      target={isEditing ? undefined : "_blank"}
+      onClick={() => !isEditing && logEvent(profileId, "tap")}
+      className="w-full bg-white rounded-3xl px-4 py-4 shadow-[0_12px_30px_rgba(0,0,0,0.08)] hover:shadow-[0_18px_40px_rgba(0,0,0,0.12)] transition-all duration-300 flex items-center justify-between cursor-pointer"
+    >
       {/* LEFT SIDE */}
       <div className="flex items-center gap-6">
 
         {/* LOGO */}
-        <div className="w-16 h-16 rounded-2xl bg-gray-100 
-                        flex items-center justify-center 
-                        overflow-hidden">
+        <div className="w-16 h-16 rounded-2xl bg-gray-100 flex items-center justify-center overflow-hidden relative group"
+          style={{ cursor: isEditing ? "grab" : "default" }}
+          onTouchStart={isEditing ? (e) => {
+            e.preventDefault()
+            const t = e.touches[0]
+            const startX = t.clientX
+            const startY = t.clientY
+            const startPosX = imgX || 0
+            const startPosY = imgY || 0
+            const onMove = (ev) => {
+              ev.preventDefault()
+              const touch = ev.touches[0]
+              onImgChange({ x: startPosX + (touch.clientX - startX), y: startPosY + (touch.clientY - startY), scale: imgScale || 1 })
+            }
+            const onEnd = () => { window.removeEventListener("touchmove", onMove); window.removeEventListener("touchend", onEnd) }
+            window.addEventListener("touchmove", onMove, { passive: false })
+            window.addEventListener("touchend", onEnd)
+          } : undefined}
+        >
           {image ? (
-            <img 
-              src={image} 
-              className="w-full h-full object-cover"
-            />
+            <>
+              <img
+                src={image}
+                draggable={false}
+                style={{
+                  position: "absolute",
+                  width: "100%",
+                  height: "100%",
+                  objectFit: "cover",
+                  transform: `translate(${imgX || 0}px, ${imgY || 0}px) scale(${imgScale || 1})`,
+                  transformOrigin: "center",
+                  pointerEvents: "none",
+                  userSelect: "none",
+                }}
+              />
+              {isEditing && (
+                <div className="absolute bottom-0 left-1/2 -translate-x-1/2 flex items-center gap-1 bg-white/90 border border-gray-200 rounded-full px-1 py-0.5 shadow-sm opacity-0 group-hover:opacity-100 transition" style={{ width: 70, zIndex: 10 }}>
+                  <span className="text-[9px] text-gray-400">−</span>
+                  <input type="range" min="0.5" max="3" step="0.05"
+                    value={imgScale || 1}
+                    onChange={(e) => onImgChange({ x: imgX || 0, y: imgY || 0, scale: parseFloat(e.target.value) })}
+                    className="flex-1 accent-black" style={{ width: 45 }}
+                    onClick={(e) => e.preventDefault()}
+                  />
+                  <span className="text-[9px] text-gray-400">+</span>
+                </div>
+              )}
+            </>
           ) : (
             <div className="text-gray-400 text-xs">Logo</div>
           )}
@@ -421,18 +464,12 @@ className="w-full bg-white rounded-3xl
 
         {/* TEXT */}
         <div className="flex flex-col justify-center">
-          <p className="text-[18px] font-semibold text-gray-900 leading-tight">
-            {title}
-          </p>
+          <p className="text-[18px] font-semibold text-gray-900 leading-tight">{title}</p>
         </div>
-
       </div>
 
       {/* RIGHT ARROW */}
-      <div className="text-gray-400 text-xl">
-        →
-      </div>
-
-   </a>
+      <div className="text-gray-400 text-xl">→</div>
+    </a>
   );
-}
+}``
