@@ -7,6 +7,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import QRCode from "qrcode";
 import DashboardTutorial from "@/components/DashboardTutorial";
 import ProfileCardTutorial from "@/components/ProfileCardTutorial"
+import Cropper from "react-easy-crop"
 
 export default function Dashboard() {
 const [userName, setUserName] = useState("");
@@ -27,6 +28,10 @@ const [walletLogoUrl, setWalletLogoUrl] = useState("/taply-logo.png");
 const [walletTextColor, setWalletTextColor] = useState("rgb(255,255,255)");
 const [showTutorial, setShowTutorial] = useState(false);
 const [showProfileCardTutorial, setShowProfileCardTutorial] = useState(false)
+const [cropImageSrc, setCropImageSrc] = useState(null)
+const [crop, setCrop] = useState({ x: 0, y: 0 })
+const [zoom, setZoom] = useState(1)
+const [croppedAreaPixels, setCroppedAreaPixels] = useState(null)
 
 const handleShowQR = async (profileUsername) => {
   const url = `https://taply.now/${profileUsername}`;
@@ -696,18 +701,15 @@ shadow-[0_8px_30px_rgba(0,0,0,0.08)] ring-2 ring-white/100">
               <div className="w-8 h-8 rounded bg-gray-100 flex items-center justify-center text-[10px] text-gray-400">Logo</div>
             )}
             <span className="text-sm text-gray-500">{walletLogoUrl && walletLogoUrl !== "/taply-logo.png" ? "Change logo" : "Upload company logo"}</span>
-            <input type="file" accept="image/*" className="hidden" onChange={async (e) => {
-              const file = e.target.files[0];
-              if (!file) return;
-              const { data: userData } = await supabase.auth.getUser();
-              const fileName = `wallet-logo-${userData.user.id}-${Date.now()}.png`;
-              const { error } = await supabase.storage.from("avatars").upload(fileName, file);
-              if (error) return;
-              const { data } = supabase.storage.from("avatars").getPublicUrl(fileName);
-              setWalletLogoUrl(data.publicUrl);
+            <input type="file" accept="image/*" className="hidden" onChange={(e) => {
+              const file = e.target.files[0]
+              if (!file) return
+              const reader = new FileReader()
+              reader.onload = () => setCropImageSrc(reader.result)
+              reader.readAsDataURL(file)
             }} />
           </label>
-          {walletLogoUrl && walletLogoUrl !== "/taply-logo.png" && <button onClick={() => setWalletLogoUrl("/taply-logo.svg")} className="text-xs text-red-400 mt-1">Remove logo</button>}
+          {walletLogoUrl && walletLogoUrl !== "/taply-logo.png" && <button onClick={() => setWalletLogoUrl("/taply-logo.png")} className="text-xs text-red-400 mt-1">Remove logo</button>}
         </div>
       </div>
     </motion.div>
@@ -834,6 +836,63 @@ shadow-[0_8px_30px_rgba(0,0,0,0.08)] ring-2 ring-white/100">
         </motion.div>
       )}
     </AnimatePresence>
+
+{cropImageSrc && (
+  <div className="fixed inset-0 z-[9999] bg-black/80 flex flex-col items-center justify-center px-4">
+    <div className="bg-white rounded-3xl overflow-hidden w-full max-w-sm">
+      <div className="relative w-full h-64 bg-gray-900">
+        <Cropper
+          image={cropImageSrc}
+          crop={crop}
+          zoom={zoom}
+          aspect={16 / 9}
+          onCropChange={setCrop}
+          onZoomChange={setZoom}
+          onCropComplete={(_, croppedPixels) => setCroppedAreaPixels(croppedPixels)}
+        />
+      </div>
+      <div className="p-4 space-y-3">
+        <p className="text-sm text-gray-500 text-center">Pinch or scroll to zoom, drag to reposition</p>
+        <input type="range" min={1} max={3} step={0.1} value={zoom}
+          onChange={(e) => setZoom(Number(e.target.value))}
+          className="w-full" />
+        <div className="flex gap-2">
+          <button onClick={() => setCropImageSrc(null)}
+            className="flex-1 py-3 rounded-2xl border border-gray-200 text-sm font-medium">
+            Cancel
+          </button>
+          <button
+            onClick={async () => {
+              const image = new Image()
+              image.src = cropImageSrc
+              await new Promise(r => image.onload = r)
+              const canvas = document.createElement("canvas")
+              canvas.width = croppedAreaPixels.width
+              canvas.height = croppedAreaPixels.height
+              const ctx = canvas.getContext("2d")
+              ctx.drawImage(image,
+                croppedAreaPixels.x, croppedAreaPixels.y,
+                croppedAreaPixels.width, croppedAreaPixels.height,
+                0, 0, croppedAreaPixels.width, croppedAreaPixels.height
+              )
+              canvas.toBlob(async (blob) => {
+                const { data: userData } = await supabase.auth.getUser()
+                const fileName = `wallet-logo-${userData.user.id}-${Date.now()}.png`
+                const { error } = await supabase.storage.from("avatars").upload(fileName, blob)
+                if (error) return
+                const { data } = supabase.storage.from("avatars").getPublicUrl(fileName)
+                setWalletLogoUrl(data.publicUrl)
+                setCropImageSrc(null)
+              }, "image/png")
+            }}
+            className="flex-1 py-3 rounded-2xl bg-black text-white text-sm font-medium">
+            Use this crop
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+)}
 
   </div>
   );
