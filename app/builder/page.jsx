@@ -648,11 +648,10 @@ case "social":
       profilePos={businessPos}
       setProfilePos={setBusinessPos}
       backgroundColor={backgroundColor}
-      setFieldValues={setFieldValues}
+setFieldValues={setFieldValues}
+      layout={layout}
     />
   );
-
-
 case "networking":
   return (
 <NetworkingLayout
@@ -1078,28 +1077,6 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
         </div>
         <span className="text-[9px] text-gray-400">Custom</span>
       </label>
-    </div>
-    <div className="h-px bg-gray-100 mb-3" />
-    <p className="text-sm font-semibold text-gray-600 mb-2">Diffused</p>
-    <div className="grid grid-cols-6 gap-2">
-      {[
-        { label: "Aurora", value: "radial-gradient(ellipse at 30% 40%, #c4b5fd 0%, #93c5fd 40%, #f0fdf4 100%)" },
-        { label: "Ocean", value: "radial-gradient(ellipse at 20% 60%, #22d3ee 0%, #67e8f9 50%, #e0f2fe 100%)" },
-        { label: "Lilac", value: "radial-gradient(ellipse at 60% 30%, #e0d7ff 0%, #c4b5fd 40%, #f5f3ff 100%)" },
-        { label: "Sky", value: "radial-gradient(ellipse at 60% 30%, #bae6fd 0%, #7dd3fc 50%, #e0f2fe 100%)" },
-        { label: "Rose", value: "radial-gradient(ellipse at 60% 40%, #fbcfe8 0%, #f9a8d4 50%, #fdf2f8 100%)" },
-        { label: "Sage", value: "radial-gradient(ellipse at 30% 50%, #bbf7d0 0%, #86efac 50%, #f0fdf4 100%)" },
-        { label: "Honey", value: "radial-gradient(ellipse at 50% 30%, #fde68a 0%, #fcd34d 50%, #fffbeb 100%)" },
-        { label: "Peach", value: "radial-gradient(ellipse at 40% 40%, #fed7aa 0%, #fdba74 50%, #fff7ed 100%)" },
-        { label: "Indigo", value: "radial-gradient(ellipse at 30% 30%, #a5b4fc 0%, #818cf8 40%, #e0e7ff 100%)" },
-        { label: "Teal", value: "radial-gradient(ellipse at 60% 30%, #99f6e4 0%, #5eead4 50%, #f0fdfa 100%)" },
-        { label: "Blush", value: "radial-gradient(ellipse at 40% 30%, #fca5a5 0%, #f87171 45%, #fff1f2 100%)" },
-      ].map(({ label, value }) => (
-        <button key={label} onClick={() => setBackgroundColor(value)} className="flex flex-col items-center gap-1 group">
-          <div className={`w-14 h-14 rounded-xl border-2 transition ${backgroundColor === value ? "border-black scale-90" : "border-transparent"}`} style={{ background: value, boxShadow: "0 2px 6px rgba(0,0,0,0.08)" }} />
-          <span className="text-[9px] text-gray-400">{label}</span>
-        </button>
-      ))}
     </div>
   </>
 )}
@@ -1666,8 +1643,7 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
 
   <div className="space-y-3">
     {(fieldValues?.buttons || [{ title: "", url: "", image: "" }, { title: "", url: "", image: "" }, { title: "", url: "", image: "" }]).map((button, i) => {
-      const isActive = !!(button && (button.title || button.url || button.image));
-
+const isActive = button !== null && button !== undefined;
       return (
         <div
           key={`button-${i}`}
@@ -1880,7 +1856,7 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
   icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#7c3aed" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg> },
 { id: "university", label: "University", color: "#059669", iconBg: "#ecfdf5", desc: "Student & campus identity",
   icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#059669" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg> },
-{ id: "social", label: "Social", color: "#ea580c", iconBg: "#fff7ed", desc: "Creator & social-first layout",
+{ id: "social", label: "Social", color: "#ea580c", iconBg: "#fff7ed", desc: "Creator & social-first layout", hasStyles: true,
   icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ea580c" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg> },
     ].map((m) => {
       const isActive = mode === m.id;
@@ -1889,8 +1865,8 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
           <button
             onClick={() => {
               setMode(m.id);
-              if (m.id === "business") {
-                setOpenMode(openMode === "business" ? null : "business");
+              if (m.id === "business" || m.id === "social") {
+                setOpenMode(openMode === m.id ? null : m.id);
               } else {
                 setOpenMode(null);
               }
@@ -1912,8 +1888,8 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
                   <p className={`text-sm ${isActive ? "text-gray-500" : "text-gray-400"}`}>{m.desc}</p>
                 </div>
               </div>
-              {m.id === "business" && (
-                <ChevronDown size={16} className={`transition-transform duration-300 ${openMode === "business" ? "rotate-180" : ""} ${isActive ? "text-black" : "text-gray-400"}`} />
+ {(m.id === "business" || m.id === "social") && (
+                <ChevronDown size={16} className={`transition-transform duration-300 ${openMode === m.id ? "rotate-180" : ""} ${isActive ? "text-black" : "text-gray-400"}`} />
               )}
             </div>
           </button>
@@ -1929,6 +1905,29 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
                 <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest px-1">Style</p>
                 <div className="flex gap-2">
                   {["executive", "minimal"].map((l) => (
+                    <button key={l} onClick={() => setLayout(l)}
+                      className={`flex-1 py-2 rounded-xl text-sm font-medium border transition ${
+                        layout === l
+                          ? "bg-white text-black border-2 border-black"
+                          : "bg-white border-gray-200 text-gray-600"
+                      }`}>
+                      {l.charAt(0).toUpperCase() + l.slice(1)}
+                    </button>
+                  ))}
+                </div>
+              </motion.div>
+            )}
+            {m.id === "social" && openMode === "social" && (
+              <motion.div
+                initial={{ height: 0, opacity: 0 }}
+                animate={{ height: "auto", opacity: 1 }}
+                exit={{ height: 0, opacity: 0 }}
+                transition={{ duration: 0.25 }}
+                className="pl-2 space-y-2 overflow-hidden"
+              >
+                <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest px-1">Style</p>
+                <div className="flex gap-2">
+                  {["banner", "circle"].map((l) => (
                     <button key={l} onClick={() => setLayout(l)}
                       className={`flex-1 py-2 rounded-xl text-sm font-medium border transition ${
                         layout === l
