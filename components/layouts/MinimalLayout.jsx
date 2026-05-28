@@ -102,7 +102,7 @@ onChange={(e) => setProfileScale && setProfileScale(Number(e.target.value))}
 />
 
 {isEditing && (
-  <label className="absolute bottom-4 right-4 bg-black text-white text-xs px-4 py-2 rounded-full cursor-pointer shadow-md z-20">
+  <label className="absolute bottom-4 right-4 bg-white border border-gray-200 shadow-md px-4 py-1.5 rounded-full text-xs font-medium text-gray-700 cursor-pointer z-20">
     Change Photo
     <input
       type="file"

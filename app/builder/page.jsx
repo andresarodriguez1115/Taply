@@ -57,11 +57,11 @@ const profileId = searchParams.get("id");
   // DYNAMIC OPTIONAL FIELDS
   // -----------------------------
 const [fields, setFields] = useState({
-  phone: false,
-  email: false,
-  linkedin: false,
-  instagram: false,
-  website: false,
+  phone: true,
+  email: true,
+  linkedin: true,
+  instagram: true,
+  website: true,
   bio: false,
 });
 const router = useRouter()
@@ -93,22 +93,28 @@ console.log("PROFILE DATA:", data)
 
 
 if (!data && !profileId) {
-  setFields({
-    phone: false,
-    email: false,
-    linkedin: false,
-    instagram: false,
-    website: false,
-    bio: false,
-  });
+setFields({
+  phone: true,
+  email: true,
+  linkedin: true,
+  instagram: true,
+  website: true,
+  bio: false,
+});
 
   setFieldValues({
-    phone: "",
-    email: "",
-    linkedin: "",
-    instagram: "",
+    phone: "1-800-taply.now",
+    email: "taply.now@email.com",
+    linkedin: "taplylinkedin",
+    instagram: "taplygram",
     website: "",
     bio: "",
+    uni_bio: "Tell people about yourself, your interests, and what you're working on...",
+    uni_gpa: "0",
+    uni_grad_year: "0",
+    uni_projects: [
+      { title: "Add Your Project", subtitle: "Subtitle To Your Project", desc: "", url: "https://taply.now" },
+    ],
     buttons: [
       { title: "", url: "", image: "" },
       { title: "", url: "", image: "" },
@@ -198,13 +204,23 @@ setLoadingProfile(false);
 }, [router, profileId])
 
 const [fieldValues, setFieldValues] = useState({
-  phone: "",
-  email: "",
-  linkedin: "",
+  phone: "1-800-taply.now",
+  email: "taply.now@email.com",
+  linkedin: "taplylinkedin",
   instagram: "",
   website: "",
   bio: "",
-  buttons: []
+  uni_bio: "Tell people about yourself, your interests, and what you're working on...",
+  uni_gpa: "3.8",
+  uni_grad_year: "2026",
+  uni_projects: [
+    { title: "Add Your Project", subtitle: "Subtitle To Your Project", desc: "", url: "https://taply.now" },
+  ],
+buttons: [
+  { title: "Button 1", url: "", image: "" },
+  { title: "Button 2", url: "", image: "" },
+  { title: "Button 3", url: "", image: "" },
+]
 });
 const handleSave = async () => {
   setSaving(true)
@@ -1834,7 +1850,7 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
       value={fieldValues[field] || ""}
       onChange={(e) => updateField(field, e.target.value)}
       placeholder={PLACEHOLDERS[field]}
-      className="w-full border border-gray-200 rounded-xl px-3 py-2.5 bg-gray-50 text-sm focus:outline-none focus:ring-2 focus:ring-black/10"
+      className="w-full mt-2 border border-gray-200 rounded-xl px-3 py-2.5 bg-gray-50 text-sm focus:outline-none focus:ring-2 focus:ring-black/10"
     />
   )}
 

@@ -114,7 +114,7 @@ style={{
         )}
 
         {isEditing && (
-          <label className="absolute top-2 right-2 px-2 py-1 text-[10px] rounded bg-black text-white cursor-pointer">
+          <label className="absolute top-3 right-3 bg-white border border-gray-200 shadow-md px-4 py-1.5 rounded-full text-xs font-medium text-gray-700 cursor-pointer">
             Change
             <input
               type="file"
@@ -169,23 +169,17 @@ onTouchEnd={profileMouseUp}
           </div>
         )}
 
-        {isEditing && (
-          <label className="block text-center text-[9px] sm:text-xs mt-1 sm:mt-2 cursor-pointer text-gray-500">
-            Change Photo
-            <input
-              type="file"
-              accept="image/*"
-              className="hidden"
-              onChange={handleProfileUpload}
-            />
+{isEditing && (
+          <label className="absolute -bottom-1 -right-1 w-7 h-7 bg-black rounded-full flex items-center justify-center cursor-pointer shadow z-10">
+            <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+            <input type="file" accept="image/*" className="hidden" onChange={handleProfileUpload} />
           </label>
         )}
       </div>
 
       {/* NAME CARD (NOW PERFECTLY ALIGNED) */}
 <div className="-mt-20 w-full sm:w-[650px] bg-white rounded-2xl shadow-md px-6 py-6">
-  <div className="ml- 20 mt-16 sm:ml-[30px] sm:mt-16 text-left ">
-<h1
+<div className="ml- 20 mt-16 sm:ml-[30px] sm:mt-16 text-left"><h1
   className="font-bold"
   style={{
     fontSize: `clamp(${nameSize * 0.7}px, ${nameSize}px, ${nameSize}px)`
