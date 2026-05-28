@@ -109,7 +109,11 @@ if (!data && !profileId) {
     instagram: "",
     website: "",
     bio: "",
-    buttons: []
+    buttons: [
+      { title: "", url: "", image: "" },
+      { title: "", url: "", image: "" },
+      { title: "", url: "", image: "" },
+    ]
   });
 
   setLoadingProfile(false);
@@ -157,7 +161,11 @@ setFieldValues(data.field_values || {
   instagram: "",
   website: "",
   bio: "",
-  buttons: []
+  buttons: [
+    { title: "", url: "", image: "" },
+    { title: "", url: "", image: "" },
+    { title: "", url: "", image: "" },
+  ]
 });
 
 setMode(data.mode || "business");
@@ -1641,9 +1649,8 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
 >Buttons</p>
 
   <div className="space-y-3">
-    {[0, 1, 2].map((i) => {
-      const button = fieldValues?.buttons?.[i];
-      const isActive = !!button;
+    {(fieldValues?.buttons || [{ title: "", url: "", image: "" }, { title: "", url: "", image: "" }, { title: "", url: "", image: "" }]).map((button, i) => {
+      const isActive = !!(button && (button.title || button.url || button.image));
 
       return (
         <div
@@ -1662,27 +1669,35 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
               <p className="text-[11px] text-gray-400">Logo, title & link</p>
             </div>
 
-            <button
-              onClick={() => {
-                const updated = [...(fieldValues.buttons || [])];
-
-                if (isActive) {
-                  updated[i] = undefined; // turn OFF
-                } else {
-                  updated[i] = { title: "", url: "", image: "" }; // turn ON
-                }
-
-                setFieldValues({
-                  ...fieldValues,
-                  buttons: updated
-                });
-              }}
-              className={`w-5 h-5 rounded-full border ${
-                isActive
-                  ? "bg-blue-500 border-blue-500"
-                  : "bg-white"
-              }`}
-            />
+            <div className="flex items-center gap-2">
+              {isActive && (
+                <button
+                  onClick={() => {
+                    const updated = (fieldValues.buttons || []).filter((_, idx) => idx !== i);
+                    setFieldValues({ ...fieldValues, buttons: updated });
+                  }}
+                  className="w-5 h-5 rounded-full bg-red-100 border border-red-300 flex items-center justify-center text-red-500 text-xs leading-none"
+                >
+                  ×
+                </button>
+              )}
+              <button
+                onClick={() => {
+                  const updated = [...(fieldValues.buttons || [])];
+                  if (isActive) {
+                    updated[i] = undefined;
+                  } else {
+                    updated[i] = { title: "", url: "", image: "" };
+                  }
+                  setFieldValues({ ...fieldValues, buttons: updated });
+                }}
+                className={`w-5 h-5 rounded-full border ${
+                  isActive
+                    ? "bg-blue-500 border-blue-500"
+                    : "bg-white"
+                }`}
+              />
+            </div>
           </div>
 
 {isActive && (
@@ -1738,6 +1753,15 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
       );
     })}
   </div>
+  <button
+    onClick={() => setFieldValues((prev) => ({
+      ...prev,
+      buttons: [...(prev.buttons || []), { title: "", url: "", image: "" }]
+    }))}
+    className="w-full mt-3 py-2.5 rounded-xl border border-dashed border-gray-300 text-sm text-gray-500 hover:border-gray-400 hover:text-gray-700 transition"
+  >
+    + Add Button
+  </button>
 </div>
   </>
 )}

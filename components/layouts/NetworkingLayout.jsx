@@ -245,11 +245,10 @@ onTouchEnd={()=> isEditing && setDragging(false)}
         </h1>
 
 <p
-  className="text-lg mt-2"
-  style={{ color: titleColor }}
+  className="text-sm font-medium mt-2 px-3 py-1 rounded-full border inline-block max-w-fit mx-auto"  style={{ color: titleColor, borderColor: titleColor ? `${titleColor}40` : "rgba(0,0,0,0.15)", background: titleColor ? `${titleColor}10` : "rgba(0,0,0,0.05)" }}
 >
-          {title}
-        </p>
+  {title}
+</p>
 
  
 
