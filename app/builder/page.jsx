@@ -1864,10 +1864,10 @@ const isActive = button !== null && button !== undefined;
         <div key={m.id} className="space-y-2">
           <button
             onClick={() => {
-              setMode(m.id);
               if (m.id === "business" || m.id === "social") {
                 setOpenMode(openMode === m.id ? null : m.id);
               } else {
+                setMode(m.id);
                 setOpenMode(null);
               }
             }}
@@ -1905,7 +1905,7 @@ const isActive = button !== null && button !== undefined;
                 <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest px-1">Style</p>
                 <div className="flex gap-2">
                   {["executive", "minimal"].map((l) => (
-                    <button key={l} onClick={() => setLayout(l)}
+                    <button key={l} onClick={() => { setMode("business"); setLayout(l); }}
                       className={`flex-1 py-2 rounded-xl text-sm font-medium border transition ${
                         layout === l
                           ? "bg-white text-black border-2 border-black"
@@ -1928,7 +1928,7 @@ const isActive = button !== null && button !== undefined;
                 <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest px-1">Style</p>
                 <div className="flex gap-2">
                   {["banner", "circle"].map((l) => (
-                    <button key={l} onClick={() => setLayout(l)}
+                    <button key={l} onClick={() => { setMode("social"); setLayout(l); }}
                       className={`flex-1 py-2 rounded-xl text-sm font-medium border transition ${
                         layout === l
                           ? "bg-white text-black border-2 border-black"
