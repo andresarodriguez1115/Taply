@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import { logEvent } from "@/lib/logEvent";
 import { motion } from "framer-motion";
+import React from "react";
 import { Instagram, Twitter, Youtube, Music2 } from "lucide-react";
 
 export default function SocialLayout({
@@ -123,7 +124,7 @@ useEffect(() => {
           {profileImage ? (
             <motion.img
               src={profileImage}
-              className="absolute inset-0 w-full h-full object-contain"
+              className="absolute inset-0 w-full h-full object-cover"
               style={{ scale: profileScale, translateX: profilePos.x, translateY: profilePos.y }}
               draggable={false}
             />
@@ -208,8 +209,8 @@ useEffect(() => {
           <a key={key} href={url.startsWith("http") ? url : `${SOCIAL_ICONS[key].base}${url}`} target="_blank" rel="noopener noreferrer"
                   onClick={() => logEvent(profileId, "tap")}
                   className="rounded-full flex items-center justify-center bg-white border border-gray-200 shadow-sm hover:scale-105 transition"
-                  style={{ color: SOCIAL_ICONS[key].color, width: `${40 * socialIconSize / 100}px`, height: `${40 * socialIconSize / 100}px` }}>
-                  {SOCIAL_ICONS[key].icon}
+                  style={{ color: SOCIAL_ICONS[key].color, width: `${52 * socialIconSize / 100}px`, height: `${52 * socialIconSize / 100}px` }}>
+                  {React.cloneElement(SOCIAL_ICONS[key].icon, { size: 22 * socialIconSize / 100 })}
                 </a>
               ) : null
             )}
@@ -240,7 +241,7 @@ useEffect(() => {
               onClick={() => logEvent(profileId, "tap")}
               className="block w-full rounded-2xl overflow-hidden bg-white shadow-sm border border-gray-100 hover:shadow-md transition">
 {link.image && (
-                <div className="w-full h-44 overflow-hidden relative"
+                <div className="w-full h-44 overflow-hidden relative group"
                   onTouchStart={isEditing ? (e) => {
                     e.preventDefault();
                     const t = e.touches[0];
@@ -259,7 +260,7 @@ useEffect(() => {
                     window.addEventListener("touchmove", onMove, { passive: false });
                     window.addEventListener("touchend", onEnd);
                   } : undefined}
-                  style={{ cursor: isEditing ? "grab" : "default" }}
+                  style={{ cursor: isEditing ? "grab" : "default", background: "#e4e2e2" }}
                 >
                   <img src={link.image}
                     draggable={false}
@@ -267,7 +268,7 @@ useEffect(() => {
                       position: "absolute",
                       width: "100%",
                       height: "100%",
-                      objectFit: "cover",
+                      objectFit: "fill",
                       transform: `translate(${link.imgX || 0}px, ${link.imgY || 0}px) scale(${link.imgScale || 1})`,
                       transformOrigin: "center",
                       pointerEvents: "none",

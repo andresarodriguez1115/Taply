@@ -321,7 +321,7 @@ shadow-[0_8px_30px_rgba(0,0,0,0.08)] ring-2 ring-white/100">
               alert("You've reached the maximum of 3 profiles. Delete one to create a new one.");
               return;
             }
-            router.push("/builder");
+            router.push("/create");
           }}
           className={`w-full text-[14px] font-semibold py-3 rounded-2xl transition ${profiles.length >= 3 ? "bg-gray-100 text-gray-400 cursor-not-allowed" : "bg-black text-white"}`}
         >

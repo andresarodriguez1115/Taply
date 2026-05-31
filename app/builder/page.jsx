@@ -50,7 +50,7 @@ const [socialTitleSize, setSocialTitleSize] = useState(100);
 const [socialIconSize, setSocialIconSize] = useState(100);
 const [socialLinkSize, setSocialLinkSize] = useState(100);
 const [socialProductSize, setSocialProductSize] = useState(100);
-const [socialAvatarSize, setSocialAvatarSize] = useState(144);
+const [socialAvatarSize, setSocialAvatarSize] = useState(170);
 const [minNameSize, setMinNameSize] = useState(100);
 const [minTitleSize, setMinTitleSize] = useState(100);
 const [minContactSize, setMinContactSize] = useState(100);const [execAvatarSize, setExecAvatarSize] = useState(100);
@@ -75,7 +75,7 @@ const [bannerPos, setBannerPos] = useState({ x: 0, y: 0 });
 const [showModePanel, setShowModePanel] = useState(false);
 const searchParams = useSearchParams();
 const profileId = searchParams.get("id");
-// 🔥 NEW LAYOUT STATE
+const urlMode = searchParams.get("mode");// 🔥 NEW LAYOUT STATE
 
   // -----------------------------
   // DYNAMIC OPTIONAL FIELDS
@@ -117,6 +117,7 @@ console.log("PROFILE DATA:", data)
 
 
 if (!data && !profileId) {
+if (urlMode) setMode(urlMode);
 setFields({
   phone: true,
   email: true,
@@ -130,15 +131,19 @@ setFields({
     phone: "1-800-taply.now",
     email: "taply.now@email.com",
     linkedin: "taplylinkedin",
+    location: "Taply, Headquarters",
     instagram: "taplygram",
-    website: "",
-    bio: "",
+website: "taply.now",    bio: "",
     social_icons: {
       instagram: "taplygram",
       tiktok: "taply.now",
       twitter: "taplytwitter",
       youtube: "tapltube",
     },
+    social_links: [
+      { title: "Taply", url: "taply.now", image: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxNTAwIDUwMCIgd2lkdGg9IjE1MDAiIGhlaWdodD0iNTAwIj4KICA8cmVjdCB3aWR0aD0iMTUwMCIgaGVpZ2h0PSI1MDAiIGZpbGw9IiMwYTBhMGEiLz4KICA8Y2lyY2xlIGN4PSI3NTAiIGN5PSIyMTAiIHI9IjEyMCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMjU2M2ViIiBzdHJva2Utd2lkdGg9IjgiIG9wYWNpdHk9IjAuMjUiLz4KICA8Y2lyY2xlIGN4PSI3NTAiIGN5PSIyMTAiIHI9Ijg3IiBmaWxsPSJub25lIiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iOCIgb3BhY2l0eT0iMC40NSIvPgogIDxjaXJjbGUgY3g9Ijc1MCIgY3k9IjIxMCIgcj0iNTQiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSI4IiBvcGFjaXR5PSIwLjciLz4KICA8Y2lyY2xlIGN4PSI3NTAiIGN5PSIyMTAiIHI9IjIwIiBmaWxsPSIjMjU2M2ViIi8+CiAgPHRleHQgeD0iNzUwIiB5PSIzOTAiIGZvbnQtZmFtaWx5PSItYXBwbGUtc3lzdGVtLCBCbGlua01hY1N5c3RlbUZvbnQsICdTZWdvZSBVSScsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTAwIiBmb250LXdlaWdodD0iNzAwIiBmaWxsPSJ3aGl0ZSIgbGV0dGVyLXNwYWNpbmc9Ii0zIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj50YXBseTwvdGV4dD4KPC9zdmc+Cg==", imgScale: 1.5 },
+      { title: "Taply", url: "taply.now", image: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxNTAwIDUwMCIgd2lkdGg9IjE1MDAiIGhlaWdodD0iNTAwIj4KICA8cmVjdCB3aWR0aD0iMTUwMCIgaGVpZ2h0PSI1MDAiIGZpbGw9IiMwYTBhMGEiLz4KICA8Y2lyY2xlIGN4PSI3NTAiIGN5PSIyMTAiIHI9IjEyMCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMjU2M2ViIiBzdHJva2Utd2lkdGg9IjgiIG9wYWNpdHk9IjAuMjUiLz4KICA8Y2lyY2xlIGN4PSI3NTAiIGN5PSIyMTAiIHI9Ijg3IiBmaWxsPSJub25lIiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iOCIgb3BhY2l0eT0iMC40NSIvPgogIDxjaXJjbGUgY3g9Ijc1MCIgY3k9IjIxMCIgcj0iNTQiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSI4IiBvcGFjaXR5PSIwLjciLz4KICA8Y2lyY2xlIGN4PSI3NTAiIGN5PSIyMTAiIHI9IjIwIiBmaWxsPSIjMjU2M2ViIi8+CiAgPHRleHQgeD0iNzUwIiB5PSIzOTAiIGZvbnQtZmFtaWx5PSItYXBwbGUtc3lzdGVtLCBCbGlua01hY1N5c3RlbUZvbnQsICdTZWdvZSBVSScsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTAwIiBmb250LXdlaWdodD0iNzAwIiBmaWxsPSJ3aGl0ZSIgbGV0dGVyLXNwYWNpbmc9Ii0zIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj50YXBseTwvdGV4dD4KPC9zdmc+Cg==", imgScale: 1.5 },
+    ],
     uni_bio: "Tell people about yourself, your interests, and what you're working on...",
     uni_gpa: "0",
     uni_grad_year: "0",
@@ -195,8 +200,7 @@ setFieldValues(data.field_values || {
   email: "",
   linkedin: "",
   instagram: "",
-  website: "",
-  bio: "",
+website: "taply.now",  bio: "",
   buttons: [
     { title: "", url: "", image: "" },
     { title: "", url: "", image: "" },
@@ -237,15 +241,19 @@ const [fieldValues, setFieldValues] = useState({
   phone: "1-800-taply.now",
   email: "taply.now@email.com",
   linkedin: "taplylinkedin",
+  location: "taply, headquarters",
   instagram: "",
-  website: "",
-  bio: "",
+website: "taply.now",  bio: "",
   social_icons: {
     instagram: "taplygram",
     tiktok: "taply.now",
     twitter: "taplytwitter",
     youtube: "tapltube",
   },
+  social_links: [
+    { title: "Taply", url: "taply.now", image: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMDAgNjAiIHdpZHRoPSI0MDAiIGhlaWdodD0iMTIwIj4KICA8cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjYwIiByeD0iMCIgZmlsbD0iIzFhMWEyZSIvPgogIDxjaXJjbGUgY3g9IjMwIiBjeT0iMzAiIHI9IjI2IiBmaWxsPSJub25lIiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjIuNSIgb3BhY2l0eT0iMC4yNSIvPgogIDxjaXJjbGUgY3g9IjMwIiBjeT0iMzAiIHI9IjE5IiBmaWxsPSJub25lIiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjIuNSIgb3BhY2l0eT0iMC40NSIvPgogIDxjaXJjbGUgY3g9IjMwIiBjeT0iMzAiIHI9IjEyIiBmaWxsPSJub25lIiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjIuNSIgb3BhY2l0eT0iMC43Ii8+CiAgPGNpcmNsZSBjeD0iMzAiIGN5PSIzMCIgcj0iNSIgZmlsbD0id2hpdGUiLz4KICA8dGV4dCB4PSI2NiIgeT0iMzgiIGZvbnQtZmFtaWx5PSItYXBwbGUtc3lzdGVtLCBCbGlua01hY1N5c3RlbUZvbnQsICdTZWdvZSBVSScsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMjgiIGZvbnQtd2VpZ2h0PSI3MDAiIGZpbGw9IndoaXRlIiBsZXR0ZXItc3BhY2luZz0iLTAuNSI+dGFwbHk8L3RleHQ+Cjwvc3ZnPgo=" },
+    { title: "Taply", url: "taply.now", image: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMDAgNjAiIHdpZHRoPSI0MDAiIGhlaWdodD0iMTIwIj4KICA8cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjYwIiByeD0iMCIgZmlsbD0iIzFhMWEyZSIvPgogIDxjaXJjbGUgY3g9IjMwIiBjeT0iMzAiIHI9IjI2IiBmaWxsPSJub25lIiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjIuNSIgb3BhY2l0eT0iMC4yNSIvPgogIDxjaXJjbGUgY3g9IjMwIiBjeT0iMzAiIHI9IjE5IiBmaWxsPSJub25lIiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjIuNSIgb3BhY2l0eT0iMC40NSIvPgogIDxjaXJjbGUgY3g9IjMwIiBjeT0iMzAiIHI9IjEyIiBmaWxsPSJub25lIiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjIuNSIgb3BhY2l0eT0iMC43Ii8+CiAgPGNpcmNsZSBjeD0iMzAiIGN5PSIzMCIgcj0iNSIgZmlsbD0id2hpdGUiLz4KICA8dGV4dCB4PSI2NiIgeT0iMzgiIGZvbnQtZmFtaWx5PSItYXBwbGUtc3lzdGVtLCBCbGlua01hY1N5c3RlbUZvbnQsICdTZWdvZSBVSScsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMjgiIGZvbnQtd2VpZ2h0PSI3MDAiIGZpbGw9IndoaXRlIiBsZXR0ZXItc3BhY2luZz0iLTAuNSI+dGFwbHk8L3RleHQ+Cjwvc3ZnPgo=" },
+  ],
   uni_bio: "Tell people about yourself, your interests, and what you're working on...",
   uni_gpa: "3.8",
   uni_grad_year: "2026",
@@ -399,9 +407,9 @@ const avatarMenuRef = useRef(null)
   // -----------------------------
   const [mode, setMode] = useState("business");
   const [showTemplatePicker, setShowTemplatePicker] = useState(false);
-  const [layout, setLayout] = useState("executive");
-const [runTutorial, setRunTutorial] = useState(false);
+const [layout, setLayout] = useState(urlMode === "social" ? "circle" : "executive");const [runTutorial, setRunTutorial] = useState(false);
 const [showBuilderTutorial, setShowBuilderTutorial] = useState(false)
+const tutorialMode = urlMode || "business"
   // -----------------------------
   // SIDEBAR VISIBILITY
   // -----------------------------
@@ -426,7 +434,7 @@ const handleDrag = (e) => {
 useEffect(() => {
   if (!profileId) {
     setStudioOpen(true);
-    const done = localStorage.getItem("taply_builder_tutorial_done");
+    const done = localStorage.getItem(`taply_tutorial_done_${urlMode || "business"}`);
     if (!done) setTimeout(() => setShowBuilderTutorial(true), 1000);
   }
 }, [profileId]);
@@ -803,7 +811,7 @@ return (
 {/* FLOATING BACK BUTTON */}
 {isEditing && (
   <button
-    onClick={() => router.push("/dashboard")}
+    onClick={() => router.push(profileId ? "/dashboard" : "/create")}
     className="
       fixed
       top-5
@@ -1036,6 +1044,7 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
       </label>
     </div>
 
+    {layout !== "minimal" && <>
     <div className="h-px bg-gray-100 mb-3" />
 
 <p className="text-sm font-semibold text-gray-600 mb-2">Diffused</p>
@@ -1062,6 +1071,7 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
         </button>
       ))}
     </div>
+    </>}
   </>
 )}
 {mode === "business" && layout === "minimal" && (
@@ -1090,13 +1100,13 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
     <div className="h-px bg-gray-100 my-4" />
     <p className="text-base font-bold text-gray-800 mb-3">Content Size</p>
     <div className="space-y-3">
-      {[
-        { label: "Name", value: fontSize, set: setFontSize },
-        { label: "Title", value: titleSize, set: setTitleSize },
-        { label: "Photo", value: execAvatarSize, set: setExecAvatarSize },
-        { label: "Save Btn", value: execSaveSize, set: setExecSaveSize },
-        { label: "Contact", value: execContactSize, set: setExecContactSize },
-      ].map(({ label, value, set }) => (
+{[
+  { label: "Profile Photo", value: execAvatarSize, set: setExecAvatarSize },
+  { label: "Name", value: fontSize, set: setFontSize },
+  { label: "Title", value: titleSize, set: setTitleSize },
+  { label: "Save Btn", value: execSaveSize, set: setExecSaveSize },
+  { label: "Contact", value: execContactSize, set: setExecContactSize },
+].map(({ label, value, set }) => (
         <div key={label} className="flex items-center gap-3 bg-white border border-gray-200 rounded-2xl px-4 py-3">
           <span className="text-sm text-gray-500 w-16">{label}</span>
           <button onClick={() => set(s => Math.max(70, s - 5))} className="w-9 h-9 rounded-full bg-gray-100 flex items-center justify-center text-lg font-medium hover:bg-gray-200 transition">−</button>
@@ -1160,24 +1170,17 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
     </div>
 
     <div className="h-px bg-gray-100 my-4" />
-    <p className="text-base font-bold text-gray-800 mb-3">Profile Photo Size</p>
-    <div className="flex items-center gap-3 bg-white border border-gray-200 rounded-2xl px-4 py-3 mb-3">
-      <button onClick={() => setUniAvatarSize(s => Math.max(40, s - 5))}
-        className="w-9 h-9 rounded-full bg-gray-100 flex items-center justify-center text-lg font-medium hover:bg-gray-200 transition">−</button>
-      <span className="flex-1 text-center text-sm font-medium text-gray-700">{uniAvatarSize}px</span>
-      <button onClick={() => setUniAvatarSize(s => Math.min(160, s + 5))}
-        className="w-9 h-9 rounded-full bg-gray-100 flex items-center justify-center text-lg font-medium hover:bg-gray-200 transition">+</button>
-    </div>
     <div className="h-px bg-gray-100 my-4" />
     <p className="text-base font-bold text-gray-800 mb-3">Content Size</p>
     <div className="space-y-3">
-      {[
-        { label: "Name", value: fontSize, set: setFontSize },
-        { label: "Title", value: titleSize, set: setTitleSize },
-        { label: "Bio Text", value: uniBioSize, set: setUniBioSize },
-        { label: "Stats", value: uniStatsSize, set: setUniStatsSize },
-        { label: "Contact", value: uniContentSize, set: setUniContentSize },
-      ].map(({ label, value, set }) => (
+{[
+  { label: "Profile Photo", value: uniAvatarSize, set: setUniAvatarSize },
+  { label: "Name", value: fontSize, set: setFontSize },
+  { label: "Title", value: titleSize, set: setTitleSize },
+  { label: "Bio Text", value: uniBioSize, set: setUniBioSize },
+  { label: "Stats", value: uniStatsSize, set: setUniStatsSize },
+  { label: "Contact", value: uniContentSize, set: setUniContentSize },
+].map(({ label, value, set }) => (
         <div key={label} className="flex items-center gap-3 bg-white border border-gray-200 rounded-2xl px-4 py-3">
           <span className="text-sm text-gray-500 w-14">{label}</span>
           <button onClick={() => set(s => Math.max(70, s - 5))} className="w-9 h-9 rounded-full bg-gray-100 flex items-center justify-center text-lg font-medium hover:bg-gray-200 transition">−</button>
@@ -1224,14 +1227,14 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
     <div className="h-px bg-gray-100 my-4" />
     <p className="text-base font-bold text-gray-800 mb-3">Content Size</p>
     <div className="space-y-3">
-      {[
-        { label: "Name", value: socialNameSize, set: setSocialNameSize, min: 70, max: 150, px: false },
-        { label: "Title", value: socialTitleSize, set: setSocialTitleSize, min: 70, max: 150, px: false },
-        { label: "Icons", value: socialIconSize, set: setSocialIconSize, min: 70, max: 150, px: false },
-        { label: "Links", value: socialLinkSize, set: setSocialLinkSize, min: 70, max: 150, px: false },
-        { label: "Products", value: socialProductSize, set: setSocialProductSize, min: 70, max: 150, px: false },
-        ...(layout === "circle" ? [{ label: "Photo", value: socialAvatarSize, set: setSocialAvatarSize, min: 80, max: 280, px: true }] : []),
-      ].map(({ label, value, set, min, max, px }) => (
+{[
+  ...(layout === "circle" ? [{ label: "Profile Photo", value: socialAvatarSize, set: setSocialAvatarSize, min: 80, max: 280, px: true }] : []),
+  { label: "Name", value: socialNameSize, set: setSocialNameSize, min: 70, max: 150, px: false },
+  { label: "Title", value: socialTitleSize, set: setSocialTitleSize, min: 70, max: 150, px: false },
+  { label: "Icons", value: socialIconSize, set: setSocialIconSize, min: 70, max: 150, px: false },
+  { label: "Links", value: socialLinkSize, set: setSocialLinkSize, min: 70, max: 150, px: false },
+  { label: "Products", value: socialProductSize, set: setSocialProductSize, min: 70, max: 150, px: false },
+].map(({ label, value, set, min, max, px }) => (
         <div key={label} className="flex items-center gap-3 bg-white border border-gray-200 rounded-2xl px-4 py-3">
           <span className="text-sm text-gray-500 w-16">{label}</span>
           <button onClick={() => set(s => Math.max(min, s - 5))} className="w-9 h-9 rounded-full bg-gray-100 flex items-center justify-center text-lg font-medium hover:bg-gray-200 transition">−</button>
@@ -1369,7 +1372,7 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
 {mode === "university" && (
   <>
     {/* IDENTITY */}
-<div className="mb-6">
+<div className="mb-6" data-tutorial="identity-section">
       <p className="text-base font-bold text-gray-800 mb-3">Identity</p>
       <div className="space-y-3 border p-3 rounded-xl">
         <div className="flex justify-between items-center">
@@ -1385,40 +1388,10 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
       </div>
     </div>
 
-    {/* GPA & GRAD YEAR */}
-    <div className="mb-6">
-      <p className="text-base font-bold text-gray-800 mb-3">Academic Info</p>
-      <div className="space-y-3">
-        {[
-          { key: "uni_gpa", label: "GPA", placeholder: "e.g. 3.8 / 4.0" },
-          { key: "uni_grad_year", label: "Grad Year", placeholder: "e.g. Class of 2026" },
-        ].map(({ key, label, placeholder }) => {
-          const isActive = !!(fieldValues?.[key]);
-          return (
-            <div key={key} className={`p-3 rounded-xl border transition ${isActive ? "bg-blue-50 border-blue-400" : "bg-gray-50"}`}>
-              <div className="flex justify-between items-center">
-                <span className="text-sm">{label}</span>
-                <button
-                  onClick={() => setFieldValues((prev) => ({ ...prev, [key]: isActive ? "" : " " }))}
-                  className={`w-5 h-5 rounded-full border ${isActive ? "bg-blue-500 border-blue-500" : "bg-white border-gray-300"}`}
-                />
-              </div>
-              {isActive && (
-                <input
-                  value={fieldValues?.[key]?.trim() === "" ? "" : fieldValues?.[key] || ""}
-                  onChange={(e) => setFieldValues((prev) => ({ ...prev, [key]: e.target.value }))}
-                  placeholder={placeholder}
-                  className="w-full mt-2 border border-gray-200 rounded-xl px-3 py-2.5 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-black/10"
-                />
-              )}
-            </div>
-          );
-        })}
-      </div>
-    </div>
+
 
     {/* GPA & GRAD YEAR */}
-    <div className="mb-6">
+    <div className="mb-6" data-tutorial="uni-academic">
       <p className="text-base font-bold text-gray-800 mb-3">Academic Info</p>
       <div className="space-y-3">
         {[
@@ -1463,9 +1436,8 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
     </div>
 
     {/* RESUME */}
-    <div className="mb-6">
-      <p className="text-base font-bold text-gray-800 mb-3"
->Resume</p>
+    <div className="mb-6" data-tutorial="uni-resume">
+      <p className="text-base font-bold text-gray-800 mb-3">Resume</p>
       <div className="rounded-2xl border border-gray-200 bg-white px-4 py-3">
         <p className="text-xs font-medium text-gray-500 mb-1.5 ml-1"
 >Link to your resume (Google Drive, Notion, etc.)</p>
@@ -1512,9 +1484,8 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
     </div>
 
     {/* PORTFOLIO PROJECTS */}
-    <div className="mb-6">
-      <p className="text-base font-bold text-gray-800 mb-3"
->Portfolio Projects</p>
+    <div className="mb-6" data-tutorial="uni-projects">
+      <p className="text-base font-bold text-gray-800 mb-3">Portfolio Projects</p>
       <div className="space-y-2">
         {[0, 1, 2, 3].map((i) => {
           const project = fieldValues?.uni_projects?.[i];
@@ -1583,7 +1554,7 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
 {mode === "social" && (
   <>
     {/* IDENTITY */}
-<div className="mb-6">
+<div className="mb-6" data-tutorial="social-identity">
       <p className="text-base font-bold text-gray-800 mb-3">Identity</p>
       <div className="space-y-3 border p-3 rounded-xl">
         <div className="flex justify-between items-center">
@@ -1600,7 +1571,7 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
     </div>
 
 {/* SOCIAL ICONS */}
-    <div className="mb-6">
+    <div className="mb-6" data-tutorial="social-icons">
       <p className="text-base font-bold text-gray-800 mb-3">Social Icons</p>
       <div className="space-y-3">
         {["instagram", "tiktok", "twitter", "youtube"].map((platform) => {
@@ -1635,9 +1606,8 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
     </div>
 
     {/* LINKS */}
-    <div className="mb-6">
-      <p className="text-base font-bold text-gray-800 mb-3"
->Links</p>
+    <div className="mb-6" data-tutorial="social-links">
+      <p className="text-base font-bold text-gray-800 mb-3">Links</p>
       <div className="space-y-2">
         {[0, 1, 2, 3].map((i) => {
           const link = fieldValues?.social_links?.[i];
@@ -1707,9 +1677,8 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
     </div>
 
     {/* SHOP PRODUCTS */}
-    <div className="mb-6">
-      <p className="text-base font-bold text-gray-800 mb-3"
->Shop Products</p>
+    <div className="mb-6" data-tutorial="social-products">
+      <p className="text-base font-bold text-gray-800 mb-3">Shop Products</p>
       <div className="space-y-2">
         {[0, 1, 2, 3].map((i) => {
           const product = fieldValues?.social_products?.[i];
@@ -1791,7 +1760,7 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
 {/* NETWORKING MODE ONLY */}
 {mode === "networking" && (
   <>
- <div className="mb-6">
+ <div className="mb-6" data-tutorial="net-identity">
       <p className="text-base font-bold text-gray-800 mb-3">Identity</p>
       <div className="space-y-3 border p-3 rounded-xl">
         <div className="flex justify-between items-center">
@@ -1808,7 +1777,7 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
     </div>
 
     {/* CONTACT */}
-    <div className="mb-6">
+    <div className="mb-6" data-tutorial="net-contact">
       <p className="text-base font-bold text-gray-800 mb-3">Contact</p>
       <div className="space-y-3">
         {[
@@ -1840,9 +1809,8 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
       </div>
     </div>
 
-    <div>
-      <p className="text-base font-bold text-gray-800 mb-3"
->Buttons</p>
+    <div data-tutorial="net-buttons">
+      <p className="text-base font-bold text-gray-800 mb-3">Buttons</p>
 
   <div className="space-y-3">
     {(fieldValues?.buttons || [{ title: "", url: "", image: "" }, { title: "", url: "", image: "" }, { title: "", url: "", image: "" }]).map((button, i) => {
@@ -2130,7 +2098,7 @@ const isActive = button !== null && button !== undefined;
               >
                 <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest px-1">Style</p>
                 <div className="flex gap-2">
-                  {["banner", "circle"].map((l) => (
+                  {["circle", "banner"].map((l) => (
                     <button key={l} onClick={() => { setMode("social"); setLayout(l); }}
                       className={`flex-1 py-2 rounded-xl text-sm font-medium border transition ${
                         layout === l
@@ -2212,12 +2180,21 @@ const isActive = button !== null && button !== undefined;
 </AnimatePresence>
 {showBuilderTutorial && (
   <BuilderTutorial
+    mode={tutorialMode}
     onComplete={() => setShowBuilderTutorial(false)}
     onOpenStudio={() => setStudioOpen(true)}
     onGoToContent={() => setActiveTab("content")}
     onGoToDesign={() => setActiveTab("design")}
     onCloseStudio={() => setStudioOpen(false)}
   />
+)}
+{isEditing && (
+  <button
+    onClick={() => setShowBuilderTutorial(true)}
+    className="fixed bottom-6 right-5 z-40 w-9 h-9 bg-white border border-gray-200 shadow-md rounded-full text-sm font-semibold text-gray-500 flex items-center justify-center hover:bg-gray-50 transition"
+  >
+    ?
+  </button>
 )}
 </div>
   );
