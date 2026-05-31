@@ -43,7 +43,7 @@ const [username, setUsername] = useState("")
     }
 
     setLoading(false)
-    router.replace("/home")
+    router.replace("/dashboard")
   }
 
 
@@ -244,7 +244,7 @@ return (
     await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
-redirectTo: `${window.location.origin}/home`,
+redirectTo: `${window.location.origin}/dashboard`,
       },
     })
   }}
@@ -262,7 +262,7 @@ redirectTo: `${window.location.origin}/home`,
     await supabase.auth.signInWithOAuth({
       provider: "apple",
       options: {
-redirectTo: `${window.location.origin}/home`,
+redirectTo: `${window.location.origin}/dashboard`,
       },
     })
   }}
