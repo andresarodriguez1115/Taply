@@ -92,7 +92,7 @@ if (!userId) {
 
 
 
-router.replace("/home");
+router.replace("/dashboard");
     setLoading(false)
   }
 
