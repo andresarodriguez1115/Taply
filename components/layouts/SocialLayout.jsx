@@ -19,15 +19,55 @@ export default function SocialLayout({
   fieldValues = {},
   setFieldValues,
   profileId,
+  layout = "banner",
+  fontFamily = "system-ui",
+  fontSize = 100,
+  socialNameSize = 100,
+  socialTitleSize = 100,
+  socialIconSize = 100,
+  socialLinkSize = 100,
+  socialProductSize = 100,
+  socialAvatarSize = 144,
 }) {
 const [activeTab, setActiveTab] = useState("links");
-  const [mounted, setMounted] = useState(false);
-  const [heroStyle, setHeroStyle] = useState("banner");
-  const dragging = useRef(false);
-  const dragStart = useRef({ x: 0, y: 0 });
-  const dragLast = useRef({ x: 0, y: 0 });
+const [mounted, setMounted] = useState(false);
+const [showZoom, setShowZoom] = useState(false);
+const dragging = useRef(false);
+const dragStart = useRef({ x: 0, y: 0 });
+const dragLast = useRef({ x: 0, y: 0 });
+const avatarRef = useRef(null);
+const bannerRef = useRef(null);
+const [showBannerZoom, setShowBannerZoom] = useState(false);
 
-  useEffect(() => setMounted(true), []);
+useEffect(() => setMounted(true), []);
+
+useEffect(() => {
+  const handleClickOutside = (e) => {
+    if (avatarRef.current && !avatarRef.current.contains(e.target)) {
+      setShowZoom(false);
+    }
+  };
+  document.addEventListener("touchstart", handleClickOutside);
+  document.addEventListener("mousedown", handleClickOutside);
+  return () => {
+    document.removeEventListener("touchstart", handleClickOutside);
+    document.removeEventListener("mousedown", handleClickOutside);
+  };
+}, []);
+
+useEffect(() => {
+  const handleClickOutside = (e) => {
+    if (bannerRef.current && !bannerRef.current.contains(e.target)) {
+      setShowBannerZoom(false);
+    }
+  };
+  document.addEventListener("touchstart", handleClickOutside);
+  document.addEventListener("mousedown", handleClickOutside);
+  return () => {
+    document.removeEventListener("touchstart", handleClickOutside);
+    document.removeEventListener("mousedown", handleClickOutside);
+  };
+}, []);
 
   const profileMouseDown = (e) => {
     if (!isEditing) return;
@@ -63,58 +103,102 @@ const [activeTab, setActiveTab] = useState("links");
   };
 
   return (
-    <div className="w-full min-h-screen" style={{ background: backgroundColor, fontFamily: "system-ui, sans-serif" }}>
+    <div className="w-full min-h-screen" style={{ background: backgroundColor, fontFamily: fontFamily }}>
 
       {/* ── HERO IMAGE ── */}
-      <div
-        className="relative w-full overflow-hidden group"
-        style={{ height: 380 }}
-        onMouseDown={isEditing ? profileMouseDown : undefined}
-        onMouseMove={isEditing ? profileMouseMove : undefined}
-        onMouseUp={isEditing ? profileMouseUp : undefined}
-        onMouseLeave={isEditing ? profileMouseUp : undefined}
-        onTouchStart={isEditing ? profileMouseDown : undefined}
-        onTouchMove={isEditing ? profileMouseMove : undefined}
-        onTouchEnd={isEditing ? profileMouseUp : undefined}
-      >
-        {profileImage ? (
-          <motion.img
-            src={profileImage}
-            className="absolute inset-0 w-full h-full object-contain"
-            style={{ scale: profileScale, translateX: profilePos.x, translateY: profilePos.y }}
-            draggable={false}
-          />
-        ) : (
-          <div className="w-full h-full bg-gray-200 flex items-center justify-center text-gray-400 text-sm">
-            {isEditing ? "Upload a photo" : "No Photo"}
+      {layout !== "circle" ? (
+        <div
+          ref={bannerRef}
+          className="relative w-full overflow-hidden group"
+          style={{ height: 380 }}
+          onClick={() => isEditing && setShowBannerZoom(true)}
+          onMouseDown={isEditing ? profileMouseDown : undefined}
+          onMouseMove={isEditing ? profileMouseMove : undefined}
+          onMouseUp={isEditing ? profileMouseUp : undefined}
+          onMouseLeave={isEditing ? profileMouseUp : undefined}
+          onTouchStart={isEditing ? profileMouseDown : undefined}
+          onTouchMove={isEditing ? profileMouseMove : undefined}
+          onTouchEnd={isEditing ? profileMouseUp : undefined}
+        >
+          {profileImage ? (
+            <motion.img
+              src={profileImage}
+              className="absolute inset-0 w-full h-full object-contain"
+              style={{ scale: profileScale, translateX: profilePos.x, translateY: profilePos.y }}
+              draggable={false}
+            />
+          ) : (
+            <div className="w-full h-full bg-gray-200 flex items-center justify-center text-gray-400 text-sm">
+              {isEditing ? "Upload a photo" : "No Photo"}
+            </div>
+          )}
+          <div className="absolute inset-0" style={{ background: `linear-gradient(to bottom, transparent 40%, ${backgroundColor} 100%)` }} />
+          {isEditing && profileImage && showBannerZoom && (
+            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-1 bg-white border border-gray-200 rounded-full px-2 py-1 shadow-sm z-10" style={{ width: 150 }}>
+              <span className="text-[9px] text-gray-400">−</span>
+              <input type="range" min="0.5" max="2" step="0.01" value={profileScale}
+                onChange={(e) => setProfileScale && setProfileScale(Number(e.target.value))}
+                className="flex-1 accent-black" style={{ width: 120 }} />
+              <span className="text-[9px] text-gray-400">+</span>
+            </div>
+          )}
+          {isEditing && (
+            <label className="absolute bottom-3 right-3 bg-white border border-gray-200 shadow-md px-4 py-1.5 rounded-full text-xs font-medium text-gray-700 cursor-pointer z-10">
+              Change Photo
+              <input type="file" accept="image/*" className="hidden" onChange={handleProfileUpload} />
+            </label>
+          )}
+        </div>
+      ) : (
+        <div className="pt-16 pb-2 flex flex-col items-center">
+          <div ref={avatarRef} className="relative group" onTouchStart={() => isEditing && setShowZoom(true)}>
+            <div
+              className="rounded-full overflow-hidden bg-gray-200 border-4 border-white shadow-lg cursor-grab"
+              style={{ touchAction: "none", width: socialAvatarSize, height: socialAvatarSize }}
+              onMouseDown={isEditing ? profileMouseDown : undefined}
+              onMouseMove={isEditing ? profileMouseMove : undefined}
+              onMouseUp={isEditing ? profileMouseUp : undefined}
+              onMouseLeave={isEditing ? profileMouseUp : undefined}
+              onTouchStart={isEditing ? profileMouseDown : undefined}
+              onTouchMove={isEditing ? profileMouseMove : undefined}
+              onTouchEnd={isEditing ? profileMouseUp : undefined}
+            >
+              {profileImage ? (
+                <motion.img
+                  src={profileImage}
+                  className="w-full h-full object-cover"
+                  style={{ scale: profileScale, translateX: profilePos.x, translateY: profilePos.y }}
+                  draggable={false}
+                />
+              ) : (
+                <div className="w-full h-full flex items-center justify-center text-gray-400 text-xs">
+                  {isEditing ? "Upload" : "No Photo"}
+                </div>
+              )}
+            </div>
+     {isEditing && (
+              <label className="absolute -bottom-1 -right-1 w-7 h-7 bg-black rounded-full flex items-center justify-center cursor-pointer shadow z-10">
+                <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+                <input type="file" accept="image/*" className="hidden" onChange={handleProfileUpload} />
+              </label>
+            )}
+            {isEditing && profileImage && showZoom && (
+              <div className="absolute -bottom-8 left-1/2 -translate-x-1/2 flex items-center gap-1 bg-white border border-gray-200 rounded-full px-2 py-1 shadow-sm z-10" style={{ width: 100 }}>
+                <span className="text-[9px] text-gray-400">−</span>
+                <input type="range" min="0.5" max="2" step="0.01" value={profileScale}
+                  onChange={(e) => setProfileScale && setProfileScale(Number(e.target.value))}
+                  className="flex-1 accent-black" style={{ width: 70 }} />
+                <span className="text-[9px] text-gray-400">+</span>
+              </div>
+            )}
           </div>
-        )}
-
-        {/* gradient fade at bottom */}
-        <div className="absolute inset-0" style={{ background: `linear-gradient(to bottom, transparent 40%, ${backgroundColor} 100%)` }} />
-
-        {/* zoom slider */}
-        {isEditing && profileImage && (
-          <div className="absolute bottom-2 left-1/2 -translate-x-1/2 bg-white/90 px-4 py-2 rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition z-10">
-            <input type="range" min="0.5" max="2" step="0.01" value={profileScale}
-              onChange={(e) => setProfileScale && setProfileScale(Number(e.target.value))}
-              className="w-[120px]" />
-          </div>
-        )}
-
-        {/* change photo button */}
-        {isEditing && (
-          <label className="absolute bottom-3 right-3 bg-black text-white text-xs px-4 py-2 rounded-full cursor-pointer shadow-md z-10">
-            Change Photo
-            <input type="file" accept="image/*" className="hidden" onChange={handleProfileUpload} />
-          </label>
-        )}
-      </div>
+        </div>
+      )}
 
       {/* ── PROFILE INFO ── */}
-      <div className="px-6 -mt-2 text-center relative z-10">
-        <h1 className="text-3xl font-bold tracking-tight">{name}</h1>
-        <p className="text-gray-500 text-l text-base mt-1 leading-relaxed">{title}</p>
+      <div className={`px-6 text-center relative z-10 ${layout === "circle" ? "mt-4" : "-mt-2"}`}>
+        <h1 className="font-bold tracking-tight" style={{ fontSize: `${1.875 * socialNameSize / 100}rem` }}>{name}</h1>
+        <p className="text-gray-500 mt-1 leading-relaxed" style={{ fontSize: `${1 * socialTitleSize / 100}rem` }}>{title}</p>
 
         {/* Social Icons */}
         {mounted && Object.keys(socials).length > 0 && (
@@ -123,8 +207,8 @@ const [activeTab, setActiveTab] = useState("links");
               url && SOCIAL_ICONS[key] ? (
           <a key={key} href={url.startsWith("http") ? url : `${SOCIAL_ICONS[key].base}${url}`} target="_blank" rel="noopener noreferrer"
                   onClick={() => logEvent(profileId, "tap")}
-                  className="w-10 h-10 rounded-full flex items-center justify-center bg-white border border-gray-200 shadow-sm hover:scale-105 transition"
-                  style={{ color: SOCIAL_ICONS[key].color }}>
+                  className="rounded-full flex items-center justify-center bg-white border border-gray-200 shadow-sm hover:scale-105 transition"
+                  style={{ color: SOCIAL_ICONS[key].color, width: `${40 * socialIconSize / 100}px`, height: `${40 * socialIconSize / 100}px` }}>
                   {SOCIAL_ICONS[key].icon}
                 </a>
               ) : null
@@ -207,7 +291,7 @@ const [activeTab, setActiveTab] = useState("links");
                 </div>
               )}
               <div className="px-4 py-3 flex items-center justify-between">
-                <p className="font-semibold text-sm text-gray-900">{link.title || "Untitled"}</p>
+                <p className="font-semibold text-gray-900" style={{ fontSize: `${0.875 * socialLinkSize / 100}rem` }}>{link.title || "Untitled"}</p>
                 <span className="text-gray-400 text-lg">→</span>
               </div>
             </a>
@@ -278,8 +362,8 @@ const [activeTab, setActiveTab] = useState("links");
                   </div>
                 )}
                 <div className="px-3 py-2">
-                  <p className="font-semibold text-xs text-gray-900 truncate">{product.title || "Product"}</p>
-                  {product.price && <p className="text-xs text-gray-400 mt-0.5">{product.price}</p>}
+                  <p className="font-semibold text-gray-900 truncate" style={{ fontSize: `${0.75 * socialProductSize / 100}rem` }}>{product.title || "Product"}</p>
+                  {product.price && <p className="text-gray-400 mt-0.5" style={{ fontSize: `${0.75 * socialProductSize / 100}rem` }}>{product.price}</p>}
                 </div>
               </a>
             ))}

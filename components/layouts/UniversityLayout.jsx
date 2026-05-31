@@ -15,6 +15,14 @@ export default function UniversityLayout({
   setFieldValues,
   backgroundColor = "#f8f9fa",
    profileId,
+  fontFamily = "system-ui",
+  fontSize = 100,
+  titleSize = 100,
+  buttonSize = 100,
+  uniContentSize = 100,
+uniBioSize = 100,
+  uniStatsSize = 100,
+  uniAvatarSize = 80,
 }) {
   const [activeTab, setActiveTab] = useState("about");
   const [mounted, setMounted] = useState(false);
@@ -43,7 +51,7 @@ useEffect(() => {
   const linkedin = fieldValues?.linkedin || "";
 
   return (
-    <div className="w-full min-h-screen pt-[75px]" style={{ background: backgroundColor }}>
+    <div className="w-full min-h-screen pt-[75px]" style={{ background: backgroundColor, fontFamily: fontFamily }}>
 
       {/* ── HEADER CARD ── */}
       <div className="px-5 pt-6 pb-4">
@@ -52,7 +60,7 @@ useEffect(() => {
 {/* Avatar */}
           <div ref={avatarRef} className="relative flex-shrink-0" style={{ marginBottom: isEditing && profileImage && showZoom ? "32px" : "0" }} onTouchStart={() => isEditing && setShowZoom(true)}>
             <div
-              className="w-20 h-20 rounded-full overflow-hidden bg-gray-200 border-2 border-white shadow relative"
+              className="rounded-full overflow-hidden bg-gray-200 border-2 border-white shadow relative" style={{ width: uniAvatarSize, height: uniAvatarSize, cursor: isEditing ? "grab" : "default" }}
               onTouchStart={isEditing ? (e) => {
                 e.preventDefault();
                 const t = e.touches[0];
@@ -76,8 +84,7 @@ useEffect(() => {
                 window.addEventListener("touchmove", onMove, { passive: false });
                 window.addEventListener("touchend", onEnd);
               } : undefined}
-              style={{ cursor: isEditing ? "grab" : "default" }}
-            >
+              >
               {profileImage ? (
                 <img
                   src={profileImage}
@@ -126,8 +133,8 @@ useEffect(() => {
           </div>
           {/* Name + title */}
           <div className="flex-1 min-w-0">
-<h1 className="text-xl font-bold tracking-tight text-gray-900">{name}</h1>
-            <p className="text-base text-gray-500 mt-0.5 leading-snug">{title}</p>
+<h1 className="font-bold tracking-tight text-gray-900" style={{ fontSize: `${1.25 * fontSize / 100}rem` }}>{name}</h1>
+            <p className="text-base text-gray-500 mt-0.5 leading-snug" style={titleSize !== 100 ? { fontSize: `${titleSize}%` } : undefined}>{title}</p>
 
             {/* Resume button */}
             {resumeUrl && (
@@ -164,19 +171,19 @@ useEffect(() => {
   <div className="grid grid-cols-3 gap-3">
     {fieldValues?.uni_gpa?.trim() && (
       <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 text-center">
-        <p className="text-2xl font-bold text-blue-500 leading-none">{fieldValues.uni_gpa.trim()}</p>
+        <p className="font-bold text-blue-500 leading-none" style={{ fontSize: `${1.5 * uniStatsSize / 100}rem` }}>{fieldValues.uni_gpa.trim()}</p>
         <p className="text-[11px] uppercase tracking-wide text-gray-400 mt-1">GPA</p>
       </div>
     )}
     {projects.length > 0 && (
       <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 text-center">
-        <p className="text-2xl font-bold text-blue-500 leading-none">{projects.length}</p>
+        <p className="font-bold text-blue-500 leading-none" style={{ fontSize: `${1.5 * uniStatsSize / 100}rem` }}>{projects.length}</p>
         <p className="text-[11px] uppercase tracking-wide text-gray-400 mt-1">Projects</p>
       </div>
     )}
     {fieldValues?.uni_grad_year?.trim() && (
       <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 text-center">
-        <p className="text-2xl font-bold text-blue-500 leading-none">{fieldValues.uni_grad_year.trim()}</p>
+        <p className="font-bold text-blue-500 leading-none" style={{ fontSize: `${1.5 * uniStatsSize / 100}rem` }}>{fieldValues.uni_grad_year.trim()}</p>
         <p className="text-[11px] uppercase tracking-wide text-gray-400 mt-1">Grad</p>
       </div>
     )}
@@ -187,7 +194,8 @@ useEffect(() => {
             <p className="text-[15px] font-semibold text-gray-400 uppercase tracking-widest px-1 mb-2">About</p>            
             <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5">
               {bio ? (
-                <p className="text-base text-gray-700 leading-relaxed">{bio}</p>
+                <p className="text-base text-gray-700 leading-relaxed" style={uniBioSize !== 100 ? { fontSize: `${uniBioSize}%` } : undefined}
+>{bio}</p>
               ) : (
                 <p className="text-base text-gray-400 italic">{isEditing ? "Add your bio in the Content tab" : "No bio yet"}</p>
               )}
@@ -209,7 +217,8 @@ useEffect(() => {
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="text-[13px] text-gray-400 font-medium mb-0.5">Phone</p>
-                      <p className="text-[15px] font-semibold text-gray-900">{phone}</p>
+                      <p className="text-[15px] font-semibold text-gray-900" style={uniContentSize !== 100 ? { fontSize: `${uniContentSize}%` } : undefined}
+>{phone}</p>
                     </div>
                     <span className="text-gray-300 text-xl">›</span>
                   </a>
@@ -224,7 +233,8 @@ useEffect(() => {
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="text-[13px] text-gray-400 font-medium mb-0.5">Email</p>
-                      <p className="text-[15px] font-semibold text-gray-900 truncate">{email}</p>
+                      <p className="text-[15px] font-semibold text-gray-900 truncate" style={uniContentSize !== 100 ? { fontSize: `${uniContentSize}%` } : undefined}
+>{email}</p>
                     </div>
                     <span className="text-gray-300 text-xl">›</span>
                   </a>
@@ -239,7 +249,8 @@ useEffect(() => {
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="text-[13px] text-gray-400 font-medium mb-0.5">LinkedIn</p>
-                      <p className="text-[15px] font-semibold text-gray-900 truncate">@{linkedin.replace(/.*linkedin\.com\/in\//,"")}</p>                    </div>
+                      <p className="text-[15px] font-semibold text-gray-900 truncate" style={uniContentSize !== 100 ? { fontSize: `${uniContentSize}%` } : undefined}
+>@{linkedin.replace(/.*linkedin\.com\/in\//,"")}</p>                    </div>
                     <span className="text-gray-300 text-xl">›</span>
                   </a>
                 )}

@@ -31,7 +31,31 @@ const [bannerUrl, setBannerUrl] = useState(null);
 const [saveSuccess, setSaveSuccess] = useState(false)
 const [saveError, setSaveError] = useState(null)
 const [backgroundColor, setBackgroundColor] = useState("#f3f4f6");
-const [networkingBackground, setNetworkingBackground] = useState("#f3f4f6");
+const [fontFamily, setFontFamily] = useState("system-ui");
+const [fontSize, setFontSize] = useState(100);
+const [titleSize, setTitleSize] = useState(100);
+const [buttonSize, setButtonSize] = useState(100);
+const [uniContentSize, setUniContentSize] = useState(100);
+const [uniBioSize, setUniBioSize] = useState(100);
+const [uniStatsSize, setUniStatsSize] = useState(100);
+const [uniAvatarSize, setUniAvatarSize] = useState(80);
+const [netAvatarSize, setNetAvatarSize] = useState(208);
+const [netNameSize, setNetNameSize] = useState(100);
+const [netTitleSize, setNetTitleSize] = useState(100);
+const [netContactSize, setNetContactSize] = useState(100);
+const [netActionSize, setNetActionSize] = useState(100);
+const [netButtonSize, setNetButtonSize] = useState(100);
+const [socialNameSize, setSocialNameSize] = useState(100);
+const [socialTitleSize, setSocialTitleSize] = useState(100);
+const [socialIconSize, setSocialIconSize] = useState(100);
+const [socialLinkSize, setSocialLinkSize] = useState(100);
+const [socialProductSize, setSocialProductSize] = useState(100);
+const [socialAvatarSize, setSocialAvatarSize] = useState(144);
+const [minNameSize, setMinNameSize] = useState(100);
+const [minTitleSize, setMinTitleSize] = useState(100);
+const [minContactSize, setMinContactSize] = useState(100);const [execAvatarSize, setExecAvatarSize] = useState(100);
+const [execSaveSize, setExecSaveSize] = useState(100);
+const [execContactSize, setExecContactSize] = useState(100);const [networkingBackground, setNetworkingBackground] = useState("#f3f4f6");
 const [networkingNameColor, setNetworkingNameColor] = useState("#000000");
 const [networkingTitleColor, setNetworkingTitleColor] = useState("#6b7280");
 const [username, setUsername] = useState(null)
@@ -109,6 +133,12 @@ setFields({
     instagram: "taplygram",
     website: "",
     bio: "",
+    social_icons: {
+      instagram: "taplygram",
+      tiktok: "taply.now",
+      twitter: "taplytwitter",
+      youtube: "tapltube",
+    },
     uni_bio: "Tell people about yourself, your interests, and what you're working on...",
     uni_gpa: "0",
     uni_grad_year: "0",
@@ -210,6 +240,12 @@ const [fieldValues, setFieldValues] = useState({
   instagram: "",
   website: "",
   bio: "",
+  social_icons: {
+    instagram: "taplygram",
+    tiktok: "taply.now",
+    twitter: "taplytwitter",
+    youtube: "tapltube",
+  },
   uni_bio: "Tell people about yourself, your interests, and what you're working on...",
   uni_gpa: "3.8",
   uni_grad_year: "2026",
@@ -569,12 +605,38 @@ useEffect(() => {
   // -----------------------------
   // LAYOUT PROPS
   // -----------------------------
-  const layoutProps = {
+const layoutProps = {
     name,
     title,
     isEditing,
     fields,
     fieldValues,
+    fontFamily,
+    fontSize,
+    titleSize,
+    buttonSize,
+uniContentSize,
+    uniBioSize,
+    uniStatsSize,
+    uniAvatarSize,
+    execAvatarSize,
+    execSaveSize,
+    execContactSize,
+    netAvatarSize,
+    netNameSize,
+    netTitleSize,
+    netContactSize,
+    netActionSize,
+    netButtonSize,
+    socialNameSize,
+    socialTitleSize,
+    socialIconSize,
+    socialLinkSize,
+    socialProductSize,
+    socialAvatarSize,
+    minNameSize,
+    minTitleSize,
+    minContactSize,
   };
 const addField = (field) => {
   setFields((prev) => ({
@@ -648,8 +710,14 @@ case "social":
       profilePos={businessPos}
       setProfilePos={setBusinessPos}
       backgroundColor={backgroundColor}
-setFieldValues={setFieldValues}
+      setFieldValues={setFieldValues}
       layout={layout}
+      socialNameSize={socialNameSize}
+      socialTitleSize={socialTitleSize}
+      socialIconSize={socialIconSize}
+      socialLinkSize={socialLinkSize}
+      socialProductSize={socialProductSize}
+      socialAvatarSize={socialAvatarSize}
     />
   );
 case "networking":
@@ -937,8 +1005,7 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
     {/* BUSINESS MODE DESIGN */}
 {mode === "business" && (
   <>
-   <p className="text-base font-bold text-gray-800 mb-3"
->Background</p>
+   <p className="text-base font-bold text-gray-800 mb-3">Background</p>
 
 <p className="text-sm font-semibold text-gray-600 mb-2">Solid</p>
     <div className="grid grid-cols-6 gap-2 mb-4">
@@ -997,6 +1064,50 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
     </div>
   </>
 )}
+{mode === "business" && layout === "minimal" && (
+  <>
+    <div className="h-px bg-gray-100 my-4" />
+    <p className="text-base font-bold text-gray-800 mb-3">Content Size</p>
+    <div className="space-y-3">
+      {[
+        { label: "Name", value: minNameSize, set: setMinNameSize },
+        { label: "Title", value: minTitleSize, set: setMinTitleSize },
+        { label: "Contact", value: minContactSize, set: setMinContactSize },
+      ].map(({ label, value, set }) => (
+        <div key={label} className="flex items-center gap-3 bg-white border border-gray-200 rounded-2xl px-4 py-3">
+          <span className="text-sm text-gray-500 w-16">{label}</span>
+          <button onClick={() => set(s => Math.max(70, s - 5))} className="w-9 h-9 rounded-full bg-gray-100 flex items-center justify-center text-lg font-medium hover:bg-gray-200 transition">−</button>
+          <span className="flex-1 text-center text-sm font-medium text-gray-700">{value}%</span>
+          <button onClick={() => set(s => Math.min(150, s + 5))} className="w-9 h-9 rounded-full bg-gray-100 flex items-center justify-center text-lg font-medium hover:bg-gray-200 transition">+</button>
+        </div>
+      ))}
+    </div>
+  </>
+)}
+
+{mode === "business" && layout === "executive" && (
+  <>
+    <div className="h-px bg-gray-100 my-4" />
+    <p className="text-base font-bold text-gray-800 mb-3">Content Size</p>
+    <div className="space-y-3">
+      {[
+        { label: "Name", value: fontSize, set: setFontSize },
+        { label: "Title", value: titleSize, set: setTitleSize },
+        { label: "Photo", value: execAvatarSize, set: setExecAvatarSize },
+        { label: "Save Btn", value: execSaveSize, set: setExecSaveSize },
+        { label: "Contact", value: execContactSize, set: setExecContactSize },
+      ].map(({ label, value, set }) => (
+        <div key={label} className="flex items-center gap-3 bg-white border border-gray-200 rounded-2xl px-4 py-3">
+          <span className="text-sm text-gray-500 w-16">{label}</span>
+          <button onClick={() => set(s => Math.max(70, s - 5))} className="w-9 h-9 rounded-full bg-gray-100 flex items-center justify-center text-lg font-medium hover:bg-gray-200 transition">−</button>
+          <span className="flex-1 text-center text-sm font-medium text-gray-700">{value}%</span>
+          <button onClick={() => set(s => Math.min(150, s + 5))} className="w-9 h-9 rounded-full bg-gray-100 flex items-center justify-center text-lg font-medium hover:bg-gray-200 transition">+</button>
+        </div>
+      ))}
+    </div>
+  </>
+)}
+
 {/* UNIVERSITY MODE DESIGN */}
 {mode === "university" && (
   <>
@@ -1047,6 +1158,37 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
         </button>
       ))}
     </div>
+
+    <div className="h-px bg-gray-100 my-4" />
+    <p className="text-base font-bold text-gray-800 mb-3">Profile Photo Size</p>
+    <div className="flex items-center gap-3 bg-white border border-gray-200 rounded-2xl px-4 py-3 mb-3">
+      <button onClick={() => setUniAvatarSize(s => Math.max(40, s - 5))}
+        className="w-9 h-9 rounded-full bg-gray-100 flex items-center justify-center text-lg font-medium hover:bg-gray-200 transition">−</button>
+      <span className="flex-1 text-center text-sm font-medium text-gray-700">{uniAvatarSize}px</span>
+      <button onClick={() => setUniAvatarSize(s => Math.min(160, s + 5))}
+        className="w-9 h-9 rounded-full bg-gray-100 flex items-center justify-center text-lg font-medium hover:bg-gray-200 transition">+</button>
+    </div>
+    <div className="h-px bg-gray-100 my-4" />
+    <p className="text-base font-bold text-gray-800 mb-3">Content Size</p>
+    <div className="space-y-3">
+      {[
+        { label: "Name", value: fontSize, set: setFontSize },
+        { label: "Title", value: titleSize, set: setTitleSize },
+        { label: "Bio Text", value: uniBioSize, set: setUniBioSize },
+        { label: "Stats", value: uniStatsSize, set: setUniStatsSize },
+        { label: "Contact", value: uniContentSize, set: setUniContentSize },
+      ].map(({ label, value, set }) => (
+        <div key={label} className="flex items-center gap-3 bg-white border border-gray-200 rounded-2xl px-4 py-3">
+          <span className="text-sm text-gray-500 w-14">{label}</span>
+          <button onClick={() => set(s => Math.max(70, s - 5))} className="w-9 h-9 rounded-full bg-gray-100 flex items-center justify-center text-lg font-medium hover:bg-gray-200 transition">−</button>
+          <span className="flex-1 text-center text-sm font-medium text-gray-700">{value}%</span>
+          <button onClick={() => set(s => Math.min(150, s + 5))} className="w-9 h-9 rounded-full bg-gray-100 flex items-center justify-center text-lg font-medium hover:bg-gray-200 transition">+</button>
+        </div>
+      ))}
+    </div>
+
+
+
   </>
 )}
 
@@ -1077,6 +1219,26 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
         </div>
         <span className="text-[9px] text-gray-400">Custom</span>
       </label>
+    </div>
+
+    <div className="h-px bg-gray-100 my-4" />
+    <p className="text-base font-bold text-gray-800 mb-3">Content Size</p>
+    <div className="space-y-3">
+      {[
+        { label: "Name", value: socialNameSize, set: setSocialNameSize, min: 70, max: 150, px: false },
+        { label: "Title", value: socialTitleSize, set: setSocialTitleSize, min: 70, max: 150, px: false },
+        { label: "Icons", value: socialIconSize, set: setSocialIconSize, min: 70, max: 150, px: false },
+        { label: "Links", value: socialLinkSize, set: setSocialLinkSize, min: 70, max: 150, px: false },
+        { label: "Products", value: socialProductSize, set: setSocialProductSize, min: 70, max: 150, px: false },
+        ...(layout === "circle" ? [{ label: "Photo", value: socialAvatarSize, set: setSocialAvatarSize, min: 80, max: 280, px: true }] : []),
+      ].map(({ label, value, set, min, max, px }) => (
+        <div key={label} className="flex items-center gap-3 bg-white border border-gray-200 rounded-2xl px-4 py-3">
+          <span className="text-sm text-gray-500 w-16">{label}</span>
+          <button onClick={() => set(s => Math.max(min, s - 5))} className="w-9 h-9 rounded-full bg-gray-100 flex items-center justify-center text-lg font-medium hover:bg-gray-200 transition">−</button>
+          <span className="flex-1 text-center text-sm font-medium text-gray-700">{value}{px ? "px" : "%"}</span>
+          <button onClick={() => set(s => Math.min(max, s + 5))} className="w-9 h-9 rounded-full bg-gray-100 flex items-center justify-center text-lg font-medium hover:bg-gray-200 transition">+</button>
+        </div>
+      ))}
     </div>
   </>
 )}
@@ -1152,8 +1314,49 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
             <input type="color" value={networkingTitleColor} onChange={(e) => setNetworkingTitleColor(e.target.value)} />
           </div>
         </div>
+
+        <div className="h-px bg-gray-100 my-4" />
+        <p className="text-base font-bold text-gray-800 mb-3">Content Size</p>
+        <div className="space-y-3">
+          {[
+            { label: "Photo", value: netAvatarSize, set: setNetAvatarSize, min: 80, max: 320 },
+            { label: "Name", value: netNameSize, set: setNetNameSize, min: 70, max: 150 },
+            { label: "Title", value: netTitleSize, set: setNetTitleSize, min: 70, max: 150 },
+            { label: "Contact", value: netContactSize, set: setNetContactSize, min: 70, max: 150 },
+            { label: "Actions", value: netActionSize, set: setNetActionSize, min: 70, max: 150 },
+            { label: "Buttons", value: netButtonSize, set: setNetButtonSize, min: 70, max: 150 },
+          ].map(({ label, value, set, min, max }) => (
+            <div key={label} className="flex items-center gap-3 bg-white border border-gray-200 rounded-2xl px-4 py-3">
+              <span className="text-sm text-gray-500 w-16">{label}</span>
+              <button onClick={() => set(s => Math.max(min, s - 5))} className="w-9 h-9 rounded-full bg-gray-100 flex items-center justify-center text-lg font-medium hover:bg-gray-200 transition">−</button>
+              <span className="flex-1 text-center text-sm font-medium text-gray-700">{value}{label === "Photo" ? "px" : "%"}</span>
+              <button onClick={() => set(s => Math.min(max, s + 5))} className="w-9 h-9 rounded-full bg-gray-100 flex items-center justify-center text-lg font-medium hover:bg-gray-200 transition">+</button>
+            </div>
+          ))}
+        </div>
       </>
     )}
+
+{/* FONT PICKER - ALL MODES */}
+    <div className="h-px bg-gray-100 my-4" />
+    <p className="text-base font-bold text-gray-800 mb-3">Font</p>
+    <div className="grid grid-cols-2 gap-2">
+      {[
+        { label: "Default", value: "system-ui" },
+        { label: "Inter", value: "'Inter', sans-serif" },
+        { label: "Poppins", value: "'Poppins', sans-serif" },
+        { label: "Playfair", value: "'Playfair Display', serif" },
+        { label: "DM Sans", value: "'DM Sans', sans-serif" },
+        { label: "Mono", value: "'Courier New', monospace" },
+      ].map(({ label, value }) => (
+        <button key={label} onClick={() => setFontFamily(value)}
+          className={`py-2.5 px-3 rounded-xl border text-sm transition ${fontFamily === value ? "border-black border-2 bg-white font-semibold" : "border-gray-200 bg-white text-gray-600"}`}
+          style={{ fontFamily: value }}>
+          {label}
+        </button>
+      ))}
+    </div>
+
 
   </div>
 )}

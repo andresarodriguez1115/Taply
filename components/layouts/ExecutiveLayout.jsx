@@ -27,10 +27,15 @@ fieldValues,
   setProfileScale,
   setBannerScale,
   fontFamily,
+  fontSize = 100,
   nameSize,
   titleSize,
   cardRadius,
   profileId,
+  execAvatarSize = 100,
+  execSaveSize = 100,
+  execContactSize = 100,
+  execTitleSize = 100,
 }) {
 
 const [saved, setSaved] = useState(false);
@@ -131,9 +136,9 @@ style={{
 
         {/* PROFILE IMAGE */}
         <div
-          className="w-[100px] h-[100px] sm:w-[170px] sm:h-[170px] rounded-full border-[2px] border-white overflow-hidden shadow-xl bg-gray-300 cursor-grab touch-none"
-style={{ touchAction: "none" }}
-          onMouseDown={profileMouseDown}
+          className="rounded-full border-[2px] border-white overflow-hidden shadow-xl bg-gray-300 cursor-grab touch-none"
+          style={{ width: `${execAvatarSize}px`, height: `${execAvatarSize}px`, touchAction: "none" }}
+onMouseDown={profileMouseDown}
           onMouseMove={profileMouseMove}
           onMouseUp={profileMouseUp}
           onMouseLeave={profileMouseUp}
@@ -182,7 +187,7 @@ onTouchEnd={profileMouseUp}
 <div className="ml- 20 mt-16 sm:ml-[30px] sm:mt-16 text-left"><h1
   className="font-bold"
   style={{
-    fontSize: `clamp(${nameSize * 0.7}px, ${nameSize}px, ${nameSize}px)`
+    fontSize: `clamp(${nameSize * 0.7 * (fontSize/100)}px, ${nameSize * (fontSize/100)}px, ${nameSize * (fontSize/100)}px)`
   }}
 >
             {name}
@@ -191,7 +196,7 @@ onTouchEnd={profileMouseUp}
 <p
   className="text-gray-500 mt-2"
   style={{
-    fontSize: `clamp(${titleSize * 0.8}px, ${titleSize}px, ${titleSize}px)`
+    fontSize: `clamp(${titleSize * 0.8 * (execTitleSize/100)}px, ${titleSize * (execTitleSize/100)}px, ${titleSize * (execTitleSize/100)}px)`
   }}
 >
   {title}
@@ -203,7 +208,8 @@ onTouchEnd={profileMouseUp}
 
 <button
   onClick={saveContact}
-  className="w-[95%] sm:w-full h-[48px] sm:h-[60px] bg-black text-white rounded-3xl font-semibold text-[14px] sm:text-[16px] tracking-wide shadow-md hover:opacity-90 active:scale-[0.98] transition flex items-center justify-center"
+  className="w-[95%] sm:w-full bg-black text-white rounded-3xl font-semibold tracking-wide shadow-md hover:opacity-90 active:scale-[0.98] transition flex items-center justify-center"
+  style={{ height: `${48 * execSaveSize / 100}px`, fontSize: `${14 * execSaveSize / 100}px` }}
 >
   {saved ? "✓ Contact Saved" : "Save Contact"}
 </button>
@@ -232,11 +238,8 @@ className="w-[400px] sm:w-[650px] flex items-center justify-between pl-3 pr-4 py
 </div>
 
         <div>
-<p className="text-[16px] sm:text-[17px] font-semibold text-gray-900">
-  Call
-</p>          <p className="text-[14px] sm:text-sm text-gray-500">
-            {fieldValues.phone}
-          </p>
+<p className="font-semibold text-gray-900" style={{ fontSize: `${16 * execContactSize / 100}px` }}>Call</p>
+<p className="text-gray-500" style={{ fontSize: `${14 * execContactSize / 100}px` }}>{fieldValues.phone}</p>
         </div>
       </div>
 
@@ -258,11 +261,8 @@ className="w-[400px] sm:w-[650px] flex items-center justify-between pl-3 pr-4 py
 </div>
 
         <div>
-<p className="text-[16px] sm:text-[17px] font-semibold text-gray-900">
-  Email
-</p>          <p className="text-[14px] sm:text-sm text-gray-500 truncate">
-            {fieldValues.email}
-          </p>
+<p className="font-semibold text-gray-900" style={{ fontSize: `${16 * execContactSize / 100}px` }}>Email</p>
+<p className="text-gray-500 truncate" style={{ fontSize: `${14 * execContactSize / 100}px` }}>{fieldValues.email}</p>
         </div>
       </div>
 
@@ -285,11 +285,8 @@ className="w-[400px] sm:w-[650px] flex items-center justify-between pl-3 pr-4 py
       </div>
 
       <div>
-<p className="text-[16px] sm:text-[17px] font-semibold text-gray-900">
-  LinkedIn
-</p>        <p className="text-[14px] sm:text-sm text-gray-500 break-all">
-          {fieldValues.linkedin}
-        </p>
+<p className="font-semibold text-gray-900" style={{ fontSize: `${16 * execContactSize / 100}px` }}>LinkedIn</p>
+<p className="text-gray-500 break-all" style={{ fontSize: `${14 * execContactSize / 100}px` }}>{fieldValues.linkedin}</p>
       </div>
     </div>
 
@@ -311,12 +308,8 @@ className="w-[400px] sm:w-[650px] flex items-center justify-between pl-3 pr-4 py
 </div>
 
       <div>
-        <p className="text-[16px] sm:text-[17px] font-semibold text-gray-900">
-          Instagram
-        </p>
-        <p className="text-[14px] sm:text-sm text-gray-500">
-          @{fieldValues.instagram}
-        </p>
+        <p className="font-semibold text-gray-900" style={{ fontSize: `${16 * execContactSize / 100}px` }}>Instagram</p>
+<p className="text-gray-500" style={{ fontSize: `${14 * execContactSize / 100}px` }}>@{fieldValues.instagram}</p>
       </div>
     </div>
 
@@ -343,13 +336,8 @@ className="w-[400px] sm:w-[650px] flex items-center justify-between pl-3 pr-4 py
       </div>
 
       <div>
-        <p className="text-[16px] sm:text-[17px] font-semibold text-gray-900">
-          Website
-        </p>
-
-        <p className="text-[14px] sm:text-sm text-gray-500 break-all">
-          {fieldValues.website}
-        </p>
+        <p className="font-semibold text-gray-900" style={{ fontSize: `${16 * execContactSize / 100}px` }}>Website</p>
+<p className="text-gray-500 break-all" style={{ fontSize: `${14 * execContactSize / 100}px` }}>{fieldValues.website}</p>
       </div>
     </div>
 

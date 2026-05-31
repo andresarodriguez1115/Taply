@@ -22,6 +22,14 @@ export default function NetworkingLayout({
   nameColor,
   titleColor,
   profileId,
+  fontFamily = "system-ui",
+  fontSize = 100,
+  netAvatarSize = 208,
+  netNameSize = 100,
+  netTitleSize = 100,
+  netContactSize = 100,
+  netActionSize = 100,
+  netButtonSize = 100,
 }) {
 
   const fileInputRef = useRef(null);
@@ -142,8 +150,9 @@ return (
 <div
 style={{
   background: backgroundColor,
-    paddingBottom: mounted && visualsOpen ? "380px" : "0px",
-    transition: "padding-bottom 0.3s ease",
+  paddingBottom: mounted && visualsOpen ? "380px" : "0px",
+  transition: "padding-bottom 0.3s ease",
+  fontFamily: fontFamily,
   }}
   className={`w-full min-h-screen flex justify-center ${
     visualsOpen ? "pt-6 pb-[380px]" : "py-10"
@@ -152,7 +161,8 @@ style={{
         {/* ===== PROFILE IMAGE ===== */}
         <div className="flex justify-center mb-6 sm:mb-8 relative">
 <div
-className="relative w-52 h-52 sm:w-56 sm:h-56 rounded-full overflow-hidden bg-gray-200 border-[2px] border-white shadow-lg cursor-grab group"  
+className="relative rounded-full overflow-hidden bg-gray-200 border-[2px] border-white shadow-lg cursor-grab group"
+style={{ width: netAvatarSize, height: netAvatarSize }}  
 onMouseDown={isEditing ? profileMouseDown : undefined}
 onMouseMove={isEditing ? profileMouseMove : undefined}
 onMouseUp={isEditing ? profileMouseUp : undefined}
@@ -238,78 +248,67 @@ onTouchEnd={()=> isEditing && setDragging(false)}
 
         {/* ===== NAME + TITLE ===== */}
 <h1
-  className="text-3xl sm:text-4xl font-semibold tracking-tight"
-  style={{ color: nameColor }}
+  className="font-semibold tracking-tight"
+  style={{ color: nameColor, fontSize: `${1.875 * netNameSize / 100}rem` }}
 >
           {name}
         </h1>
 
 <p
-  className="text-sm font-medium mt-2 px-3 py-1 rounded-full border inline-block max-w-fit mx-auto"  style={{ color: titleColor, borderColor: titleColor ? `${titleColor}40` : "rgba(0,0,0,0.15)", background: titleColor ? `${titleColor}10` : "rgba(0,0,0,0.05)" }}
+  className="font-medium mt-2 px-3 py-1 rounded-full border inline-block max-w-fit mx-auto"
+  style={{ color: titleColor, borderColor: titleColor ? `${titleColor}40` : "rgba(0,0,0,0.15)", background: titleColor ? `${titleColor}10` : "rgba(0,0,0,0.05)", fontSize: `${0.875 * netTitleSize / 100}rem` }}
 >
   {title}
 </p>
 
  
 
- {/* ===== CONTACT CIRCLES ===== */}
-{mounted && (
+{/* ===== CONTACT CIRCLES ===== */}
+{mounted && (fieldValues?.phone || fieldValues?.location || fieldValues?.email) && (
 <div className="flex justify-center gap-2 mt-4">
 
-<a
-href={fieldValues?.phone ? `tel:${fieldValues.phone}` : "#"}
+{fieldValues?.phone && (
+  <a
+    href={`tel:${fieldValues.phone}`}
 onClick={() => logEvent(profileId, "tap")}
-className="w-14 h-14 sm:w-10 sm:h-10 rounded-full
-bg-white border border-gray-200
-shadow-[0_10px_25px_rgba(0,0,0,0.08)]
-flex items-center justify-center
-hover:shadow-[0_15px_35px_rgba(0,0,0,0.12)]
-hover:scale-105
-transition-all duration-300"
+className="rounded-full bg-white border border-gray-200 shadow-[0_10px_25px_rgba(0,0,0,0.08)] flex items-center justify-center hover:shadow-[0_15px_35px_rgba(0,0,0,0.12)] hover:scale-105 transition-all duration-300"
+style={{ width: `${56 * netContactSize / 100}px`, height: `${56 * netContactSize / 100}px` }}
 >
-<Phone size={22} className="text-gray-700" />
+<Phone size={22 * netContactSize / 100} className="text-gray-700" />
 </a>
+)}
 
-<a
-href={fieldValues?.phone ? `sms:${fieldValues.phone}` : "#"}
+{fieldValues?.phone && (
+  <a
+    href={`sms:${fieldValues.phone}`}
 onClick={() => logEvent(profileId, "tap")}
-className="w-14 h-14 sm:w-10 sm:h-10 rounded-full
-bg-white border border-gray-200
-shadow-[0_10px_25px_rgba(0,0,0,0.08)]
-flex items-center justify-center
-hover:shadow-[0_15px_35px_rgba(0,0,0,0.12)]
-hover:scale-105
-transition-all duration-300"
+className="rounded-full bg-white border border-gray-200 shadow-[0_10px_25px_rgba(0,0,0,0.08)] flex items-center justify-center hover:shadow-[0_15px_35px_rgba(0,0,0,0.12)] hover:scale-105 transition-all duration-300"
+style={{ width: `${56 * netContactSize / 100}px`, height: `${56 * netContactSize / 100}px` }}
 >
-<MessageSquare size={22} className="text-gray-700" />
+<MessageSquare size={22 * netContactSize / 100} className="text-gray-700" />
 </a>
+)}
 
-<a
-href={fieldValues?.location ? `https://maps.google.com/?q=${fieldValues.location}` : "#"}
-className="w-14 h-14 sm:w-10 sm:h-10 rounded-full
-bg-white border border-gray-200
-shadow-[0_10px_25px_rgba(0,0,0,0.08)]
-flex items-center justify-center
-hover:shadow-[0_15px_35px_rgba(0,0,0,0.12)]
-hover:scale-105
-transition-all duration-300"
+{fieldValues?.location && (
+  <a
+    href={`https://maps.google.com/?q=${fieldValues.location}`}
+className="rounded-full bg-white border border-gray-200 shadow-[0_10px_25px_rgba(0,0,0,0.08)] flex items-center justify-center hover:shadow-[0_15px_35px_rgba(0,0,0,0.12)] hover:scale-105 transition-all duration-300"
+style={{ width: `${56 * netContactSize / 100}px`, height: `${56 * netContactSize / 100}px` }}
 >
-<MapPin size={22} className="text-gray-700" />
+<MapPin size={22 * netContactSize / 100} className="text-gray-700" />
 </a>
+)}
 
-<a
-href={fieldValues?.email ? `mailto:${fieldValues.email}` : "#"}
+{fieldValues?.email && (
+  <a
+    href={`mailto:${fieldValues.email}`}
 onClick={() => logEvent(profileId, "tap")}
-className="w-14 h-14 sm:w-10 sm:h-10 rounded-full
-bg-white border border-gray-200
-shadow-[0_10px_25px_rgba(0,0,0,0.08)]
-flex items-center justify-center
-hover:shadow-[0_15px_35px_rgba(0,0,0,0.12)]
-hover:scale-105
-transition-all duration-300"
+className="rounded-full bg-white border border-gray-200 shadow-[0_10px_25px_rgba(0,0,0,0.08)] flex items-center justify-center hover:shadow-[0_15px_35px_rgba(0,0,0,0.12)] hover:scale-105 transition-all duration-300"
+style={{ width: `${56 * netContactSize / 100}px`, height: `${56 * netContactSize / 100}px` }}
 >
-<Mail size={22} className="text-gray-700" />
+<Mail size={22 * netContactSize / 100} className="text-gray-700" />
 </a>
+)}
 
 </div>
 )}
@@ -321,30 +320,20 @@ transition-all duration-300"
   {/* ADD TO CONTACTS */}
 <button
 onClick={saveContact}
-className="flex items-center gap-2 px-6 py-3 rounded-full 
-           bg-white 
-           border border-gray-200
-           shadow-[0_12px_30px_rgba(0,0,0,0.08)]
-           hover:shadow-[0_18px_40px_rgba(0,0,0,0.12)]
-           transition-all duration-300
-           text-sm text-gray-800 font-semibold"
+className="flex items-center gap-2 px-6 py-3 rounded-full bg-white border border-gray-200 shadow-[0_12px_30px_rgba(0,0,0,0.08)] hover:shadow-[0_18px_40px_rgba(0,0,0,0.12)] transition-all duration-300 text-gray-800 font-semibold"
+style={{ fontSize: `${0.875 * netActionSize / 100}rem` }}
 >
-  <Download size={18} />
+  <Download size={18 * netActionSize / 100} />
   {saved ? "✓ Contact Saved" : "Add to Contacts"}
 </button>
 
   {/* SHARE */}
 <button
 onClick={handleShare}
-className="flex items-center gap-2 px-6 py-3 rounded-full 
-           bg-white 
-           border border-gray-200
-           shadow-[0_12px_30px_rgba(0,0,0,0.08)]
-           hover:shadow-[0_18px_40px_rgba(0,0,0,0.12)]
-           transition-all duration-300
-           text-sm text-gray-800 font-semibold"
+className="flex items-center gap-2 px-6 py-3 rounded-full bg-white border border-gray-200 shadow-[0_12px_30px_rgba(0,0,0,0.08)] hover:shadow-[0_18px_40px_rgba(0,0,0,0.12)] transition-all duration-300 text-gray-800 font-semibold"
+style={{ fontSize: `${0.875 * netActionSize / 100}rem` }}
 >
-  <Share2 size={18} />
+  <Share2 size={18 * netActionSize / 100} />
   Share
 </button>
   
@@ -367,6 +356,7 @@ className="flex items-center gap-2 px-6 py-3 rounded-full
       imgX={btn.imgX}
       imgY={btn.imgY}
       imgScale={btn.imgScale}
+      netButtonSize={netButtonSize}
       onImgChange={({ x, y, scale }) => {
         if (!setFieldValues) return
         const updated = [...(fieldValues?.buttons || [])]
@@ -395,7 +385,7 @@ function LinkCard({ title }) {
     </div>
   );
 }
-function BigLinkCard({ title, image, url, profileId, isEditing, imgX, imgY, imgScale, onImgChange }) {
+function BigLinkCard({ title, image, url, profileId, isEditing, imgX, imgY, imgScale, onImgChange, netButtonSize = 100 }) {
   const safeUrl = url ? (url.startsWith("http") ? url : `https://${url}`) : "#";
   return (
     <a
@@ -463,7 +453,7 @@ function BigLinkCard({ title, image, url, profileId, isEditing, imgX, imgY, imgS
 
         {/* TEXT */}
         <div className="flex flex-col justify-center">
-          <p className="text-[18px] font-semibold text-gray-900 leading-tight">{title}</p>
+          <p className="font-semibold text-gray-900 leading-tight" style={{ fontSize: `${18 * netButtonSize / 100}px` }}>{title}</p>
         </div>
       </div>
 
@@ -471,4 +461,4 @@ function BigLinkCard({ title, image, url, profileId, isEditing, imgX, imgY, imgS
       <div className="text-gray-400 text-xl">→</div>
     </a>
   );
-}``
+}

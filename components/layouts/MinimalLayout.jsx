@@ -22,6 +22,11 @@ export default function MinimalLayout({
   profileMouseMove,
   profileMouseUp,
   profileId,
+  fontFamily = "system-ui",
+  fontSize = 100,
+  minNameSize = 100,
+  minTitleSize = 100,
+  minContactSize = 100,
 })
 {
 
@@ -56,7 +61,7 @@ if (data.scale !== undefined && setProfileScale) {
 }, []);
 
   return (
-    <div className="w-full bg-[#f4f4f4] min-h-screen">
+    <div className="w-full bg-[#f4f4f4] min-h-screen" style={{ fontFamily: fontFamily }}>
 
       {/* FULL WIDTH IMAGE */}
 <div className="relative w-full max-w-5xl mx-auto aspect-[1/.9] sm:aspect-[1/0.8] overflow-hidden group">
@@ -136,10 +141,10 @@ onChange={(e) => setProfileScale && setProfileScale(Number(e.target.value))}
     
 {/* NAME SECTION */}
 <div className="text-center mt-4">
-  <h1 className="text-4xl sm:text-5xl font-bold text-black">
+  <h1 className="font-bold text-black" style={{ fontSize: `${2.25 * minNameSize / 100}rem` }}>
     {name}
   </h1>
-  <p className="uppercase text-lg sm:text-2xl tracking-[0.1em] text-gray-600 mt-4">
+  <p className="uppercase tracking-[0.1em] text-gray-600 mt-4" style={{ fontSize: `${1.125 * minTitleSize / 100}rem` }}>
     {title}
   </p>
 </div>
@@ -154,7 +159,8 @@ onChange={(e) => setProfileScale && setProfileScale(Number(e.target.value))}
       <div className="w-[44px] h-[44px] bg-gray-100 rounded-full flex items-center justify-center flex-shrink-0">
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#374151" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
       </div>
-      <h2 className="text-lg font-semibold">Contact Information</h2>
+      <h2 className="font-semibold" style={{ fontSize: `${1.125 * minContactSize / 100}rem` }}>Contact Information</h2>
+
     </div>
 
 
@@ -165,8 +171,8 @@ onChange={(e) => setProfileScale && setProfileScale(Number(e.target.value))}
             <Phone size={18} className="text-white" />
           </div>
           <div className="flex-1">
-            <p className="text-base font-semibold">Call</p>
-            <p className="text-sm text-gray-400">{fieldValues.phone}</p>
+            <p className="font-semibold" style={{ fontSize: `${1 * minContactSize / 100}rem` }}>Call</p>
+            <p className="text-gray-400" style={{ fontSize: `${0.875 * minContactSize / 100}rem` }}>{fieldValues.phone}</p>
           </div>
           <span className="text-gray-300 text-lg">›</span>
         </a>
@@ -182,8 +188,8 @@ onChange={(e) => setProfileScale && setProfileScale(Number(e.target.value))}
             <Mail size={18} className="text-white" />
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-base font-semibold">Email</p>
-            <p className="text-sm text-gray-400 truncate">{fieldValues.email}</p>
+            <p className="font-semibold" style={{ fontSize: `${1 * minContactSize / 100}rem` }}>Email</p>
+            <p className="text-gray-400 truncate" style={{ fontSize: `${0.875 * minContactSize / 100}rem` }}>{fieldValues.email}</p>
           </div>
           <span className="text-gray-300 text-lg">›</span>
         </a>
@@ -198,8 +204,8 @@ onChange={(e) => setProfileScale && setProfileScale(Number(e.target.value))}
             <Linkedin size={18} className="text-white" />
           </div>
           <div className="flex-1">
-            <p className="text-base font-semibold">LinkedIn</p>
-            <p className="text-sm text-gray-400 truncate">@{fieldValues.linkedin.replace(/.*linkedin\.com\/in\//,"")}</p>          </div>
+            <p className="font-semibold" style={{ fontSize: `${1 * minContactSize / 100}rem` }}>LinkedIn</p>
+            <p className="text-gray-400 truncate" style={{ fontSize: `${0.875 * minContactSize / 100}rem` }}>@{fieldValues.linkedin.replace(/.*linkedin\.com\/in\//,"")}</p>          </div>
           <span className="text-gray-300 text-lg">›</span>
         </a>
         
@@ -211,8 +217,8 @@ onChange={(e) => setProfileScale && setProfileScale(Number(e.target.value))}
           <Instagram size={18} className="text-white" />
         </div>
         <div className="flex-1">
-          <p className="text-base font-semibold">Instagram</p>
-          <p className="text-sm text-gray-400">@{fieldValues.instagram}</p>
+          <p className="font-semibold" style={{ fontSize: `${1 * minContactSize / 100}rem` }}>Instagram</p>
+          <p className="text-gray-400" style={{ fontSize: `${0.875 * minContactSize / 100}rem` }}>@{fieldValues.instagram}</p>
         </div>
         <span className="text-gray-300 text-lg">›</span>
       </a>
@@ -240,11 +246,8 @@ onChange={(e) => setProfileScale && setProfileScale(Number(e.target.value))}
       </div>
 
       <div className="flex-1 min-w-0">
-        <p className="text-base font-semibold">Website</p>
-
-        <p className="text-sm text-gray-400 truncate">
-          {fieldValues.website}
-        </p>
+        <p className="font-semibold" style={{ fontSize: `${1 * minContactSize / 100}rem` }}>Website</p>
+        <p className="text-gray-400 truncate" style={{ fontSize: `${0.875 * minContactSize / 100}rem` }}>{fieldValues.website}</p>
       </div>
 
       <span className="text-gray-300 text-lg">›</span>

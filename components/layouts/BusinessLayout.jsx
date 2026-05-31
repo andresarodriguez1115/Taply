@@ -49,6 +49,15 @@ export default function BusinessLayout({
   bannerPos,
   setBannerPos,
   profileId,
+fontFamily: fontFamilyProp,
+  fontSize = 100,
+  titleSize: titleSizeProp = 100,
+  execAvatarSize = 100,
+  execSaveSize = 100,
+  execContactSize = 100,
+  minNameSize = 100,
+  minTitleSize = 100,
+  minContactSize = 100,
 })
  {
   // ---------------------------
@@ -71,6 +80,7 @@ useEffect(() => {
 const [visualsOpen, setVisualsOpen] = useState(false);
 const [mounted, setMounted] = useState(false);
 const [fontFamily, setFontFamily] = useState("");
+const resolvedFont = fontFamilyProp || fontFamily;
 const [nameSize, setNameSize] = useState(22);
 const [titleSize, setTitleSize] = useState(14);
 const [cardRadius, setCardRadius] = useState(24);
@@ -265,6 +275,11 @@ titleSize={titleSize}
   profileMouseMove={profileMouseMove}
   profileMouseUp={profileMouseUp}
   profileId={profileId}
+  fontFamily={resolvedFont}
+  fontSize={fontSize}
+  minNameSize={minNameSize}
+  minTitleSize={minTitleSize}
+  minContactSize={minContactSize}
 />
 )}
 
@@ -296,13 +311,18 @@ titleSize={titleSize}
     setProfileScale={setProfileScale}
     setBannerScale={setBannerScale}
 
-    fontFamily={fontFamily}
+    fontFamily={resolvedFont}
+    fontSize={fontSize}
     nameSize={nameSize}
     titleSize={titleSize}
     cardRadius={cardRadius}
-fields={fields}
-fieldValues={fieldValues}
-profileId={profileId}
+    fields={fields}
+    fieldValues={fieldValues}
+    profileId={profileId}
+    execAvatarSize={execAvatarSize}
+    execSaveSize={execSaveSize}
+    execContactSize={execContactSize}
+    execTitleSize={titleSizeProp}
   />
 )}
 

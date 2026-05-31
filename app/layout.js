@@ -25,6 +25,7 @@ export default function RootLayout({ children }) {
     <html lang="en" className={inter.className}>
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link href="https://fonts.googleapis.com/css2?family=Inter&family=Poppins&family=Playfair+Display&family=DM+Sans&display=swap" rel="stylesheet" />
       </head>
 
       <body className={`${geistSans.variable} ${geistMono.variable} overflow-x-hidden`}>
