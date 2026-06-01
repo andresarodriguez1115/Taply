@@ -473,9 +473,12 @@ const [activeTab, setActiveTab] = useState("layout");
 const [openMode, setOpenMode] = useState(null);
 const [avatarMenuOpen, setAvatarMenuOpen] = useState(false);
 const [openSections, setOpenSections] = useState({
-  modes: true,
-  profiles: false,
+  modes: true, profiles: false,
+  identity: true, contact: true, buttons: true,
+  socialIcons: true, links: true, products: true,
+  academic: true, resume: true, projects: true,
 });
+const toggleSection = (key) => setOpenSections(prev => ({ ...prev, [key]: !prev[key] }))
   // -----------------------------
   // FIELD HANDLERS
   // -----------------------------
@@ -1397,15 +1400,23 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
 <div style={{ height: "10px" }} />
       {/* CONTENT TAB */}
 {activeTab === "content" && (
-  <div className="space-y-6 pb-20">
+  <div className="space-y-2 pb-20">
 
 {/* UNIVERSITY MODE ONLY */}
 {mode === "university" && (
   <>
     {/* IDENTITY */}
-<div className="mb-6" data-tutorial="identity-section">
-      <p className="text-base font-bold text-gray-800 mb-3">Identity</p>
-      <div className="space-y-3 border p-3 rounded-xl">
+<div className="mb-0" data-tutorial="identity-section">
+<button onClick={() => toggleSection("identity")} className={`w-full flex justify-between items-center px-4 py-3.5 rounded-2xl border transition mb-3 ${openSections.identity ? "bg-gray-50 border-gray-200" : "bg-white border-gray-200 shadow-sm"}`}>
+  <div className="flex items-center gap-3">
+    <div className="w-8 h-8 rounded-xl bg-purple-500 flex items-center justify-center flex-shrink-0">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+    </div>
+    <span className="text-base font-semibold text-gray-900">Identity</span>
+  </div>
+  <ChevronDown size={16} className={`text-gray-400 transition-transform duration-300 ${openSections.identity ? "rotate-180" : ""}`} />
+</button>
+{openSections.identity && <div className="space-y-3 border p-3 rounded-xl">
         <div className="flex justify-between items-center">
           <span className="text-sm">Full Name</span>
           <input value={name} onChange={(e) => setName(e.target.value)} placeholder="Your Name"
@@ -1416,15 +1427,21 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
           <input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="CS @ MIT"
             className="w-40 border border-gray-200 rounded-lg px-3 py-1.5 bg-gray-50 text-sm focus:outline-none focus:ring-2 focus:ring-black/10" />
         </div>
-      </div>
+      </div>}
     </div>
 
-
-
     {/* GPA & GRAD YEAR */}
-    <div className="mb-6" data-tutorial="uni-academic">
-      <p className="text-base font-bold text-gray-800 mb-3">Academic Info</p>
-      <div className="space-y-3">
+    <div className="mb-0" data-tutorial="uni-academic">
+<button onClick={() => toggleSection("academic")} className={`w-full flex justify-between items-center px-4 py-3.5 rounded-2xl border transition mb-3 ${openSections.academic ? "bg-gray-50 border-gray-200" : "bg-white border-gray-200 shadow-sm"}`}>
+  <div className="flex items-center gap-3">
+    <div className="w-8 h-8 rounded-xl bg-blue-500 flex items-center justify-center flex-shrink-0">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+    </div>
+    <span className="text-base font-semibold text-gray-900">Academic Info</span>
+  </div>
+  <ChevronDown size={16} className={`text-gray-400 transition-transform duration-300 ${openSections.academic ? "rotate-180" : ""}`} />
+</button>
+{openSections.academic && <div className="space-y-3">
         {[
           { key: "uni_gpa", label: "GPA", placeholder: "e.g. 3.8 / 4.0" },
           { key: "uni_grad_year", label: "Grad Year", placeholder: "e.g. Class of 2026" },
@@ -1450,26 +1467,41 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
             </div>
           );
         })}
-      </div>
+      </div>}
     </div>
 
     {/* BIO */}
-    <div className="mb-6">
-      <p className="text-base font-bold text-gray-800 mb-3"
->Bio</p>
-      <textarea
+    <div className="mb-0">
+<button onClick={() => toggleSection("resume")} className={`w-full flex justify-between items-center px-4 py-3.5 rounded-2xl border transition mb-3 ${openSections.resume ? "bg-gray-50 border-gray-200" : "bg-white border-gray-200 shadow-sm"}`}>
+  <div className="flex items-center gap-3">
+    <div className="w-8 h-8 rounded-xl bg-pink-500 flex items-center justify-center flex-shrink-0">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+    </div>
+    <span className="text-base font-semibold text-gray-900">Bio</span>
+  </div>
+  <ChevronDown size={16} className={`text-gray-400 transition-transform duration-300 ${openSections.resume ? "rotate-180" : ""}`} />
+</button>
+{openSections.resume && <textarea
         value={fieldValues?.uni_bio || ""}
         onChange={(e) => setFieldValues((prev) => ({ ...prev, uni_bio: e.target.value }))}
         placeholder="Tell people about yourself, your interests, and what you're working on..."
         rows={4}
         className="w-full border border-gray-200 rounded-2xl px-4 py-3 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-black/10 resize-none"
-      />
+      />}
     </div>
 
     {/* RESUME */}
-    <div className="mb-6" data-tutorial="uni-resume">
-      <p className="text-base font-bold text-gray-800 mb-3">Resume</p>
-      <div className="rounded-2xl border border-gray-200 bg-white px-4 py-3">
+    <div className="mb-0" data-tutorial="uni-resume">
+<button onClick={() => toggleSection("projects")} className={`w-full flex justify-between items-center px-4 py-3.5 rounded-2xl border transition mb-3 ${openSections.projects ? "bg-gray-50 border-gray-200" : "bg-white border-gray-200 shadow-sm"}`}>
+  <div className="flex items-center gap-3">
+    <div className="w-8 h-8 rounded-xl bg-orange-500 flex items-center justify-center flex-shrink-0">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+    </div>
+    <span className="text-base font-semibold text-gray-900">Resume</span>
+  </div>
+  <ChevronDown size={16} className={`text-gray-400 transition-transform duration-300 ${openSections.projects ? "rotate-180" : ""}`} />
+</button>
+{openSections.projects && <div className="rounded-2xl border border-gray-200 bg-white px-4 py-3">
         <p className="text-xs font-medium text-gray-500 mb-1.5 ml-1"
 >Link to your resume (Google Drive, Notion, etc.)</p>
         <input
@@ -1478,13 +1510,21 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
           placeholder="https://drive.google.com/your-resume"
           className="w-full border border-gray-200 rounded-xl px-3 py-2.5 bg-gray-50 text-sm focus:outline-none focus:ring-2 focus:ring-black/10"
         />
-      </div>
+      </div>}
     </div>
 
 {/* CONTACT */}
-    <div className="mb-6">
-      <p className="text-base font-bold text-gray-800 mb-3">Contact</p>
-      <div className="space-y-3">
+    <div className="mb-0">
+<button onClick={() => toggleSection("contact")} className={`w-full flex justify-between items-center px-4 py-3.5 rounded-2xl border transition mb-3 ${openSections.contact ? "bg-gray-50 border-gray-200" : "bg-white border-gray-200 shadow-sm"}`}>
+  <div className="flex items-center gap-3">
+    <div className="w-8 h-8 rounded-xl bg-blue-500 flex items-center justify-center flex-shrink-0">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.48C2 2.41 2.9 1.68 4 1.68h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+    </div>
+    <span className="text-base font-semibold text-gray-900">Contact</span>
+  </div>
+  <ChevronDown size={16} className={`text-gray-400 transition-transform duration-300 ${openSections.contact ? "rotate-180" : ""}`} />
+</button>
+{openSections.contact && <div className="space-y-3">
 {[
           { key: "phone", label: "Phone", placeholder: "Your phone number" },
           { key: "email", label: "Email", placeholder: "Your email" },
@@ -1511,13 +1551,21 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
             </div>
           );
         })}
-      </div>
+      </div>}
     </div>
 
     {/* PORTFOLIO PROJECTS */}
-    <div className="mb-6" data-tutorial="uni-projects">
-      <p className="text-base font-bold text-gray-800 mb-3">Portfolio Projects</p>
-      <div className="space-y-2">
+    <div className="mb-0" data-tutorial="uni-projects">
+<button onClick={() => toggleSection("projects")} className={`w-full flex justify-between items-center px-4 py-3.5 rounded-2xl border transition mb-3 ${openSections.projects ? "bg-gray-50 border-gray-200" : "bg-white border-gray-200 shadow-sm"}`}>
+  <div className="flex items-center gap-3">
+    <div className="w-8 h-8 rounded-xl bg-teal-500 flex items-center justify-center flex-shrink-0">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+    </div>
+    <span className="text-base font-semibold text-gray-900">Portfolio Projects</span>
+  </div>
+  <ChevronDown size={16} className={`text-gray-400 transition-transform duration-300 ${openSections.projects ? "rotate-180" : ""}`} />
+</button>
+{openSections.projects && <div className="space-y-2">
         {[0, 1, 2, 3].map((i) => {
           const project = fieldValues?.uni_projects?.[i];
           const isActive = !!project;
@@ -1576,7 +1624,7 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
             </div>
           );
         })}
-      </div>
+      </div>}
     </div>
   </>
 )}
@@ -1585,9 +1633,17 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
 {mode === "social" && (
   <>
     {/* IDENTITY */}
-<div className="mb-6" data-tutorial="social-identity">
-      <p className="text-base font-bold text-gray-800 mb-3">Identity</p>
-      <div className="space-y-3 border p-3 rounded-xl">
+<div className="mb-0" data-tutorial="social-identity">
+<button onClick={() => toggleSection("identity")} className={`w-full flex justify-between items-center px-4 py-3.5 rounded-2xl border transition mb-3 ${openSections.identity ? "bg-gray-50 border-gray-200" : "bg-white border-gray-200 shadow-sm"}`}>
+  <div className="flex items-center gap-3">
+    <div className="w-8 h-8 rounded-xl bg-purple-500 flex items-center justify-center flex-shrink-0">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+    </div>
+    <span className="text-base font-semibold text-gray-900">Identity</span>
+  </div>
+  <ChevronDown size={16} className={`text-gray-400 transition-transform duration-300 ${openSections.identity ? "rotate-180" : ""}`} />
+</button>
+{openSections.identity && <div className="space-y-3 border p-3 rounded-xl mb-3">
         <div className="flex justify-between items-center">
           <span className="text-sm">Display Name</span>
           <input value={name} onChange={(e) => setName(e.target.value)} placeholder="Your Name"
@@ -1598,13 +1654,21 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
           <input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Health & Fitness Coach"
             className="w-40 border border-gray-200 rounded-lg px-3 py-1.5 bg-gray-50 text-sm focus:outline-none focus:ring-2 focus:ring-black/10" />
         </div>
-      </div>
+      </div>}
     </div>
 
 {/* SOCIAL ICONS */}
-    <div className="mb-6" data-tutorial="social-icons">
-      <p className="text-base font-bold text-gray-800 mb-3">Social Icons</p>
-      <div className="space-y-3">
+    <div className="mb-0" data-tutorial="social-icons">
+<button onClick={() => toggleSection("socialIcons")} className={`w-full flex justify-between items-center px-4 py-3.5 rounded-2xl border transition mb-3 ${openSections.socialIcons ? "bg-gray-50 border-gray-200" : "bg-white border-gray-200 shadow-sm"}`}>
+  <div className="flex items-center gap-3">
+    <div className="w-8 h-8 rounded-xl bg-orange-500 flex items-center justify-center flex-shrink-0">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+    </div>
+    <span className="text-base font-semibold text-gray-900">Social Icons</span>
+  </div>
+  <ChevronDown size={16} className={`text-gray-400 transition-transform duration-300 ${openSections.socialIcons ? "rotate-180" : ""}`} />
+</button>
+{openSections.socialIcons && <div className="space-y-3">
         {["instagram", "tiktok", "twitter", "youtube"].map((platform) => {
           const isActive = !!(fieldValues?.social_icons?.[platform]);
           return (
@@ -1633,13 +1697,21 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
             </div>
           );
         })}
-      </div>
+      </div>}
     </div>
 
     {/* LINKS */}
-    <div className="mb-6" data-tutorial="social-links">
-      <p className="text-base font-bold text-gray-800 mb-3">Links</p>
-      <div className="space-y-2">
+    <div className="mb-0" data-tutorial="social-links">
+<button onClick={() => toggleSection("links")} className={`w-full flex justify-between items-center px-4 py-3.5 rounded-2xl border transition mb-3 ${openSections.links ? "bg-gray-50 border-gray-200" : "bg-white border-gray-200 shadow-sm"}`}>
+  <div className="flex items-center gap-3">
+    <div className="w-8 h-8 rounded-xl bg-blue-500 flex items-center justify-center flex-shrink-0">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+    </div>
+    <span className="text-base font-semibold text-gray-900">Links</span>
+  </div>
+  <ChevronDown size={16} className={`text-gray-400 transition-transform duration-300 ${openSections.links ? "rotate-180" : ""}`} />
+</button>
+{openSections.links && <div className="space-y-2">
         {[0, 1, 2, 3].map((i) => {
           const link = fieldValues?.social_links?.[i];
           const isActive = !!link;
@@ -1704,13 +1776,21 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
             </div>
           );
         })}
-      </div>
+      </div>}
     </div>
 
     {/* SHOP PRODUCTS */}
-    <div className="mb-6" data-tutorial="social-products">
-      <p className="text-base font-bold text-gray-800 mb-3">Shop Products</p>
-      <div className="space-y-2">
+    <div className="mb-0" data-tutorial="social-products">
+<button onClick={() => toggleSection("products")} className={`w-full flex justify-between items-center px-4 py-3.5 rounded-2xl border transition mb-3 ${openSections.products ? "bg-gray-50 border-gray-200" : "bg-white border-gray-200 shadow-sm"}`}>
+  <div className="flex items-center gap-3">
+    <div className="w-8 h-8 rounded-xl bg-emerald-500 flex items-center justify-center flex-shrink-0">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+    </div>
+    <span className="text-base font-semibold text-gray-900">Shop Products</span>
+  </div>
+  <ChevronDown size={16} className={`text-gray-400 transition-transform duration-300 ${openSections.products ? "rotate-180" : ""}`} />
+</button>
+{openSections.products && <div className="space-y-2">
         {[0, 1, 2, 3].map((i) => {
           const product = fieldValues?.social_products?.[i];
           const isActive = !!product;
@@ -1783,7 +1863,7 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
             </div>
           );
         })}
-      </div>
+      </div>}
     </div>
   </>
 )}
@@ -1791,9 +1871,17 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
 {/* NETWORKING MODE ONLY */}
 {mode === "networking" && (
   <>
- <div className="mb-6" data-tutorial="net-identity">
-      <p className="text-base font-bold text-gray-800 mb-3">Identity</p>
-      <div className="space-y-3 border p-3 rounded-xl">
+ <div className="mb-0" data-tutorial="net-identity">
+<button onClick={() => toggleSection("identity")} className={`w-full flex justify-between items-center px-4 py-3.5 rounded-2xl border transition mb-3 ${openSections.identity ? "bg-gray-50 border-gray-200" : "bg-white border-gray-200 shadow-sm"}`}>
+  <div className="flex items-center gap-3">
+    <div className="w-8 h-8 rounded-xl bg-purple-500 flex items-center justify-center flex-shrink-0">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+    </div>
+    <span className="text-base font-semibold text-gray-900">Identity</span>
+  </div>
+  <ChevronDown size={16} className={`text-gray-400 transition-transform duration-300 ${openSections.identity ? "rotate-180" : ""}`} />
+</button>
+{openSections.identity && <div className="space-y-3 border p-3 rounded-xl">
         <div className="flex justify-between items-center">
           <span className="text-sm">Full Name</span>
           <input value={name} onChange={(e) => setName(e.target.value)} placeholder="Your Name"
@@ -1804,13 +1892,21 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
           <input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Your Title"
             className="w-40 border border-gray-200 rounded-lg px-3 py-1.5 bg-gray-50 text-sm focus:outline-none focus:ring-2 focus:ring-black/10" />
         </div>
-      </div>
+      </div>}
     </div>
 
     {/* CONTACT */}
-    <div className="mb-6" data-tutorial="net-contact">
-      <p className="text-base font-bold text-gray-800 mb-3">Contact</p>
-      <div className="space-y-3">
+    <div className="mb-0" data-tutorial="net-contact">
+<button onClick={() => toggleSection("contact")} className={`w-full flex justify-between items-center px-4 py-3.5 rounded-2xl border transition mb-3 ${openSections.contact ? "bg-gray-50 border-gray-200" : "bg-white border-gray-200 shadow-sm"}`}>
+  <div className="flex items-center gap-3">
+    <div className="w-8 h-8 rounded-xl bg-blue-500 flex items-center justify-center flex-shrink-0">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.48C2 2.41 2.9 1.68 4 1.68h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+    </div>
+    <span className="text-base font-semibold text-gray-900">Contact</span>
+  </div>
+  <ChevronDown size={16} className={`text-gray-400 transition-transform duration-300 ${openSections.contact ? "rotate-180" : ""}`} />
+</button>
+{openSections.contact && <div className="space-y-3">
         {[
           { key: "phone", label: "Phone", placeholder: "Your phone number" },
           { key: "email", label: "Email", placeholder: "Your email" },
@@ -1837,11 +1933,20 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
             </div>
           );
         })}
-      </div>
+      </div>}
     </div>
 
     <div data-tutorial="net-buttons">
-      <p className="text-base font-bold text-gray-800 mb-3">Buttons</p>
+<button onClick={() => toggleSection("buttons")} className={`w-full flex justify-between items-center px-4 py-3.5 rounded-2xl border transition mb-3 ${openSections.buttons ? "bg-gray-50 border-gray-200" : "bg-white border-gray-200 shadow-sm"}`}>
+  <div className="flex items-center gap-3">
+    <div className="w-8 h-8 rounded-xl bg-emerald-500 flex items-center justify-center flex-shrink-0">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+    </div>
+    <span className="text-base font-semibold text-gray-900">Buttons</span>
+  </div>
+  <ChevronDown size={16} className={`text-gray-400 transition-transform duration-300 ${openSections.buttons ? "rotate-180" : ""}`} />
+</button>
+{openSections.buttons && <div>
 
   <div className="space-y-3">
     {(fieldValues?.buttons || [{ title: "", url: "", image: "" }, { title: "", url: "", image: "" }, { title: "", url: "", image: "" }]).map((button, i) => {
@@ -1956,6 +2061,7 @@ const isActive = button !== null && button !== undefined;
   >
     + Add Button
   </button>
+</div>}
 </div>
   </>
 )}
@@ -1963,9 +2069,17 @@ const isActive = button !== null && button !== undefined;
     {mode === "business" && (
       <>
 {/* IDENTITY */}
-<div className="mb-6" data-tutorial="identity-section">
-<p className="text-base font-bold text-gray-800 mb-3">Identity</p>
-  <div className="space-y-3 border p-3 rounded-xl">
+<div className="mb-0" data-tutorial="identity-section">
+<button onClick={() => toggleSection("identity")} className={`w-full flex justify-between items-center px-4 py-3.5 rounded-2xl border transition mb-3 ${openSections.identity ? "bg-gray-50 border-gray-200" : "bg-white border-gray-200 shadow-sm"}`}>
+  <div className="flex items-center gap-3">
+    <div className="w-8 h-8 rounded-xl bg-purple-500 flex items-center justify-center flex-shrink-0">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+    </div>
+    <span className="text-base font-semibold text-gray-900">Identity</span>
+  </div>
+  <ChevronDown size={16} className={`text-gray-400 transition-transform duration-300 ${openSections.identity ? "rotate-180" : ""}`} />
+</button>
+{openSections.identity && <div className="space-y-3 border p-3 rounded-xl">
     <div className="flex justify-between items-center">
       <span className="text-sm">Full Name</span>
       <input
@@ -1984,13 +2098,21 @@ const isActive = button !== null && button !== undefined;
         className="w-40 border border-gray-200 rounded-lg px-3 py-1.5 bg-gray-50 text-sm focus:outline-none focus:ring-2 focus:ring-black/10"
       />
     </div>
-  </div>
+  </div>}
 </div>
 
         {/* ADD FIELDS */}
 <div data-tutorial="contact-fields">
-<p className="text-base font-bold text-gray-800 mb-3">Contact Fields</p>
-  <div className="space-y-3">
+<button onClick={() => toggleSection("contact")} className={`w-full flex justify-between items-center px-4 py-3.5 rounded-2xl border transition mb-3 ${openSections.contact ? "bg-gray-50 border-gray-200" : "bg-white border-gray-200 shadow-sm"}`}>
+  <div className="flex items-center gap-3">
+    <div className="w-8 h-8 rounded-xl bg-blue-500 flex items-center justify-center flex-shrink-0">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.48C2 2.41 2.9 1.68 4 1.68h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+    </div>
+    <span className="text-base font-semibold text-gray-900">Contact Fields</span>
+  </div>
+  <ChevronDown size={16} className={`text-gray-400 transition-transform duration-300 ${openSections.contact ? "rotate-180" : ""}`} />
+</button>
+{openSections.contact && <div className="space-y-3">
     {["phone", "email", "linkedin", "instagram", "website"].map((field) => {
       const isActive = fields[field];
 
@@ -2035,7 +2157,7 @@ const isActive = button !== null && button !== undefined;
 </div>
       );
     })}
-  </div>
+  </div>}
 </div>
 
         {/* ACTIVE FIELDS */}

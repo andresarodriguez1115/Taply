@@ -696,7 +696,7 @@ shadow-[0_8px_30px_rgba(0,0,0,0.08)] ring-2 ring-white/100">
           <p className="text-sm font-semibold text-gray-700 mb-2">Company Logo</p>
           <label className="flex items-center gap-3 bg-white border border-gray-200 rounded-xl px-4 py-3 cursor-pointer hover:bg-gray-50 transition">
             {walletLogoUrl ? (
-              <img src={walletLogoUrl} className="w-8 h-8 object-contain rounded" />
+              <img src={walletLogoUrl} className="w-24 h-8 object-contain rounded" />
             ) : (
               <div className="w-8 h-8 rounded bg-gray-100 flex items-center justify-center text-[10px] text-gray-400">Logo</div>
             )}
@@ -845,7 +845,8 @@ shadow-[0_8px_30px_rgba(0,0,0,0.08)] ring-2 ring-white/100">
           image={cropImageSrc}
           crop={crop}
           zoom={zoom}
-          aspect={1 / 1}
+          aspect={3 / 1}
+
           onCropChange={setCrop}
           onZoomChange={setZoom}
           onCropComplete={(_, croppedPixels) => setCroppedAreaPixels(croppedPixels)}
@@ -867,7 +868,7 @@ shadow-[0_8px_30px_rgba(0,0,0,0.08)] ring-2 ring-white/100">
               image.src = cropImageSrc
               await new Promise(r => image.onload = r)
               const canvas = document.createElement("canvas")
-              canvas.width = 300
+              canvas.width = 900
               canvas.height = 300
               const ctx = canvas.getContext("2d")
               ctx.drawImage(image,
