@@ -845,7 +845,7 @@ shadow-[0_8px_30px_rgba(0,0,0,0.08)] ring-2 ring-white/100">
           image={cropImageSrc}
           crop={crop}
           zoom={zoom}
-          aspect={3 / 1}
+          aspect={1 / 1}
           onCropChange={setCrop}
           onZoomChange={setZoom}
           onCropComplete={(_, croppedPixels) => setCroppedAreaPixels(croppedPixels)}
@@ -867,13 +867,13 @@ shadow-[0_8px_30px_rgba(0,0,0,0.08)] ring-2 ring-white/100">
               image.src = cropImageSrc
               await new Promise(r => image.onload = r)
               const canvas = document.createElement("canvas")
-              canvas.width = croppedAreaPixels.width
-              canvas.height = croppedAreaPixels.height
+              canvas.width = 300
+              canvas.height = 300
               const ctx = canvas.getContext("2d")
               ctx.drawImage(image,
                 croppedAreaPixels.x, croppedAreaPixels.y,
                 croppedAreaPixels.width, croppedAreaPixels.height,
-                0, 0, croppedAreaPixels.width, croppedAreaPixels.height
+                0, 0, 300, 300
               )
               canvas.toBlob(async (blob) => {
                 const { data: userData } = await supabase.auth.getUser()

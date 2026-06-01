@@ -46,6 +46,8 @@ if (!profile) {
 await supabase
   .from("profile_events")
   .insert({ profile_id: profile.id, event_type: "view" });
+const s = profile.sizes || {};
+
 const layoutProps = {
   name: profile.name,
   title: profile.title,
@@ -53,6 +55,7 @@ const layoutProps = {
   fieldValues: profile.field_values,
   isEditing: false,
   profileId: profile.id,
+  fontFamily: profile.font_family || "system-ui",
 
   backgroundColor: profile.bg_color || "#f3f4f6",
 
@@ -72,6 +75,32 @@ const layoutProps = {
     x: profile.banner_x ?? 0,
     y: profile.banner_y ?? 0,
   },
+
+  fontSize: s.fontSize || 100,
+  titleSize: s.titleSize || 100,
+  buttonSize: s.buttonSize || 100,
+  uniContentSize: s.uniContentSize || 100,
+  uniBioSize: s.uniBioSize || 100,
+  uniStatsSize: s.uniStatsSize || 100,
+  uniAvatarSize: s.uniAvatarSize || 80,
+  netAvatarSize: s.netAvatarSize || 208,
+  netNameSize: s.netNameSize || 100,
+  netTitleSize: s.netTitleSize || 100,
+  netContactSize: s.netContactSize || 100,
+  netActionSize: s.netActionSize || 100,
+  netButtonSize: s.netButtonSize || 100,
+  socialNameSize: s.socialNameSize || 100,
+  socialTitleSize: s.socialTitleSize || 100,
+  socialIconSize: s.socialIconSize || 100,
+  socialLinkSize: s.socialLinkSize || 100,
+  socialProductSize: s.socialProductSize || 100,
+  socialAvatarSize: s.socialAvatarSize || 170,
+  minNameSize: s.minNameSize || 100,
+  minTitleSize: s.minTitleSize || 100,
+  minContactSize: s.minContactSize || 100,
+  execAvatarSize: s.execAvatarSize || 100,
+  execSaveSize: s.execSaveSize || 100,
+  execContactSize: s.execContactSize || 100,
 };
 
   switch (profile.mode) {

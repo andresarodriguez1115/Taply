@@ -25,8 +25,8 @@ const [bannerUrl, setBannerUrl] = useState(null);
   // -----------------------------
   // BASIC PROFILE FIELDS}
   // -----------------------------
-  const [name, setName] = useState("Your Name");
-  const [title, setTitle] = useState("Your Title / Position");
+  const [name, setName] = useState("");
+  const [title, setTitle] = useState("");
   const [saving, setSaving] = useState(false)
 const [saveSuccess, setSaveSuccess] = useState(false)
 const [saveError, setSaveError] = useState(null)
@@ -183,8 +183,8 @@ setBannerPos({
 });
 setLoadingProfile(false);// 🔥 LOAD EVERYTHING BACK INTO STATE
 
-setName(data.name || "Your Name");
-setTitle(data.title || "Your Title / Position");
+setName(data.name || "");
+setTitle(data.title || "");
 
 setFields(data.fields || {
   phone: false,
@@ -210,6 +210,35 @@ website: "taply.now",  bio: "",
 
 setMode(data.mode || "business");
 setLayout(data.layout || "executive");
+
+if (data.sizes) {
+  const s = data.sizes;
+  if (s.fontSize) setFontSize(s.fontSize);
+  if (s.titleSize) setTitleSize(s.titleSize);
+  if (s.buttonSize) setButtonSize(s.buttonSize);
+  if (s.uniContentSize) setUniContentSize(s.uniContentSize);
+  if (s.uniBioSize) setUniBioSize(s.uniBioSize);
+  if (s.uniStatsSize) setUniStatsSize(s.uniStatsSize);
+  if (s.uniAvatarSize) setUniAvatarSize(s.uniAvatarSize);
+  if (s.netAvatarSize) setNetAvatarSize(s.netAvatarSize);
+  if (s.netNameSize) setNetNameSize(s.netNameSize);
+  if (s.netTitleSize) setNetTitleSize(s.netTitleSize);
+  if (s.netContactSize) setNetContactSize(s.netContactSize);
+  if (s.netActionSize) setNetActionSize(s.netActionSize);
+  if (s.netButtonSize) setNetButtonSize(s.netButtonSize);
+  if (s.socialNameSize) setSocialNameSize(s.socialNameSize);
+  if (s.socialTitleSize) setSocialTitleSize(s.socialTitleSize);
+  if (s.socialIconSize) setSocialIconSize(s.socialIconSize);
+  if (s.socialLinkSize) setSocialLinkSize(s.socialLinkSize);
+  if (s.socialProductSize) setSocialProductSize(s.socialProductSize);
+  if (s.socialAvatarSize) setSocialAvatarSize(s.socialAvatarSize);
+  if (s.minNameSize) setMinNameSize(s.minNameSize);
+  if (s.minTitleSize) setMinTitleSize(s.minTitleSize);
+  if (s.minContactSize) setMinContactSize(s.minContactSize);
+  if (s.execAvatarSize) setExecAvatarSize(s.execAvatarSize);
+  if (s.execSaveSize) setExecSaveSize(s.execSaveSize);
+  if (s.execContactSize) setExecContactSize(s.execContactSize);
+}
 
 setBackgroundColor(data.bg_color || "#f3f4f6");
 setNetworkingBackground(data.networking_bg || "#f3f4f6");
@@ -315,6 +344,7 @@ networking_y: networkingPos.y,
       banner_scale: bannerScale,
       banner_x: bannerPos.x,
       banner_y: bannerPos.y,
+      sizes: { fontSize, titleSize, buttonSize, uniContentSize, uniBioSize, uniStatsSize, uniAvatarSize, netAvatarSize, netNameSize, netTitleSize, netContactSize, netActionSize, netButtonSize, socialNameSize, socialTitleSize, socialIconSize, socialLinkSize, socialProductSize, socialAvatarSize, minNameSize, minTitleSize, minContactSize, execAvatarSize, execSaveSize, execContactSize },
     })
     .eq("id", profileId);
 
@@ -322,9 +352,9 @@ networking_y: networkingPos.y,
 
 } else {
   // 🆕 CREATE NEW PROFILE — only if user explicitly came to create
-  if (name === "Your Name" && title === "Your Title / Position") {
+  if (!name.trim() && !title.trim()) {
 setSaving(false)
-setSaveError("Please fill in your name and title before saving.")
+setSaveError("Please fill in your name before saving.")
 return
 
   }
@@ -376,6 +406,7 @@ networking_y: networkingPos.y,
       banner_scale: bannerScale,
       banner_x: bannerPos.x,
       banner_y: bannerPos.y,
+      sizes: { fontSize, titleSize, buttonSize, uniContentSize, uniBioSize, uniStatsSize, uniAvatarSize, netAvatarSize, netNameSize, netTitleSize, netContactSize, netActionSize, netButtonSize, socialNameSize, socialTitleSize, socialIconSize, socialLinkSize, socialProductSize, socialAvatarSize, minNameSize, minTitleSize, minContactSize, execAvatarSize, execSaveSize, execContactSize },
     });
 
   error = insertError;
@@ -614,8 +645,8 @@ useEffect(() => {
   // LAYOUT PROPS
   // -----------------------------
 const layoutProps = {
-    name,
-    title,
+    name: name || "Your Name",
+    title: title || "Your Title / Position",
     isEditing,
     fields,
     fieldValues,
