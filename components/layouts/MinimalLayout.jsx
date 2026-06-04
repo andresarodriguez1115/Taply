@@ -27,6 +27,8 @@ export default function MinimalLayout({
   minNameSize = 100,
   minTitleSize = 100,
   minContactSize = 100,
+  nameColor = "#000000",
+  titleColor = "#6b7280",
 })
 {
 
@@ -141,10 +143,10 @@ onChange={(e) => setProfileScale && setProfileScale(Number(e.target.value))}
     
 {/* NAME SECTION */}
 <div className="text-center mt-4">
-  <h1 className="font-bold text-black" style={{ fontSize: `${2.25 * minNameSize / 100}rem` }}>
+  <h1 className="font-bold" style={{ fontSize: `${2.25 * minNameSize / 100}rem`, color: nameColor }}>
     {name}
   </h1>
-  <p className="uppercase tracking-[0.1em] text-gray-600 mt-4" style={{ fontSize: `${1.125 * minTitleSize / 100}rem` }}>
+  <p className="uppercase tracking-[0.1em] mt-4" style={{ fontSize: `${1.125 * minTitleSize / 100}rem`, color: titleColor }}>
     {title}
   </p>
 </div>

@@ -23,6 +23,8 @@ export default function UniversityLayout({
 uniBioSize = 100,
   uniStatsSize = 100,
   uniAvatarSize = 80,
+  nameColor = "#000000",
+  titleColor = "#6b7280",
 }) {
   const [activeTab, setActiveTab] = useState("about");
   const [mounted, setMounted] = useState(false);
@@ -133,8 +135,8 @@ useEffect(() => {
           </div>
           {/* Name + title */}
           <div className="flex-1 min-w-0">
-<h1 className="font-bold tracking-tight text-gray-900" style={{ fontSize: `${1.25 * fontSize / 100}rem` }}>{name}</h1>
-            <p className="text-base text-gray-500 mt-0.5 leading-snug" style={titleSize !== 100 ? { fontSize: `${titleSize}%` } : undefined}>{title}</p>
+<h1 className="font-bold tracking-tight" style={{ fontSize: `${1.25 * fontSize / 100}rem`, color: nameColor }}>{name}</h1>
+            <p className="text-base mt-0.5 leading-snug" style={{ color: titleColor, ...(titleSize !== 100 ? { fontSize: `${titleSize}%` } : {}) }}>{title}</p>
 
             {/* Resume button */}
             {resumeUrl && (

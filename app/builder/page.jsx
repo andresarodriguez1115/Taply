@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense } from "react";
+import React, { Suspense } from "react";
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronDown } from "lucide-react";
@@ -58,6 +58,12 @@ const [execSaveSize, setExecSaveSize] = useState(100);
 const [execContactSize, setExecContactSize] = useState(100);const [networkingBackground, setNetworkingBackground] = useState("#f3f4f6");
 const [networkingNameColor, setNetworkingNameColor] = useState("#000000");
 const [networkingTitleColor, setNetworkingTitleColor] = useState("#6b7280");
+const [businessNameColor, setBusinessNameColor] = useState("#000000");
+const [businessTitleColor, setBusinessTitleColor] = useState("#6b7280");
+const [universityNameColor, setUniversityNameColor] = useState("#000000");
+const [universityTitleColor, setUniversityTitleColor] = useState("#6b7280");
+const [socialNameColor, setSocialNameColor] = useState("#000000");
+const [socialTitleColor2, setSocialTitleColor2] = useState("#6b7280");
 const [username, setUsername] = useState(null)
 const [loadingProfile, setLoadingProfile] = useState(true);
 // ==============================
@@ -244,6 +250,12 @@ setBackgroundColor(data.bg_color || "#f3f4f6");
 setNetworkingBackground(data.networking_bg || "#f3f4f6");
 setNetworkingNameColor(data.networking_name_color || "#000000");
 setNetworkingTitleColor(data.networking_title_color || "#6b7280");
+setBusinessNameColor(data.business_name_color || "#000000");
+setBusinessTitleColor(data.business_title_color || "#6b7280");
+setUniversityNameColor(data.university_name_color || "#000000");
+setUniversityTitleColor(data.university_title_color || "#6b7280");
+setSocialNameColor(data.social_name_color || "#000000");
+setSocialTitleColor2(data.social_title_color || "#6b7280");
 setAvatarUrl(data.avatar_url || null);
 setBannerUrl(data.banner_url || null);
 
@@ -327,6 +339,12 @@ if (profileId) {
 networking_bg: networkingBackground,
 networking_name_color: networkingNameColor,
 networking_title_color: networkingTitleColor,
+business_name_color: businessNameColor,
+business_title_color: businessTitleColor,
+university_name_color: universityNameColor,
+university_title_color: universityTitleColor,
+social_name_color: socialNameColor,
+social_title_color: socialTitleColor2,
 
       avatar_url: avatarUrl,
       banner_url: bannerUrl,
@@ -389,6 +407,12 @@ bg_color: backgroundColor,
 networking_bg: networkingBackground,
 networking_name_color: networkingNameColor,
 networking_title_color: networkingTitleColor,
+business_name_color: businessNameColor,
+business_title_color: businessTitleColor,
+university_name_color: universityNameColor,
+university_title_color: universityTitleColor,
+social_name_color: socialNameColor,
+social_title_color: socialTitleColor2,
 
       avatar_url: avatarUrl,
       banner_url: bannerUrl,
@@ -478,6 +502,20 @@ const [openSections, setOpenSections] = useState({
   socialIcons: true, links: true, products: true,
   academic: true, resume: true, projects: true,
 });
+const [uniDesignOpen, setUniDesignOpen] = useState({ bg: true, colors: true, font: true, size: true });
+const [uniBgType, setUniBgType] = useState("solid");
+const toggleUD = (k) => setUniDesignOpen(p => ({ ...p, [k]: !p[k] }));
+
+const [bizDesignOpen, setBizDesignOpen] = useState({ bg: true, colors: true, font: true, size: true });
+const [bizBgType, setBizBgType] = useState("solid");
+const toggleBD = (k) => setBizDesignOpen(p => ({ ...p, [k]: !p[k] }));
+
+const [socDesignOpen, setSocDesignOpen] = useState({ bg: true, colors: true, font: true, size: true });
+const toggleSD = (k) => setSocDesignOpen(p => ({ ...p, [k]: !p[k] }));
+
+const [netDesignOpen, setNetDesignOpen] = useState({ bg: true, colors: true, font: true, size: true });
+const [netBgType, setNetBgType] = useState("solid");
+const toggleND = (k) => setNetDesignOpen(p => ({ ...p, [k]: !p[k] }));
 const toggleSection = (key) => setOpenSections(prev => ({ ...prev, [key]: !prev[key] }))
   // -----------------------------
   // FIELD HANDLERS
@@ -709,26 +747,24 @@ const updateField = (field, value) => {
   {...layoutProps}
   layout={layout}
   setLayout={setLayout}
-
   backgroundColor={backgroundColor}
   setBackgroundColor={setBackgroundColor}
-
   avatarUrl={avatarUrl}
   bannerUrl={bannerUrl}
   handleAvatarUpload={handleAvatarUpload}
   handleBannerUpload={handleBannerUpload}
   addField={addField}
   removeField={removeField}
-
 profileScale={businessScale}
 setProfileScale={setBusinessScale}
 profilePos={businessPos}
 setProfilePos={setBusinessPos}
-
   bannerScale={bannerScale}
   setBannerScale={setBannerScale}
   bannerPos={bannerPos}
   setBannerPos={setBannerPos}
+  nameColor={businessNameColor}
+  titleColor={businessTitleColor}
 />
   );
 case "university":
@@ -739,6 +775,8 @@ case "university":
       handleProfileUpload={handleAvatarUpload}
       backgroundColor={backgroundColor}
       setFieldValues={setFieldValues}
+      nameColor={universityNameColor}
+      titleColor={universityTitleColor}
     />
   );
 case "social":
@@ -754,6 +792,8 @@ case "social":
       backgroundColor={backgroundColor}
       setFieldValues={setFieldValues}
       layout={layout}
+      nameColor={socialNameColor}
+      titleColor={socialTitleColor2}
       socialNameSize={socialNameSize}
       socialTitleSize={socialTitleSize}
       socialIconSize={socialIconSize}
@@ -1044,355 +1084,664 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
 {activeTab === "design" && (
   <div className="space-y-6 pb-20">
 
-    {/* BUSINESS MODE DESIGN */}
+{/* BUSINESS MODE DESIGN */}
 {mode === "business" && (
-  <>
-   <p className="text-base font-bold text-gray-800 mb-3">Background</p>
+  <div className="space-y-3 pb-20">
 
-<p className="text-sm font-semibold text-gray-600 mb-2">Solid</p>
-    <div className="grid grid-cols-6 gap-2 mb-4">
-      {[
-        { label: "Snow", value: "#f3f4f6" },
-        { label: "Sky", value: "#dbeafe" },
-        { label: "Lavender", value: "#ede9fe" },
-        { label: "Blush", value: "#fce7f3" },
-        { label: "Mint", value: "#d1fae5" },
-        { label: "Cream", value: "#fef9c3" },
-        { label: "Slate", value: "#1e293b" },
-      ].map(({ label, value }) => (
-        <button key={label} onClick={() => setBackgroundColor(value)}
-          className="flex flex-col items-center gap-1 group">
-          <div className={`w-14 h-14 rounded-xl border-2 transition ${backgroundColor === value ? "border-black scale-90" : "border-transparent"}`}
-
-            style={{ background: value, boxShadow: "0 2px 6px rgba(0,0,0,0.08)" }} />
-          <span className="text-[9px] text-gray-400">{label}</span>
-        </button>
-      ))}
-      <label className="flex flex-col items-center gap-1 cursor-pointer group">
-        <div className="w-14 h-14 rounded-xl border-2 border-dashed border-gray-200 flex items-center justify-center overflow-hidden transition group-hover:border-gray-400 relative"
-          style={{ background: !["#f3f4f6","#dbeafe","#ede9fe","#fce7f3","#d1fae5","#fef9c3","#1e293b"].includes(backgroundColor) && !backgroundColor.startsWith("radial-gradient") ? backgroundColor : "white" }}>
-          <span className="text-gray-400 text-base">+</span>
-          <input type="color" value={backgroundColor} onChange={(e) => setBackgroundColor(e.target.value)} className="absolute inset-0 opacity-0 w-full h-full cursor-pointer" />
+    {/* BACKGROUND */}
+    <div className="border border-gray-200 rounded-2xl overflow-hidden">
+      <button onClick={() => toggleBD("bg")} className="w-full flex items-center justify-between px-4 py-3.5 bg-white">
+        <div className="flex items-center gap-3">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6b7280" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+          <span className="text-base font-semibold text-gray-900">Background</span>
         </div>
-        <span className="text-[9px] text-gray-400">Custom</span>
-      </label>
-    </div>
-
-    {layout !== "minimal" && <>
-    <div className="h-px bg-gray-100 mb-3" />
-
-<p className="text-sm font-semibold text-gray-600 mb-2">Diffused</p>
-    <div className="grid grid-cols-6 gap-2">
-      {[
- { label: "Aurora", value: "radial-gradient(ellipse at 30% 40%, #c4b5fd 0%, #93c5fd 40%, #f0fdf4 100%)" },
-        { label: "Ocean", value: "radial-gradient(ellipse at 20% 60%, #22d3ee 0%, #67e8f9 50%, #e0f2fe 100%)" },
-        { label: "Lilac", value: "radial-gradient(ellipse at 60% 30%, #e0d7ff 0%, #c4b5fd 40%, #f5f3ff 100%)" },
-        { label: "Sky", value: "radial-gradient(ellipse at 60% 30%, #bae6fd 0%, #7dd3fc 50%, #e0f2fe 100%)" },
-        { label: "Rose", value: "radial-gradient(ellipse at 60% 40%, #fbcfe8 0%, #f9a8d4 50%, #fdf2f8 100%)" },
-        { label: "Sage", value: "radial-gradient(ellipse at 30% 50%, #bbf7d0 0%, #86efac 50%, #f0fdf4 100%)" },
-        { label: "Honey", value: "radial-gradient(ellipse at 50% 30%, #fde68a 0%, #fcd34d 50%, #fffbeb 100%)" },
-        { label: "Peach", value: "radial-gradient(ellipse at 40% 40%, #fed7aa 0%, #fdba74 50%, #fff7ed 100%)" },
-        { label: "Indigo", value: "radial-gradient(ellipse at 30% 30%, #a5b4fc 0%, #818cf8 40%, #e0e7ff 100%)" },
-        { label: "Teal", value: "radial-gradient(ellipse at 60% 30%, #99f6e4 0%, #5eead4 50%, #f0fdfa 100%)" },
-        { label: "Blush", value: "radial-gradient(ellipse at 40% 30%, #fca5a5 0%, #f87171 45%, #fff1f2 100%)" },
-      ].map(({ label, value }) => (
-        <button key={label} onClick={() => setBackgroundColor(value)}
-          className="flex flex-col items-center gap-1 group">
-          <div className={`w-14 h-14 rounded-xl border-2 transition ${backgroundColor === value ? "border-black scale-90" : "border-transparent"}`}
-
-            style={{ background: value, boxShadow: "0 2px 6px rgba(0,0,0,0.08)" }} />
-          <span className="text-[9px] text-gray-400">{label}</span>
-        </button>
-      ))}
-    </div>
-    </>}
-  </>
-)}
-{mode === "business" && layout === "minimal" && (
-  <>
-    <div className="h-px bg-gray-100 my-4" />
-    <p className="text-base font-bold text-gray-800 mb-3">Content Size</p>
-    <div className="space-y-3">
-      {[
-        { label: "Name", value: minNameSize, set: setMinNameSize },
-        { label: "Title", value: minTitleSize, set: setMinTitleSize },
-        { label: "Contact", value: minContactSize, set: setMinContactSize },
-      ].map(({ label, value, set }) => (
-        <div key={label} className="flex items-center gap-3 bg-white border border-gray-200 rounded-2xl px-4 py-3">
-          <span className="text-sm text-gray-500 w-16">{label}</span>
-          <button onClick={() => set(s => Math.max(70, s - 5))} className="w-9 h-9 rounded-full bg-gray-100 flex items-center justify-center text-lg font-medium hover:bg-gray-200 transition">−</button>
-          <span className="flex-1 text-center text-sm font-medium text-gray-700">{value}%</span>
-          <button onClick={() => set(s => Math.min(150, s + 5))} className="w-9 h-9 rounded-full bg-gray-100 flex items-center justify-center text-lg font-medium hover:bg-gray-200 transition">+</button>
-        </div>
-      ))}
-    </div>
-  </>
-)}
-
-{mode === "business" && layout === "executive" && (
-  <>
-    <div className="h-px bg-gray-100 my-4" />
-    <p className="text-base font-bold text-gray-800 mb-3">Content Size</p>
-    <div className="space-y-3">
-{[
-  { label: "Profile Photo", value: execAvatarSize, set: setExecAvatarSize },
-  { label: "Name", value: fontSize, set: setFontSize },
-  { label: "Title", value: titleSize, set: setTitleSize },
-  { label: "Save Btn", value: execSaveSize, set: setExecSaveSize },
-  { label: "Contact", value: execContactSize, set: setExecContactSize },
-].map(({ label, value, set }) => (
-        <div key={label} className="flex items-center gap-3 bg-white border border-gray-200 rounded-2xl px-4 py-3">
-          <span className="text-sm text-gray-500 w-16">{label}</span>
-          <button onClick={() => set(s => Math.max(70, s - 5))} className="w-9 h-9 rounded-full bg-gray-100 flex items-center justify-center text-lg font-medium hover:bg-gray-200 transition">−</button>
-          <span className="flex-1 text-center text-sm font-medium text-gray-700">{value}%</span>
-          <button onClick={() => set(s => Math.min(150, s + 5))} className="w-9 h-9 rounded-full bg-gray-100 flex items-center justify-center text-lg font-medium hover:bg-gray-200 transition">+</button>
-        </div>
-      ))}
-    </div>
-  </>
-)}
-
-{/* UNIVERSITY MODE DESIGN */}
-{mode === "university" && (
-  <>
-    <p className="text-base font-bold text-gray-800 mb-3">Background</p>
-    <p className="text-sm font-semibold text-gray-600 mb-2">Solid</p>
-    <div className="grid grid-cols-6 gap-2 mb-4">
-      {[
-        { label: "Snow", value: "#f3f4f6" },
-        { label: "Sky", value: "#dbeafe" },
-        { label: "Lavender", value: "#ede9fe" },
-        { label: "Blush", value: "#fce7f3" },
-        { label: "Mint", value: "#d1fae5" },
-        { label: "Cream", value: "#fef9c3" },
-        { label: "Slate", value: "#1e293b" },
-      ].map(({ label, value }) => (
-        <button key={label} onClick={() => setBackgroundColor(value)} className="flex flex-col items-center gap-1 group">
-          <div className={`w-14 h-14 rounded-xl border-2 transition ${backgroundColor === value ? "border-black scale-90" : "border-transparent"}`} style={{ background: value, boxShadow: "0 2px 6px rgba(0,0,0,0.08)" }} />
-          <span className="text-[9px] text-gray-400">{label}</span>
-        </button>
-      ))}
-      <label className="flex flex-col items-center gap-1 cursor-pointer group">
-        <div className="w-14 h-14 rounded-xl border-2 border-dashed border-gray-200 flex items-center justify-center overflow-hidden transition group-hover:border-gray-400 relative" style={{ background: !["#f3f4f6","#dbeafe","#ede9fe","#fce7f3","#d1fae5","#fef9c3","#1e293b"].includes(backgroundColor) && !backgroundColor.startsWith("radial-gradient") ? backgroundColor : "white" }}>
-          <span className="text-gray-400 text-base">+</span>
-          <input type="color" value={backgroundColor} onChange={(e) => setBackgroundColor(e.target.value)} className="absolute inset-0 opacity-0 w-full h-full cursor-pointer" />
-        </div>
-        <span className="text-[9px] text-gray-400">Custom</span>
-      </label>
-    </div>
-    <div className="h-px bg-gray-100 mb-3" />
-    <p className="text-sm font-semibold text-gray-600 mb-2">Diffused</p>
-    <div className="grid grid-cols-6 gap-2">
-      {[
-        { label: "Aurora", value: "radial-gradient(ellipse at 30% 40%, #c4b5fd 0%, #93c5fd 40%, #f0fdf4 100%)" },
-        { label: "Ocean", value: "radial-gradient(ellipse at 20% 60%, #22d3ee 0%, #67e8f9 50%, #e0f2fe 100%)" },
-        { label: "Lilac", value: "radial-gradient(ellipse at 60% 30%, #e0d7ff 0%, #c4b5fd 40%, #f5f3ff 100%)" },
-        { label: "Sky", value: "radial-gradient(ellipse at 60% 30%, #bae6fd 0%, #7dd3fc 50%, #e0f2fe 100%)" },
-        { label: "Rose", value: "radial-gradient(ellipse at 60% 40%, #fbcfe8 0%, #f9a8d4 50%, #fdf2f8 100%)" },
-        { label: "Sage", value: "radial-gradient(ellipse at 30% 50%, #bbf7d0 0%, #86efac 50%, #f0fdf4 100%)" },
-        { label: "Honey", value: "radial-gradient(ellipse at 50% 30%, #fde68a 0%, #fcd34d 50%, #fffbeb 100%)" },
-        { label: "Peach", value: "radial-gradient(ellipse at 40% 40%, #fed7aa 0%, #fdba74 50%, #fff7ed 100%)" },
-        { label: "Indigo", value: "radial-gradient(ellipse at 30% 30%, #a5b4fc 0%, #818cf8 40%, #e0e7ff 100%)" },
-        { label: "Teal", value: "radial-gradient(ellipse at 60% 30%, #99f6e4 0%, #5eead4 50%, #f0fdfa 100%)" },
-        { label: "Blush", value: "radial-gradient(ellipse at 40% 30%, #fca5a5 0%, #f87171 45%, #fff1f2 100%)" },
-      ].map(({ label, value }) => (
-        <button key={label} onClick={() => setBackgroundColor(value)} className="flex flex-col items-center gap-1 group">
-          <div className={`w-14 h-14 rounded-xl border-2 transition ${backgroundColor === value ? "border-black scale-90" : "border-transparent"}`} style={{ background: value, boxShadow: "0 2px 6px rgba(0,0,0,0.08)" }} />
-          <span className="text-[9px] text-gray-400">{label}</span>
-        </button>
-      ))}
-    </div>
-
-    <div className="h-px bg-gray-100 my-4" />
-    <div className="h-px bg-gray-100 my-4" />
-    <p className="text-base font-bold text-gray-800 mb-3">Content Size</p>
-    <div className="space-y-3">
-{[
-  { label: "Profile Photo", value: uniAvatarSize, set: setUniAvatarSize },
-  { label: "Name", value: fontSize, set: setFontSize },
-  { label: "Title", value: titleSize, set: setTitleSize },
-  { label: "Bio Text", value: uniBioSize, set: setUniBioSize },
-  { label: "Stats", value: uniStatsSize, set: setUniStatsSize },
-  { label: "Contact", value: uniContentSize, set: setUniContentSize },
-].map(({ label, value, set }) => (
-        <div key={label} className="flex items-center gap-3 bg-white border border-gray-200 rounded-2xl px-4 py-3">
-          <span className="text-sm text-gray-500 w-14">{label}</span>
-          <button onClick={() => set(s => Math.max(70, s - 5))} className="w-9 h-9 rounded-full bg-gray-100 flex items-center justify-center text-lg font-medium hover:bg-gray-200 transition">−</button>
-          <span className="flex-1 text-center text-sm font-medium text-gray-700">{value}%</span>
-          <button onClick={() => set(s => Math.min(150, s + 5))} className="w-9 h-9 rounded-full bg-gray-100 flex items-center justify-center text-lg font-medium hover:bg-gray-200 transition">+</button>
-        </div>
-      ))}
-    </div>
-
-
-
-  </>
-)}
-
-{/* SOCIAL MODE DESIGN */}
-{mode === "social" && (
-  <>
-    <p className="text-base font-bold text-gray-800 mb-3">Background</p>
-    <p className="text-sm font-semibold text-gray-600 mb-2">Solid</p>
-    <div className="grid grid-cols-6 gap-2 mb-4">
-      {[
-        { label: "Snow", value: "#f3f4f6" },
-        { label: "Sky", value: "#dbeafe" },
-        { label: "Lavender", value: "#ede9fe" },
-        { label: "Blush", value: "#fce7f3" },
-        { label: "Mint", value: "#d1fae5" },
-        { label: "Cream", value: "#fef9c3" },
-        { label: "Slate", value: "#1e293b" },
-      ].map(({ label, value }) => (
-        <button key={label} onClick={() => setBackgroundColor(value)} className="flex flex-col items-center gap-1 group">
-          <div className={`w-14 h-14 rounded-xl border-2 transition ${backgroundColor === value ? "border-black scale-90" : "border-transparent"}`} style={{ background: value, boxShadow: "0 2px 6px rgba(0,0,0,0.08)" }} />
-          <span className="text-[9px] text-gray-400">{label}</span>
-        </button>
-      ))}
-      <label className="flex flex-col items-center gap-1 cursor-pointer group">
-        <div className="w-14 h-14 rounded-xl border-2 border-dashed border-gray-200 flex items-center justify-center overflow-hidden transition group-hover:border-gray-400 relative" style={{ background: !["#f3f4f6","#dbeafe","#ede9fe","#fce7f3","#d1fae5","#fef9c3","#1e293b"].includes(backgroundColor) && !backgroundColor.startsWith("radial-gradient") ? backgroundColor : "white" }}>
-          <span className="text-gray-400 text-base">+</span>
-          <input type="color" value={backgroundColor} onChange={(e) => setBackgroundColor(e.target.value)} className="absolute inset-0 opacity-0 w-full h-full cursor-pointer" />
-        </div>
-        <span className="text-[9px] text-gray-400">Custom</span>
-      </label>
-    </div>
-
-    <div className="h-px bg-gray-100 my-4" />
-    <p className="text-base font-bold text-gray-800 mb-3">Content Size</p>
-    <div className="space-y-3">
-{[
-  ...(layout === "circle" ? [{ label: "Profile Photo", value: socialAvatarSize, set: setSocialAvatarSize, min: 80, max: 280, px: true }] : []),
-  { label: "Name", value: socialNameSize, set: setSocialNameSize, min: 70, max: 150, px: false },
-  { label: "Title", value: socialTitleSize, set: setSocialTitleSize, min: 70, max: 150, px: false },
-  { label: "Icons", value: socialIconSize, set: setSocialIconSize, min: 70, max: 150, px: false },
-  { label: "Links", value: socialLinkSize, set: setSocialLinkSize, min: 70, max: 150, px: false },
-  { label: "Products", value: socialProductSize, set: setSocialProductSize, min: 70, max: 150, px: false },
-].map(({ label, value, set, min, max, px }) => (
-        <div key={label} className="flex items-center gap-3 bg-white border border-gray-200 rounded-2xl px-4 py-3">
-          <span className="text-sm text-gray-500 w-16">{label}</span>
-          <button onClick={() => set(s => Math.max(min, s - 5))} className="w-9 h-9 rounded-full bg-gray-100 flex items-center justify-center text-lg font-medium hover:bg-gray-200 transition">−</button>
-          <span className="flex-1 text-center text-sm font-medium text-gray-700">{value}{px ? "px" : "%"}</span>
-          <button onClick={() => set(s => Math.min(max, s + 5))} className="w-9 h-9 rounded-full bg-gray-100 flex items-center justify-center text-lg font-medium hover:bg-gray-200 transition">+</button>
-        </div>
-      ))}
-    </div>
-  </>
-)}
-{/* NETWORKING MODE DESIGN */}
-    {mode === "networking" && (
-      <>
-        <p className="text-base font-bold text-gray-800 mb-3">Background</p>
-
-        <p className="text-sm font-semibold text-gray-600 mb-2">Solid</p>
-        <div className="grid grid-cols-6 gap-2 mb-4">
-          {[
-            { label: "Snow", value: "#f3f4f6" },
-            { label: "Sky", value: "#dbeafe" },
-            { label: "Lavender", value: "#ede9fe" },
-            { label: "Blush", value: "#fce7f3" },
-            { label: "Mint", value: "#d1fae5" },
-            { label: "Cream", value: "#fef9c3" },
-            { label: "Slate", value: "#1e293b" },
-          ].map(({ label, value }) => (
-            <button key={label} onClick={() => setNetworkingBackground(value)}
-              className="flex flex-col items-center gap-1 group">
-              <div className={`w-14 h-14 rounded-xl border-2 transition ${networkingBackground === value ? "border-black scale-90" : "border-transparent"}`}
-                style={{ background: value, boxShadow: "0 2px 6px rgba(0,0,0,0.08)" }} />
-              <span className="text-[9px] text-gray-400">{label}</span>
-            </button>
-          ))}
-          <label className="flex flex-col items-center gap-1 cursor-pointer group">
-            <div className="w-14 h-14 rounded-xl border-2 border-dashed border-gray-200 flex items-center justify-center overflow-hidden transition group-hover:border-gray-400 relative"
-              style={{ background: !["#f3f4f6","#dbeafe","#ede9fe","#fce7f3","#d1fae5","#fef9c3","#1e293b"].includes(networkingBackground) && !networkingBackground.startsWith("radial-gradient") ? networkingBackground : "white" }}>
-              <span className="text-gray-400 text-base">+</span>
-              <input type="color" value={networkingBackground} onChange={(e) => setNetworkingBackground(e.target.value)} className="absolute inset-0 opacity-0 w-full h-full cursor-pointer" />
+        <ChevronDown size={16} className={`text-gray-400 transition-transform duration-300 ${bizDesignOpen.bg ? "rotate-180" : ""}`} />
+      </button>
+      {bizDesignOpen.bg && (
+        <div className="px-4 pb-4 border-t border-gray-100">
+          {layout !== "minimal" && (
+            <div className="flex gap-2 mt-3 mb-4">
+              {["solid", "diffused"].map(t => (
+                <button key={t} onClick={() => setBizBgType(t)}
+                  className={`flex-1 py-2 rounded-xl text-sm font-medium border transition ${bizBgType === t ? "bg-white border-gray-900 text-gray-900 border-2" : "bg-gray-50 border-gray-200 text-gray-500"}`}>
+                  {t.charAt(0).toUpperCase() + t.slice(1)}
+                </button>
+              ))}
             </div>
-            <span className="text-[9px] text-gray-400">Custom</span>
-          </label>
+          )}
+          {(bizBgType === "solid" || layout === "minimal") && (
+            <div className="grid grid-cols-8 gap-1 mt-3">
+              {[
+                { label: "Snow", value: "#f3f4f6" },
+                { label: "Sky", value: "#dbeafe" },
+                { label: "Lavender", value: "#ede9fe" },
+                { label: "Blush", value: "#fce7f3" },
+                { label: "Mint", value: "#d1fae5" },
+                { label: "Cream", value: "#fef9c3" },
+                { label: "Slate", value: "#1e293b" },
+              ].map(({ label, value }) => (
+                <button key={label} onClick={() => setBackgroundColor(value)} className="flex flex-col items-center gap-1">
+                  <div className={`w-12 h-12 rounded-xl border-2 transition ${backgroundColor === value ? "border-black scale-90" : "border-transparent"}`} style={{ background: value, boxShadow: "0 2px 6px rgba(0,0,0,0.08)" }} />
+                  <span className="text-[9px] text-gray-400">{label}</span>
+                </button>
+              ))}
+              <label className="flex flex-col items-center gap-1 cursor-pointer">
+                <div className="w-12 h-12 rounded-xl border-2 border-dashed border-gray-200 flex items-center justify-center overflow-hidden relative"
+                  style={{ background: !["#f3f4f6","#dbeafe","#ede9fe","#fce7f3","#d1fae5","#fef9c3","#1e293b"].includes(backgroundColor) && !backgroundColor.startsWith("radial-gradient") ? backgroundColor : "white" }}>
+                  <span className="text-gray-400 text-base">+</span>
+                  <input type="color" value={backgroundColor} onChange={(e) => setBackgroundColor(e.target.value)} className="absolute inset-0 opacity-0 w-full h-full cursor-pointer" />
+                </div>
+                <span className="text-[9px] text-gray-400">Custom</span>
+              </label>
+            </div>
+          )}
+          {bizBgType === "diffused" && layout !== "minimal" && (
+            <div className="grid grid-cols-8 gap-1">
+              {[
+                { label: "Aurora", value: "radial-gradient(ellipse at 30% 40%, #c4b5fd 0%, #93c5fd 40%, #f0fdf4 100%)" },
+                { label: "Ocean", value: "radial-gradient(ellipse at 20% 60%, #22d3ee 0%, #67e8f9 50%, #e0f2fe 100%)" },
+                { label: "Lilac", value: "radial-gradient(ellipse at 60% 30%, #e0d7ff 0%, #c4b5fd 40%, #f5f3ff 100%)" },
+                { label: "Sky", value: "radial-gradient(ellipse at 60% 30%, #bae6fd 0%, #7dd3fc 50%, #e0f2fe 100%)" },
+                { label: "Rose", value: "radial-gradient(ellipse at 60% 40%, #fbcfe8 0%, #f9a8d4 50%, #fdf2f8 100%)" },
+                { label: "Sage", value: "radial-gradient(ellipse at 30% 50%, #bbf7d0 0%, #86efac 50%, #f0fdf4 100%)" },
+                { label: "Honey", value: "radial-gradient(ellipse at 50% 30%, #fde68a 0%, #fcd34d 50%, #fffbeb 100%)" },
+                { label: "Peach", value: "radial-gradient(ellipse at 40% 40%, #fed7aa 0%, #fdba74 50%, #fff7ed 100%)" },
+                { label: "Indigo", value: "radial-gradient(ellipse at 30% 30%, #a5b4fc 0%, #818cf8 40%, #e0e7ff 100%)" },
+                { label: "Teal", value: "radial-gradient(ellipse at 60% 30%, #99f6e4 0%, #5eead4 50%, #f0fdfa 100%)" },
+                { label: "Blush", value: "radial-gradient(ellipse at 40% 30%, #fca5a5 0%, #f87171 45%, #fff1f2 100%)" },
+              ].map(({ label, value }) => (
+                <button key={label} onClick={() => setBackgroundColor(value)} className="flex flex-col items-center gap-1">
+                  <div className={`w-12 h-12 rounded-xl border-2 transition ${backgroundColor === value ? "border-black scale-90" : "border-transparent"}`} style={{ background: value, boxShadow: "0 2px 6px rgba(0,0,0,0.08)" }} />
+                  <span className="text-[9px] text-gray-400">{label}</span>
+                </button>
+              ))}
+            </div>
+          )}
         </div>
+      )}
+    </div>
 
-        <div className="h-px bg-gray-100 mb-3" />
-
-        <p className="text-sm font-semibold text-gray-600 mb-2">Diffused</p>
-        <div className="grid grid-cols-6 gap-2 mb-6">
-          {[
-{ label: "Aurora", value: "radial-gradient(ellipse at 30% 40%, #c4b5fd 0%, #93c5fd 40%, #f0fdf4 100%)" },
-        { label: "Ocean", value: "radial-gradient(ellipse at 20% 60%, #22d3ee 0%, #67e8f9 50%, #e0f2fe 100%)" },
-        { label: "Lilac", value: "radial-gradient(ellipse at 60% 30%, #e0d7ff 0%, #c4b5fd 40%, #f5f3ff 100%)" },
-        { label: "Sky", value: "radial-gradient(ellipse at 60% 30%, #bae6fd 0%, #7dd3fc 50%, #e0f2fe 100%)" },
-        { label: "Rose", value: "radial-gradient(ellipse at 60% 40%, #fbcfe8 0%, #f9a8d4 50%, #fdf2f8 100%)" },
-        { label: "Sage", value: "radial-gradient(ellipse at 30% 50%, #bbf7d0 0%, #86efac 50%, #f0fdf4 100%)" },
-        { label: "Honey", value: "radial-gradient(ellipse at 50% 30%, #fde68a 0%, #fcd34d 50%, #fffbeb 100%)" },
-        { label: "Peach", value: "radial-gradient(ellipse at 40% 40%, #fed7aa 0%, #fdba74 50%, #fff7ed 100%)" },
-        { label: "Indigo", value: "radial-gradient(ellipse at 30% 30%, #a5b4fc 0%, #818cf8 40%, #e0e7ff 100%)" },
-        { label: "Teal", value: "radial-gradient(ellipse at 60% 30%, #99f6e4 0%, #5eead4 50%, #f0fdfa 100%)" },
-        { label: "Blush", value: "radial-gradient(ellipse at 40% 30%, #fca5a5 0%, #f87171 45%, #fff1f2 100%)" },
-          ].map(({ label, value }) => (
-            <button key={label} onClick={() => setNetworkingBackground(value)}
-              className="flex flex-col items-center gap-1 group">
-              <div className={`w-14 h-14 rounded-xl border-2 transition ${networkingBackground === value ? "border-black scale-90" : "border-transparent"}`}
-                style={{ background: value, boxShadow: "0 2px 6px rgba(0,0,0,0.08)" }} />
-              <span className="text-[9px] text-gray-400">{label}</span>
-            </button>
-          ))}
+    {/* TEXT COLORS */}
+    <div className="border border-gray-200 rounded-2xl overflow-hidden">
+      <button onClick={() => toggleBD("colors")} className="w-full flex items-center justify-between px-4 py-3.5 bg-white">
+        <div className="flex items-center gap-3">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6b7280" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg>
+          <span className="text-base font-semibold text-gray-900">Text Colors</span>
         </div>
-
-        <div className="h-px bg-gray-100 mb-4" />
-
-        <p className="text-base font-bold text-gray-800 mb-3">Text Colors</p>
-        <div className="space-y-3 border p-3 rounded-xl">
-          <div className="flex justify-between items-center">
-            <span className="text-sm">Name</span>
-            <input type="color" value={networkingNameColor} onChange={(e) => setNetworkingNameColor(e.target.value)} />
+        <ChevronDown size={16} className={`text-gray-400 transition-transform duration-300 ${bizDesignOpen.colors ? "rotate-180" : ""}`} />
+      </button>
+      {bizDesignOpen.colors && (
+        <div className="px-4 pb-4 border-t border-gray-100">
+          <div className="flex items-center justify-between mt-3">
+            <span className="text-sm text-gray-600">Name</span>
+            <label className="flex items-center gap-2 border border-gray-200 rounded-xl px-3 py-2.5 cursor-pointer bg-gray-50">
+              <div className="w-5 h-5 rounded-md border border-gray-300" style={{ background: businessNameColor }} />
+              <span className="text-sm text-gray-500">{businessNameColor}</span>
+              <ChevronDown size={12} className="text-gray-400" />
+              <input type="color" value={businessNameColor} onChange={(e) => setBusinessNameColor(e.target.value)} className="absolute opacity-0 w-0 h-0" />
+            </label>
           </div>
-          <div className="flex justify-between items-center">
-            <span className="text-sm">Title</span>
-            <input type="color" value={networkingTitleColor} onChange={(e) => setNetworkingTitleColor(e.target.value)} />
+          <div className="flex items-center justify-between mt-3">
+            <span className="text-sm text-gray-600">Title</span>
+            <label className="flex items-center gap-2 border border-gray-200 rounded-xl px-3 py-2.5 cursor-pointer bg-gray-50">
+              <div className="w-5 h-5 rounded-md border border-gray-300" style={{ background: businessTitleColor }} />
+              <span className="text-sm text-gray-500">{businessTitleColor}</span>
+              <ChevronDown size={12} className="text-gray-400" />
+              <input type="color" value={businessTitleColor} onChange={(e) => setBusinessTitleColor(e.target.value)} className="absolute opacity-0 w-0 h-0" />
+            </label>
           </div>
         </div>
+      )}
+    </div>
 
-        <div className="h-px bg-gray-100 my-4" />
-        <p className="text-base font-bold text-gray-800 mb-3">Content Size</p>
-        <div className="space-y-3">
-          {[
-            { label: "Photo", value: netAvatarSize, set: setNetAvatarSize, min: 80, max: 320 },
-            { label: "Name", value: netNameSize, set: setNetNameSize, min: 70, max: 150 },
-            { label: "Title", value: netTitleSize, set: setNetTitleSize, min: 70, max: 150 },
-            { label: "Contact", value: netContactSize, set: setNetContactSize, min: 70, max: 150 },
-            { label: "Actions", value: netActionSize, set: setNetActionSize, min: 70, max: 150 },
-            { label: "Buttons", value: netButtonSize, set: setNetButtonSize, min: 70, max: 150 },
-          ].map(({ label, value, set, min, max }) => (
-            <div key={label} className="flex items-center gap-3 bg-white border border-gray-200 rounded-2xl px-4 py-3">
-              <span className="text-sm text-gray-500 w-16">{label}</span>
+    {/* FONT */}
+    <div className="border border-gray-200 rounded-2xl overflow-hidden">
+      <button onClick={() => toggleBD("font")} className="w-full flex items-center justify-between px-4 py-3.5 bg-white">
+        <div className="flex items-center gap-3">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6b7280" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><text x="4" y="18" fontSize="16" fontWeight="bold" fill="#6b7280">Aa</text></svg>
+          <span className="text-base font-semibold text-gray-900">Font</span>
+        </div>
+        <ChevronDown size={16} className={`text-gray-400 transition-transform duration-300 ${bizDesignOpen.font ? "rotate-180" : ""}`} />
+      </button>
+      {bizDesignOpen.font && (
+        <div className="px-4 pb-4 border-t border-gray-100">
+          <div className="grid grid-cols-3 gap-2 mt-3">
+            {[
+              { label: "Default", value: "system-ui" },
+              { label: "Inter", value: "'Inter', sans-serif" },
+              { label: "Poppins", value: "'Poppins', sans-serif" },
+              { label: "Playfair", value: "'Playfair Display', serif" },
+              { label: "DM Sans", value: "'DM Sans', sans-serif" },
+              { label: "Mono", value: "'Courier New', monospace" },
+            ].map(({ label, value }) => (
+              <button key={label} onClick={() => setFontFamily(value)}
+                className={`py-2.5 px-2 rounded-xl border text-sm transition ${fontFamily === value ? "border-black border-2 bg-white font-semibold" : "border-gray-200 bg-white text-gray-600"}`}
+                style={{ fontFamily: value }}>
+                {label}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+
+    {/* CONTENT SIZE */}
+    <div className="border border-gray-200 rounded-2xl overflow-hidden">
+      <button onClick={() => toggleBD("size")} className="w-full flex items-center justify-between px-4 py-3.5 bg-white">
+        <div className="flex items-center gap-3">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6b7280" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+          <span className="text-base font-semibold text-gray-900">Content Size</span>
+        </div>
+        <ChevronDown size={16} className={`text-gray-400 transition-transform duration-300 ${bizDesignOpen.size ? "rotate-180" : ""}`} />
+      </button>
+      {bizDesignOpen.size && (
+        <div className="border-t border-gray-100">
+          {(layout === "executive" ? [
+            { label: "Profile Photo", value: execAvatarSize, set: setExecAvatarSize, min: 70, max: 150 },
+            { label: "Name", value: fontSize, set: setFontSize, min: 70, max: 150 },
+            { label: "Title", value: titleSize, set: setTitleSize, min: 70, max: 150 },
+            { label: "Save Btn", value: execSaveSize, set: setExecSaveSize, min: 70, max: 150 },
+            { label: "Contact", value: execContactSize, set: setExecContactSize, min: 70, max: 150 },
+          ] : [
+            { label: "Name", value: minNameSize, set: setMinNameSize, min: 70, max: 150 },
+            { label: "Title", value: minTitleSize, set: setMinTitleSize, min: 70, max: 150 },
+            { label: "Contact", value: minContactSize, set: setMinContactSize, min: 70, max: 150 },
+          ]).map(({ label, value, set, min, max }, i, arr) => (
+            <div key={label} className={`flex items-center px-4 py-4 ${i < arr.length - 1 ? "border-b border-gray-100" : ""}`}>
+              <span className="text-sm text-gray-600 flex-1">{label}</span>
               <button onClick={() => set(s => Math.max(min, s - 5))} className="w-9 h-9 rounded-full bg-gray-100 flex items-center justify-center text-lg font-medium hover:bg-gray-200 transition">−</button>
-              <span className="flex-1 text-center text-sm font-medium text-gray-700">{value}{label === "Photo" ? "px" : "%"}</span>
+              <span className="w-16 text-center text-sm font-medium text-gray-700">{value}{label === "Profile Photo" ? "px" : "%"}</span>
               <button onClick={() => set(s => Math.min(max, s + 5))} className="w-9 h-9 rounded-full bg-gray-100 flex items-center justify-center text-lg font-medium hover:bg-gray-200 transition">+</button>
             </div>
           ))}
         </div>
-      </>
-    )}
-
-{/* FONT PICKER - ALL MODES */}
-    <div className="h-px bg-gray-100 my-4" />
-    <p className="text-base font-bold text-gray-800 mb-3">Font</p>
-    <div className="grid grid-cols-2 gap-2">
-      {[
-        { label: "Default", value: "system-ui" },
-        { label: "Inter", value: "'Inter', sans-serif" },
-        { label: "Poppins", value: "'Poppins', sans-serif" },
-        { label: "Playfair", value: "'Playfair Display', serif" },
-        { label: "DM Sans", value: "'DM Sans', sans-serif" },
-        { label: "Mono", value: "'Courier New', monospace" },
-      ].map(({ label, value }) => (
-        <button key={label} onClick={() => setFontFamily(value)}
-          className={`py-2.5 px-3 rounded-xl border text-sm transition ${fontFamily === value ? "border-black border-2 bg-white font-semibold" : "border-gray-200 bg-white text-gray-600"}`}
-          style={{ fontFamily: value }}>
-          {label}
-        </button>
-      ))}
+      )}
     </div>
+
+  </div>
+)}
+
+{/* UNIVERSITY MODE DESIGN */}
+{mode === "university" && (
+    <div className="space-y-3 pb-20">
+
+      {/* BACKGROUND */}
+      <div className="border border-gray-200 rounded-2xl overflow-hidden">
+        <button onClick={() => toggleUD("bg")} className="w-full flex items-center justify-between px-4 py-3.5 bg-white">
+          <div className="flex items-center gap-3">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6b7280" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+            <span className="text-base font-semibold text-gray-900">Background</span>
+          </div>
+          <ChevronDown size={16} className={`text-gray-400 transition-transform duration-300 ${uniDesignOpen.bg ? "rotate-180" : ""}`} />
+        </button>
+        {uniDesignOpen.bg && (
+          <div className="px-4 pb-4 border-t border-gray-100">
+            <div className="flex gap-2 mt-3 mb-4">
+              {["solid", "diffused"].map(t => (
+                <button key={t} onClick={() => setUniBgType(t)}
+                  className={`flex-1 py-3 rounded-xl text-base font-medium border transition ${uniBgType === t ? "bg-white border-gray-900 text-gray-900 border-2" : "bg-gray-50 border-gray-200 text-gray-500"}`}>
+                  {t.charAt(0).toUpperCase() + t.slice(1)}
+                </button>
+              ))}
+            </div>
+            {uniBgType === "solid" && (
+              <div className="grid grid-cols-8 gap-2">
+                {[
+                  { label: "Snow", value: "#f3f4f6" },
+                  { label: "Sky", value: "#dbeafe" },
+                  { label: "Lavender", value: "#ede9fe" },
+                  { label: "Blush", value: "#fce7f3" },
+                  { label: "Mint", value: "#d1fae5" },
+                  { label: "Cream", value: "#fef9c3" },
+                  { label: "Slate", value: "#1e293b" },
+                ].map(({ label, value }) => (
+                  <button key={label} onClick={() => setBackgroundColor(value)} className="flex flex-col items-center gap-1">
+                    <div className={`w-12 h-12 rounded-xl border-2 transition ${backgroundColor === value ? "border-black scale-90" : "border-transparent"}`} style={{ background: value, boxShadow: "0 2px 6px rgba(0,0,0,0.08)" }} />
+                    <span className="text-[9px] text-gray-400">{label}</span>
+                  </button>
+                ))}
+                <label className="flex flex-col items-center gap-1 cursor-pointer">
+                  <div className="w-12 h-12 rounded-xl border-2 border-dashed border-gray-200 flex items-center justify-center overflow-hidden relative"
+                    style={{ background: !["#f3f4f6","#dbeafe","#ede9fe","#fce7f3","#d1fae5","#fef9c3","#1e293b"].includes(backgroundColor) && !backgroundColor.startsWith("radial-gradient") ? backgroundColor : "white" }}>
+                    <span className="text-gray-400 text-base">+</span>
+                    <input type="color" value={backgroundColor} onChange={(e) => setBackgroundColor(e.target.value)} className="absolute inset-0 opacity-0 w-full h-full cursor-pointer" />
+                  </div>
+                  <span className="text-[9px] text-gray-400">Custom</span>
+                </label>
+              </div>
+            )}
+            {uniBgType === "diffused" && (
+              <div className="grid grid-cols-8 gap-2">
+                {[
+                  { label: "Aurora", value: "radial-gradient(ellipse at 30% 40%, #c4b5fd 0%, #93c5fd 40%, #f0fdf4 100%)" },
+                  { label: "Ocean", value: "radial-gradient(ellipse at 20% 60%, #22d3ee 0%, #67e8f9 50%, #e0f2fe 100%)" },
+                  { label: "Lilac", value: "radial-gradient(ellipse at 60% 30%, #e0d7ff 0%, #c4b5fd 40%, #f5f3ff 100%)" },
+                  { label: "Sky", value: "radial-gradient(ellipse at 60% 30%, #bae6fd 0%, #7dd3fc 50%, #e0f2fe 100%)" },
+                  { label: "Rose", value: "radial-gradient(ellipse at 60% 40%, #fbcfe8 0%, #f9a8d4 50%, #fdf2f8 100%)" },
+                  { label: "Sage", value: "radial-gradient(ellipse at 30% 50%, #bbf7d0 0%, #86efac 50%, #f0fdf4 100%)" },
+                  { label: "Honey", value: "radial-gradient(ellipse at 50% 30%, #fde68a 0%, #fcd34d 50%, #fffbeb 100%)" },
+                  { label: "Peach", value: "radial-gradient(ellipse at 40% 40%, #fed7aa 0%, #fdba74 50%, #fff7ed 100%)" },
+                  { label: "Indigo", value: "radial-gradient(ellipse at 30% 30%, #a5b4fc 0%, #818cf8 40%, #e0e7ff 100%)" },
+                  { label: "Teal", value: "radial-gradient(ellipse at 60% 30%, #99f6e4 0%, #5eead4 50%, #f0fdfa 100%)" },
+                  { label: "Blush", value: "radial-gradient(ellipse at 40% 30%, #fca5a5 0%, #f87171 45%, #fff1f2 100%)" },
+                ].map(({ label, value }) => (
+                  <button key={label} onClick={() => setBackgroundColor(value)} className="flex flex-col items-center gap-1">
+                    <div className={`w-12 h-12 rounded-xl border-2 transition ${backgroundColor === value ? "border-black scale-90" : "border-transparent"}`} style={{ background: value, boxShadow: "0 2px 6px rgba(0,0,0,0.08)" }} />
+                    <span className="text-[9px] text-gray-400">{label}</span>
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+
+      {/* TEXT COLORS */}
+      <div className="border border-gray-200 rounded-2xl overflow-hidden">
+        <button onClick={() => toggleUD("colors")} className="w-full flex items-center justify-between px-4 py-3.5 bg-white">
+          <div className="flex items-center gap-3">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6b7280" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg>
+            <span className="text-base font-semibold text-gray-900">Text Colors</span>
+          </div>
+          <ChevronDown size={16} className={`text-gray-400 transition-transform duration-300 ${uniDesignOpen.colors ? "rotate-180" : ""}`} />
+        </button>
+        {uniDesignOpen.colors && (
+          <div className="px-4 pb-4 border-t border-gray-100">
+            <div className="flex items-center justify-between mt-3">
+              <span className="text-sm text-gray-600">Name</span>
+              <label className="flex items-center gap-2 border border-gray-200 rounded-xl px-3 py-2.5 cursor-pointer bg-gray-50">                <div className="w-5 h-5 rounded-md border border-gray-300" style={{ background: universityNameColor }} />
+                <span className="text-sm text-gray-500">{universityNameColor}</span>
+                <ChevronDown size={12} className="text-gray-400" />
+                <input type="color" value={universityNameColor} onChange={(e) => setUniversityNameColor(e.target.value)} className="absolute opacity-0 w-0 h-0" />
+              </label>
+            </div>
+            <div className="flex items-center justify-between mt-3">
+              <span className="text-sm text-gray-600">Title</span>
+              <label className="flex items-center gap-2 border border-gray-200 rounded-xl px-3 py-2.5 cursor-pointer bg-gray-50">                <div className="w-5 h-5 rounded-md border border-gray-300" style={{ background: universityTitleColor }} />
+                <span className="text-sm text-gray-500">{universityTitleColor}</span>
+                <ChevronDown size={12} className="text-gray-400" />
+                <input type="color" value={universityTitleColor} onChange={(e) => setUniversityTitleColor(e.target.value)} className="absolute opacity-0 w-0 h-0" />
+              </label>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* FONT */}
+      <div className="border border-gray-200 rounded-2xl overflow-hidden">
+        <button onClick={() => toggleUD("font")} className="w-full flex items-center justify-between px-4 py-3.5 bg-white">
+          <div className="flex items-center gap-3">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6b7280" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><text x="4" y="18" fontSize="16" fontWeight="bold" fill="#6b7280">Aa</text></svg>
+            <span className="text-base font-semibold text-gray-900">Font</span>
+          </div>
+          <ChevronDown size={16} className={`text-gray-400 transition-transform duration-300 ${uniDesignOpen.font ? "rotate-180" : ""}`} />
+        </button>
+        {uniDesignOpen.font && (
+          <div className="px-4 pb-4 border-t border-gray-100">
+            <div className="grid grid-cols-3 gap-2 mt-3">
+              {[
+                { label: "Default", value: "system-ui" },
+                { label: "Inter", value: "'Inter', sans-serif" },
+                { label: "Poppins", value: "'Poppins', sans-serif" },
+                { label: "Playfair", value: "'Playfair Display', serif" },
+                { label: "DM Sans", value: "'DM Sans', sans-serif" },
+                { label: "Mono", value: "'Courier New', monospace" },
+              ].map(({ label, value }) => (
+                <button key={label} onClick={() => setFontFamily(value)}
+                  className={`py-2.5 px-2 rounded-xl border text-sm transition ${fontFamily === value ? "border-black border-2 bg-white font-semibold" : "border-gray-200 bg-white text-gray-600"}`}
+                  style={{ fontFamily: value }}>
+                  {label}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* CONTENT SIZE */}
+      <div className="border border-gray-200 rounded-2xl overflow-hidden">
+        <button onClick={() => toggleUD("size")} className="w-full flex items-center justify-between px-4 py-3.5 bg-white">
+          <div className="flex items-center gap-3">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6b7280" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+            <span className="text-base font-semibold text-gray-900">Content Size</span>
+          </div>
+          <ChevronDown size={16} className={`text-gray-400 transition-transform duration-300 ${uniDesignOpen.size ? "rotate-180" : ""}`} />
+        </button>
+        {uniDesignOpen.size && (
+          <div className="border-t border-gray-100">
+            {[
+              { label: "Profile Photo", value: uniAvatarSize, set: setUniAvatarSize, min: 40, max: 150 },
+              { label: "Name", value: fontSize, set: setFontSize, min: 70, max: 150 },
+              { label: "Title", value: titleSize, set: setTitleSize, min: 70, max: 150 },
+              { label: "Bio Text", value: uniBioSize, set: setUniBioSize, min: 70, max: 150 },
+              { label: "Stats", value: uniStatsSize, set: setUniStatsSize, min: 70, max: 150 },
+              { label: "Contact", value: uniContentSize, set: setUniContentSize, min: 70, max: 150 },
+            ].map(({ label, value, set, min, max }, i, arr) => (
+              <div key={label} className={`flex items-center px-4 py-4 ${i < arr.length - 1 ? "border-b border-gray-100" : ""}`}>
+                <span className="text-sm text-gray-600 flex-1">{label}</span>
+            <button onClick={() => set(s => Math.max(min, s - 5))} className="w-9 h-9 rounded-full bg-gray-100 flex items-center justify-center text-lg font-medium hover:bg-gray-200 transition">−</button>
+<span className="w-16 text-center text-sm font-medium text-gray-700">{value}{label === "Profile Photo" ? "px" : "%"}</span>
+<button onClick={() => set(s => Math.min(max, s + 5))} className="w-9 h-9 rounded-full bg-gray-100 flex items-center justify-center text-lg font-medium hover:bg-gray-200 transition">+</button>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+    </div>
+)}
+
+{/* SOCIAL MODE DESIGN */}
+{mode === "social" && (
+  <div className="space-y-3 pb-20">
+
+    {/* BACKGROUND */}
+    <div className="border border-gray-200 rounded-2xl overflow-hidden">
+      <button onClick={() => toggleSD("bg")} className="w-full flex items-center justify-between px-4 py-3.5 bg-white">
+        <div className="flex items-center gap-3">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6b7280" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+          <span className="text-base font-semibold text-gray-900">Background</span>
+        </div>
+        <ChevronDown size={16} className={`text-gray-400 transition-transform duration-300 ${socDesignOpen.bg ? "rotate-180" : ""}`} />
+      </button>
+      {socDesignOpen.bg && (
+        <div className="px-4 pb-4 border-t border-gray-100">
+          <div className="grid grid-cols-8 gap-1 mt-3">
+            {[
+              { label: "Snow", value: "#f3f4f6" },
+              { label: "Sky", value: "#dbeafe" },
+              { label: "Lavender", value: "#ede9fe" },
+              { label: "Blush", value: "#fce7f3" },
+              { label: "Mint", value: "#d1fae5" },
+              { label: "Cream", value: "#fef9c3" },
+              { label: "Slate", value: "#1e293b" },
+            ].map(({ label, value }) => (
+              <button key={label} onClick={() => setBackgroundColor(value)} className="flex flex-col items-center gap-1">
+                <div className={`w-12 h-12 rounded-xl border-2 transition ${backgroundColor === value ? "border-black scale-90" : "border-transparent"}`} style={{ background: value, boxShadow: "0 2px 6px rgba(0,0,0,0.08)" }} />
+                <span className="text-[9px] text-gray-400">{label}</span>
+              </button>
+            ))}
+            <label className="flex flex-col items-center gap-1 cursor-pointer">
+              <div className="w-12 h-12 rounded-xl border-2 border-dashed border-gray-200 flex items-center justify-center overflow-hidden relative"
+                style={{ background: !["#f3f4f6","#dbeafe","#ede9fe","#fce7f3","#d1fae5","#fef9c3","#1e293b"].includes(backgroundColor) && !backgroundColor.startsWith("radial-gradient") ? backgroundColor : "white" }}>
+                <span className="text-gray-400 text-base">+</span>
+                <input type="color" value={backgroundColor} onChange={(e) => setBackgroundColor(e.target.value)} className="absolute inset-0 opacity-0 w-full h-full cursor-pointer" />
+              </div>
+              <span className="text-[9px] text-gray-400">Custom</span>
+            </label>
+          </div>
+        </div>
+      )}
+    </div>
+
+    {/* TEXT COLORS */}
+    <div className="border border-gray-200 rounded-2xl overflow-hidden">
+      <button onClick={() => toggleSD("colors")} className="w-full flex items-center justify-between px-4 py-3.5 bg-white">
+        <div className="flex items-center gap-3">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6b7280" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg>
+          <span className="text-base font-semibold text-gray-900">Text Colors</span>
+        </div>
+        <ChevronDown size={16} className={`text-gray-400 transition-transform duration-300 ${socDesignOpen.colors ? "rotate-180" : ""}`} />
+      </button>
+      {socDesignOpen.colors && (
+        <div className="px-4 pb-4 border-t border-gray-100">
+          <div className="flex items-center justify-between mt-3">
+            <span className="text-sm text-gray-600">Name</span>
+            <label className="flex items-center gap-2 border border-gray-200 rounded-xl px-3 py-2.5 cursor-pointer bg-gray-50">
+              <div className="w-5 h-5 rounded-md border border-gray-300" style={{ background: socialNameColor }} />
+              <span className="text-sm text-gray-500">{socialNameColor}</span>
+              <ChevronDown size={12} className="text-gray-400" />
+              <input type="color" value={socialNameColor} onChange={(e) => setSocialNameColor(e.target.value)} className="absolute opacity-0 w-0 h-0" />
+            </label>
+          </div>
+          <div className="flex items-center justify-between mt-3">
+            <span className="text-sm text-gray-600">Title</span>
+            <label className="flex items-center gap-2 border border-gray-200 rounded-xl px-3 py-2.5 cursor-pointer bg-gray-50">
+              <div className="w-5 h-5 rounded-md border border-gray-300" style={{ background: socialTitleColor2 }} />
+              <span className="text-sm text-gray-500">{socialTitleColor2}</span>
+              <ChevronDown size={12} className="text-gray-400" />
+              <input type="color" value={socialTitleColor2} onChange={(e) => setSocialTitleColor2(e.target.value)} className="absolute opacity-0 w-0 h-0" />
+            </label>
+          </div>
+        </div>
+      )}
+    </div>
+
+    {/* FONT */}
+    <div className="border border-gray-200 rounded-2xl overflow-hidden">
+      <button onClick={() => toggleSD("font")} className="w-full flex items-center justify-between px-4 py-3.5 bg-white">
+        <div className="flex items-center gap-3">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6b7280" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><text x="4" y="18" fontSize="16" fontWeight="bold" fill="#6b7280">Aa</text></svg>
+          <span className="text-base font-semibold text-gray-900">Font</span>
+        </div>
+        <ChevronDown size={16} className={`text-gray-400 transition-transform duration-300 ${socDesignOpen.font ? "rotate-180" : ""}`} />
+      </button>
+      {socDesignOpen.font && (
+        <div className="px-4 pb-4 border-t border-gray-100">
+          <div className="grid grid-cols-3 gap-2 mt-3">
+            {[
+              { label: "Default", value: "system-ui" },
+              { label: "Inter", value: "'Inter', sans-serif" },
+              { label: "Poppins", value: "'Poppins', sans-serif" },
+              { label: "Playfair", value: "'Playfair Display', serif" },
+              { label: "DM Sans", value: "'DM Sans', sans-serif" },
+              { label: "Mono", value: "'Courier New', monospace" },
+            ].map(({ label, value }) => (
+              <button key={label} onClick={() => setFontFamily(value)}
+                className={`py-2.5 px-2 rounded-xl border text-sm transition ${fontFamily === value ? "border-black border-2 bg-white font-semibold" : "border-gray-200 bg-white text-gray-600"}`}
+                style={{ fontFamily: value }}>
+                {label}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+
+    {/* CONTENT SIZE */}
+    <div className="border border-gray-200 rounded-2xl overflow-hidden">
+      <button onClick={() => toggleSD("size")} className="w-full flex items-center justify-between px-4 py-3.5 bg-white">
+        <div className="flex items-center gap-3">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6b7280" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+          <span className="text-base font-semibold text-gray-900">Content Size</span>
+        </div>
+        <ChevronDown size={16} className={`text-gray-400 transition-transform duration-300 ${socDesignOpen.size ? "rotate-180" : ""}`} />
+      </button>
+      {socDesignOpen.size && (
+        <div className="border-t border-gray-100">
+          {[
+            ...(layout === "circle" ? [{ label: "Profile Photo", value: socialAvatarSize, set: setSocialAvatarSize, min: 80, max: 280, px: true }] : []),
+            { label: "Name", value: socialNameSize, set: setSocialNameSize, min: 70, max: 150, px: false },
+            { label: "Title", value: socialTitleSize, set: setSocialTitleSize, min: 70, max: 150, px: false },
+            { label: "Icons", value: socialIconSize, set: setSocialIconSize, min: 70, max: 150, px: false },
+            { label: "Links", value: socialLinkSize, set: setSocialLinkSize, min: 70, max: 150, px: false },
+            { label: "Products", value: socialProductSize, set: setSocialProductSize, min: 70, max: 150, px: false },
+          ].map(({ label, value, set, min, max, px }, i, arr) => (
+            <div key={label} className={`flex items-center px-4 py-4 ${i < arr.length - 1 ? "border-b border-gray-100" : ""}`}>
+              <span className="text-sm text-gray-600 flex-1">{label}</span>
+              <button onClick={() => set(s => Math.max(min, s - 5))} className="w-9 h-9 rounded-full bg-gray-100 flex items-center justify-center text-lg font-medium hover:bg-gray-200 transition">−</button>
+              <span className="w-16 text-center text-sm font-medium text-gray-700">{value}{px ? "px" : "%"}</span>
+              <button onClick={() => set(s => Math.min(max, s + 5))} className="w-9 h-9 rounded-full bg-gray-100 flex items-center justify-center text-lg font-medium hover:bg-gray-200 transition">+</button>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+
+  </div>
+)}
+{/* NETWORKING MODE DESIGN */}
+{mode === "networking" && (
+  <div className="space-y-3 pb-20">
+
+    {/* BACKGROUND */}
+    <div className="border border-gray-200 rounded-2xl overflow-hidden">
+      <button onClick={() => toggleND("bg")} className="w-full flex items-center justify-between px-4 py-3.5 bg-white">
+        <div className="flex items-center gap-3">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6b7280" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+          <span className="text-base font-semibold text-gray-900">Background</span>
+        </div>
+        <ChevronDown size={16} className={`text-gray-400 transition-transform duration-300 ${netDesignOpen.bg ? "rotate-180" : ""}`} />
+      </button>
+      {netDesignOpen.bg && (
+        <div className="px-4 pb-4 border-t border-gray-100">
+          <div className="flex gap-2 mt-3 mb-4">
+            {["solid", "diffused"].map(t => (
+              <button key={t} onClick={() => setNetBgType(t)}
+                className={`flex-1 py-2 rounded-xl text-sm font-medium border transition ${netBgType === t ? "bg-white border-gray-900 text-gray-900 border-2" : "bg-gray-50 border-gray-200 text-gray-500"}`}>
+                {t.charAt(0).toUpperCase() + t.slice(1)}
+              </button>
+            ))}
+          </div>
+          {netBgType === "solid" && (
+            <div className="grid grid-cols-8 gap-1">
+              {[
+                { label: "Snow", value: "#f3f4f6" },
+                { label: "Sky", value: "#dbeafe" },
+                { label: "Lavender", value: "#ede9fe" },
+                { label: "Blush", value: "#fce7f3" },
+                { label: "Mint", value: "#d1fae5" },
+                { label: "Cream", value: "#fef9c3" },
+                { label: "Slate", value: "#1e293b" },
+              ].map(({ label, value }) => (
+                <button key={label} onClick={() => setNetworkingBackground(value)} className="flex flex-col items-center gap-1">
+                  <div className={`w-12 h-12 rounded-xl border-2 transition ${networkingBackground === value ? "border-black scale-90" : "border-transparent"}`} style={{ background: value, boxShadow: "0 2px 6px rgba(0,0,0,0.08)" }} />
+                  <span className="text-[9px] text-gray-400">{label}</span>
+                </button>
+              ))}
+              <label className="flex flex-col items-center gap-1 cursor-pointer">
+                <div className="w-12 h-12 rounded-xl border-2 border-dashed border-gray-200 flex items-center justify-center overflow-hidden relative"
+                  style={{ background: !["#f3f4f6","#dbeafe","#ede9fe","#fce7f3","#d1fae5","#fef9c3","#1e293b"].includes(networkingBackground) && !networkingBackground.startsWith("radial-gradient") ? networkingBackground : "white" }}>
+                  <span className="text-gray-400 text-base">+</span>
+                  <input type="color" value={networkingBackground} onChange={(e) => setNetworkingBackground(e.target.value)} className="absolute inset-0 opacity-0 w-full h-full cursor-pointer" />
+                </div>
+                <span className="text-[9px] text-gray-400">Custom</span>
+              </label>
+            </div>
+          )}
+          {netBgType === "diffused" && (
+            <div className="grid grid-cols-8 gap-1">
+              {[
+                { label: "Aurora", value: "radial-gradient(ellipse at 30% 40%, #c4b5fd 0%, #93c5fd 40%, #f0fdf4 100%)" },
+                { label: "Ocean", value: "radial-gradient(ellipse at 20% 60%, #22d3ee 0%, #67e8f9 50%, #e0f2fe 100%)" },
+                { label: "Lilac", value: "radial-gradient(ellipse at 60% 30%, #e0d7ff 0%, #c4b5fd 40%, #f5f3ff 100%)" },
+                { label: "Sky", value: "radial-gradient(ellipse at 60% 30%, #bae6fd 0%, #7dd3fc 50%, #e0f2fe 100%)" },
+                { label: "Rose", value: "radial-gradient(ellipse at 60% 40%, #fbcfe8 0%, #f9a8d4 50%, #fdf2f8 100%)" },
+                { label: "Sage", value: "radial-gradient(ellipse at 30% 50%, #bbf7d0 0%, #86efac 50%, #f0fdf4 100%)" },
+                { label: "Honey", value: "radial-gradient(ellipse at 50% 30%, #fde68a 0%, #fcd34d 50%, #fffbeb 100%)" },
+                { label: "Peach", value: "radial-gradient(ellipse at 40% 40%, #fed7aa 0%, #fdba74 50%, #fff7ed 100%)" },
+                { label: "Indigo", value: "radial-gradient(ellipse at 30% 30%, #a5b4fc 0%, #818cf8 40%, #e0e7ff 100%)" },
+                { label: "Teal", value: "radial-gradient(ellipse at 60% 30%, #99f6e4 0%, #5eead4 50%, #f0fdfa 100%)" },
+                { label: "Blush", value: "radial-gradient(ellipse at 40% 30%, #fca5a5 0%, #f87171 45%, #fff1f2 100%)" },
+              ].map(({ label, value }) => (
+                <button key={label} onClick={() => setNetworkingBackground(value)} className="flex flex-col items-center gap-1">
+                  <div className={`w-12 h-12 rounded-xl border-2 transition ${networkingBackground === value ? "border-black scale-90" : "border-transparent"}`} style={{ background: value, boxShadow: "0 2px 6px rgba(0,0,0,0.08)" }} />
+                  <span className="text-[9px] text-gray-400">{label}</span>
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+
+    {/* TEXT COLORS */}
+    <div className="border border-gray-200 rounded-2xl overflow-hidden">
+      <button onClick={() => toggleND("colors")} className="w-full flex items-center justify-between px-4 py-3.5 bg-white">
+        <div className="flex items-center gap-3">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6b7280" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg>
+          <span className="text-base font-semibold text-gray-900">Text Colors</span>
+        </div>
+        <ChevronDown size={16} className={`text-gray-400 transition-transform duration-300 ${netDesignOpen.colors ? "rotate-180" : ""}`} />
+      </button>
+      {netDesignOpen.colors && (
+        <div className="px-4 pb-4 border-t border-gray-100">
+          <div className="flex items-center justify-between mt-3">
+            <span className="text-sm text-gray-600">Name</span>
+            <label className="flex items-center gap-2 border border-gray-200 rounded-xl px-3 py-2.5 cursor-pointer bg-gray-50">
+              <div className="w-5 h-5 rounded-md border border-gray-300" style={{ background: networkingNameColor }} />
+              <span className="text-sm text-gray-500">{networkingNameColor}</span>
+              <ChevronDown size={12} className="text-gray-400" />
+              <input type="color" value={networkingNameColor} onChange={(e) => setNetworkingNameColor(e.target.value)} className="absolute opacity-0 w-0 h-0" />
+            </label>
+          </div>
+          <div className="flex items-center justify-between mt-3">
+            <span className="text-sm text-gray-600">Title</span>
+            <label className="flex items-center gap-2 border border-gray-200 rounded-xl px-3 py-2.5 cursor-pointer bg-gray-50">
+              <div className="w-5 h-5 rounded-md border border-gray-300" style={{ background: networkingTitleColor }} />
+              <span className="text-sm text-gray-500">{networkingTitleColor}</span>
+              <ChevronDown size={12} className="text-gray-400" />
+              <input type="color" value={networkingTitleColor} onChange={(e) => setNetworkingTitleColor(e.target.value)} className="absolute opacity-0 w-0 h-0" />
+            </label>
+          </div>
+        </div>
+      )}
+    </div>
+
+    {/* FONT */}
+    <div className="border border-gray-200 rounded-2xl overflow-hidden">
+      <button onClick={() => toggleND("font")} className="w-full flex items-center justify-between px-4 py-3.5 bg-white">
+        <div className="flex items-center gap-3">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6b7280" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><text x="4" y="18" fontSize="16" fontWeight="bold" fill="#6b7280">Aa</text></svg>
+          <span className="text-base font-semibold text-gray-900">Font</span>
+        </div>
+        <ChevronDown size={16} className={`text-gray-400 transition-transform duration-300 ${netDesignOpen.font ? "rotate-180" : ""}`} />
+      </button>
+      {netDesignOpen.font && (
+        <div className="px-4 pb-4 border-t border-gray-100">
+          <div className="grid grid-cols-3 gap-2 mt-3">
+            {[
+              { label: "Default", value: "system-ui" },
+              { label: "Inter", value: "'Inter', sans-serif" },
+              { label: "Poppins", value: "'Poppins', sans-serif" },
+              { label: "Playfair", value: "'Playfair Display', serif" },
+              { label: "DM Sans", value: "'DM Sans', sans-serif" },
+              { label: "Mono", value: "'Courier New', monospace" },
+            ].map(({ label, value }) => (
+              <button key={label} onClick={() => setFontFamily(value)}
+                className={`py-2.5 px-2 rounded-xl border text-sm transition ${fontFamily === value ? "border-black border-2 bg-white font-semibold" : "border-gray-200 bg-white text-gray-600"}`}
+                style={{ fontFamily: value }}>
+                {label}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+
+    {/* CONTENT SIZE */}
+    <div className="border border-gray-200 rounded-2xl overflow-hidden">
+      <button onClick={() => toggleND("size")} className="w-full flex items-center justify-between px-4 py-3.5 bg-white">
+        <div className="flex items-center gap-3">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6b7280" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+          <span className="text-base font-semibold text-gray-900">Content Size</span>
+        </div>
+        <ChevronDown size={16} className={`text-gray-400 transition-transform duration-300 ${netDesignOpen.size ? "rotate-180" : ""}`} />
+      </button>
+      {netDesignOpen.size && (
+        <div className="border-t border-gray-100">
+          {[
+            { label: "Photo", value: netAvatarSize, set: setNetAvatarSize, min: 80, max: 320, px: true },
+            { label: "Name", value: netNameSize, set: setNetNameSize, min: 70, max: 150, px: false },
+            { label: "Title", value: netTitleSize, set: setNetTitleSize, min: 70, max: 150, px: false },
+            { label: "Contact", value: netContactSize, set: setNetContactSize, min: 70, max: 150, px: false },
+            { label: "Actions", value: netActionSize, set: setNetActionSize, min: 70, max: 150, px: false },
+            { label: "Buttons", value: netButtonSize, set: setNetButtonSize, min: 70, max: 150, px: false },
+          ].map(({ label, value, set, min, max, px }, i, arr) => (
+            <div key={label} className={`flex items-center px-4 py-4 ${i < arr.length - 1 ? "border-b border-gray-100" : ""}`}>
+              <span className="text-sm text-gray-600 flex-1">{label}</span>
+              <button onClick={() => set(s => Math.max(min, s - 5))} className="w-9 h-9 rounded-full bg-gray-100 flex items-center justify-center text-lg font-medium hover:bg-gray-200 transition">−</button>
+              <span className="w-16 text-center text-sm font-medium text-gray-700">{value}{px ? "px" : "%"}</span>
+              <button onClick={() => set(s => Math.min(max, s + 5))} className="w-9 h-9 rounded-full bg-gray-100 flex items-center justify-center text-lg font-medium hover:bg-gray-200 transition">+</button>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+
+  </div>
+)}
+
 
 
   </div>
@@ -2189,6 +2538,8 @@ const isActive = button !== null && button !== undefined;
           <button
             onClick={() => {
               if (m.id === "business" || m.id === "social") {
+                setMode(m.id);
+                setLayout(m.id === "business" ? "executive" : "circle");
                 setOpenMode(openMode === m.id ? null : m.id);
               } else {
                 setMode(m.id);

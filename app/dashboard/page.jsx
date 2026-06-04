@@ -121,7 +121,7 @@ const { data: profilesData } = await supabase
   .select("*")
   .eq("user_id", userData.user.id);
 
-let data = profilesData || [];
+let data = (profilesData || []).sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
 
 // if NONE are active → make first one active
 // 🔥 FORCE ONLY ONE ACTIVE (fix duplicates)

@@ -36,6 +36,8 @@ fieldValues,
   execSaveSize = 100,
   execContactSize = 100,
   execTitleSize = 100,
+  nameColor = "#000000",
+  titleColor = "#6b7280",
 }) {
 
 const [saved, setSaved] = useState(false);
@@ -187,16 +189,18 @@ onTouchEnd={profileMouseUp}
 <div className="ml- 20 mt-16 sm:ml-[30px] sm:mt-16 text-left"><h1
   className="font-bold"
   style={{
-    fontSize: `clamp(${nameSize * 0.7 * (fontSize/100)}px, ${nameSize * (fontSize/100)}px, ${nameSize * (fontSize/100)}px)`
+    fontSize: `clamp(${nameSize * 0.7 * (fontSize/100)}px, ${nameSize * (fontSize/100)}px, ${nameSize * (fontSize/100)}px)`,
+    color: nameColor
   }}
 >
             {name}
           </h1>
 
 <p
-  className="text-gray-500 mt-2"
+  className="mt-2"
   style={{
-    fontSize: `clamp(${titleSize * 0.8 * (execTitleSize/100)}px, ${titleSize * (execTitleSize/100)}px, ${titleSize * (execTitleSize/100)}px)`
+    fontSize: `clamp(${titleSize * 0.8 * (execTitleSize/100)}px, ${titleSize * (execTitleSize/100)}px, ${titleSize * (execTitleSize/100)}px)`,
+    color: titleColor
   }}
 >
   {title}

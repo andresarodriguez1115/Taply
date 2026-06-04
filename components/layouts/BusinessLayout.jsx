@@ -58,6 +58,8 @@ fontFamily: fontFamilyProp,
   minNameSize = 100,
   minTitleSize = 100,
   minContactSize = 100,
+  nameColor = "#000000",
+  titleColor = "#6b7280",
 })
  {
   // ---------------------------
@@ -280,6 +282,8 @@ titleSize={titleSize}
   minNameSize={minNameSize}
   minTitleSize={minTitleSize}
   minContactSize={minContactSize}
+  nameColor={nameColor}
+  titleColor={titleColor}
 />
 )}
 
@@ -323,6 +327,8 @@ titleSize={titleSize}
     execSaveSize={execSaveSize}
     execContactSize={execContactSize}
     execTitleSize={titleSizeProp}
+    nameColor={nameColor}
+    titleColor={titleColor}
   />
 )}
 
