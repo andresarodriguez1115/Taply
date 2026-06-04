@@ -87,11 +87,11 @@ const urlMode = searchParams.get("mode");// 🔥 NEW LAYOUT STATE
   // DYNAMIC OPTIONAL FIELDS
   // -----------------------------
 const [fields, setFields] = useState({
-  phone: true,
-  email: true,
-  linkedin: true,
-  instagram: true,
-  website: true,
+  phone: false,
+  email: false,
+  linkedin: false,
+  instagram: false,
+  website: false,
   bio: false,
 });
 const router = useRouter()
@@ -125,21 +125,21 @@ console.log("PROFILE DATA:", data)
 if (!data && !profileId) {
 if (urlMode) setMode(urlMode);
 setFields({
-  phone: true,
-  email: true,
-  linkedin: true,
-  instagram: true,
-  website: true,
+  phone: false,
+  email: false,
+  linkedin: false,
+  instagram: false,
+  website: false,
   bio: false,
 });
 
   setFieldValues({
-    phone: "1-800-taply.now",
-    email: "taply.now@email.com",
-    linkedin: "taplylinkedin",
-    location: "Taply, Headquarters",
-    instagram: "taplygram",
-website: "taply.now",    bio: "",
+    phone: "",
+    email: "",
+    linkedin: "",
+    location: "",
+    instagram: "",
+website: "",    bio: "",
     social_icons: {
       instagram: "taplygram",
       tiktok: "taply.now",
@@ -150,17 +150,11 @@ website: "taply.now",    bio: "",
       { title: "Taply", url: "taply.now", image: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxNTAwIDUwMCIgd2lkdGg9IjE1MDAiIGhlaWdodD0iNTAwIj4KICA8cmVjdCB3aWR0aD0iMTUwMCIgaGVpZ2h0PSI1MDAiIGZpbGw9IiMwYTBhMGEiLz4KICA8Y2lyY2xlIGN4PSI3NTAiIGN5PSIyMTAiIHI9IjEyMCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMjU2M2ViIiBzdHJva2Utd2lkdGg9IjgiIG9wYWNpdHk9IjAuMjUiLz4KICA8Y2lyY2xlIGN4PSI3NTAiIGN5PSIyMTAiIHI9Ijg3IiBmaWxsPSJub25lIiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iOCIgb3BhY2l0eT0iMC40NSIvPgogIDxjaXJjbGUgY3g9Ijc1MCIgY3k9IjIxMCIgcj0iNTQiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSI4IiBvcGFjaXR5PSIwLjciLz4KICA8Y2lyY2xlIGN4PSI3NTAiIGN5PSIyMTAiIHI9IjIwIiBmaWxsPSIjMjU2M2ViIi8+CiAgPHRleHQgeD0iNzUwIiB5PSIzOTAiIGZvbnQtZmFtaWx5PSItYXBwbGUtc3lzdGVtLCBCbGlua01hY1N5c3RlbUZvbnQsICdTZWdvZSBVSScsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTAwIiBmb250LXdlaWdodD0iNzAwIiBmaWxsPSJ3aGl0ZSIgbGV0dGVyLXNwYWNpbmc9Ii0zIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj50YXBseTwvdGV4dD4KPC9zdmc+Cg==", imgScale: 1.5 },
       { title: "Taply", url: "taply.now", image: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxNTAwIDUwMCIgd2lkdGg9IjE1MDAiIGhlaWdodD0iNTAwIj4KICA8cmVjdCB3aWR0aD0iMTUwMCIgaGVpZ2h0PSI1MDAiIGZpbGw9IiMwYTBhMGEiLz4KICA8Y2lyY2xlIGN4PSI3NTAiIGN5PSIyMTAiIHI9IjEyMCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMjU2M2ViIiBzdHJva2Utd2lkdGg9IjgiIG9wYWNpdHk9IjAuMjUiLz4KICA8Y2lyY2xlIGN4PSI3NTAiIGN5PSIyMTAiIHI9Ijg3IiBmaWxsPSJub25lIiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iOCIgb3BhY2l0eT0iMC40NSIvPgogIDxjaXJjbGUgY3g9Ijc1MCIgY3k9IjIxMCIgcj0iNTQiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzI1NjNlYiIgc3Ryb2tlLXdpZHRoPSI4IiBvcGFjaXR5PSIwLjciLz4KICA8Y2lyY2xlIGN4PSI3NTAiIGN5PSIyMTAiIHI9IjIwIiBmaWxsPSIjMjU2M2ViIi8+CiAgPHRleHQgeD0iNzUwIiB5PSIzOTAiIGZvbnQtZmFtaWx5PSItYXBwbGUtc3lzdGVtLCBCbGlua01hY1N5c3RlbUZvbnQsICdTZWdvZSBVSScsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTAwIiBmb250LXdlaWdodD0iNzAwIiBmaWxsPSJ3aGl0ZSIgbGV0dGVyLXNwYWNpbmc9Ii0zIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj50YXBseTwvdGV4dD4KPC9zdmc+Cg==", imgScale: 1.5 },
     ],
-    uni_bio: "Tell people about yourself, your interests, and what you're working on...",
-    uni_gpa: "0",
-    uni_grad_year: "0",
-    uni_projects: [
-      { title: "Add Your Project", subtitle: "Subtitle To Your Project", desc: "", url: "https://taply.now" },
-    ],
-    buttons: [
-      { title: "", url: "", image: "" },
-      { title: "", url: "", image: "" },
-      { title: "", url: "", image: "" },
-    ]
+    uni_bio: "",
+    uni_gpa: "",
+    uni_grad_year: "",
+    uni_projects: [],
+    buttons: []
   });
 
   setLoadingProfile(false);
@@ -207,13 +201,12 @@ setFieldValues(data.field_values || {
   linkedin: "",
   instagram: "",
 website: "taply.now",  bio: "",
-  buttons: [
-    { title: "", url: "", image: "" },
-    { title: "", url: "", image: "" },
-    { title: "", url: "", image: "" },
-  ]
+  buttons: []
 });
-
+if (data.field_values?.buttons) {
+  const cleaned = data.field_values.buttons.filter(b => b !== null && b !== undefined && (b.title || b.url || b.image));
+  setFieldValues(prev => ({ ...prev, buttons: cleaned }));
+}
 setMode(data.mode || "business");
 setLayout(data.layout || "executive");
 
@@ -244,6 +237,7 @@ if (data.sizes) {
   if (s.execAvatarSize) setExecAvatarSize(s.execAvatarSize);
   if (s.execSaveSize) setExecSaveSize(s.execSaveSize);
   if (s.execContactSize) setExecContactSize(s.execContactSize);
+  if (s.fontFamily) setFontFamily(s.fontFamily);
 }
 
 setBackgroundColor(data.bg_color || "#f3f4f6");
@@ -279,9 +273,9 @@ setLoadingProfile(false);
 }, [router, profileId])
 
 const [fieldValues, setFieldValues] = useState({
-  phone: "1-800-taply.now",
-  email: "taply.now@email.com",
-  linkedin: "taplylinkedin",
+  phone: "",
+  email: "",
+  linkedin: "",
   location: "taply, headquarters",
   instagram: "",
 website: "taply.now",  bio: "",
@@ -295,17 +289,13 @@ website: "taply.now",  bio: "",
     { title: "Taply", url: "taply.now", image: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMDAgNjAiIHdpZHRoPSI0MDAiIGhlaWdodD0iMTIwIj4KICA8cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjYwIiByeD0iMCIgZmlsbD0iIzFhMWEyZSIvPgogIDxjaXJjbGUgY3g9IjMwIiBjeT0iMzAiIHI9IjI2IiBmaWxsPSJub25lIiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjIuNSIgb3BhY2l0eT0iMC4yNSIvPgogIDxjaXJjbGUgY3g9IjMwIiBjeT0iMzAiIHI9IjE5IiBmaWxsPSJub25lIiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjIuNSIgb3BhY2l0eT0iMC40NSIvPgogIDxjaXJjbGUgY3g9IjMwIiBjeT0iMzAiIHI9IjEyIiBmaWxsPSJub25lIiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjIuNSIgb3BhY2l0eT0iMC43Ii8+CiAgPGNpcmNsZSBjeD0iMzAiIGN5PSIzMCIgcj0iNSIgZmlsbD0id2hpdGUiLz4KICA8dGV4dCB4PSI2NiIgeT0iMzgiIGZvbnQtZmFtaWx5PSItYXBwbGUtc3lzdGVtLCBCbGlua01hY1N5c3RlbUZvbnQsICdTZWdvZSBVSScsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMjgiIGZvbnQtd2VpZ2h0PSI3MDAiIGZpbGw9IndoaXRlIiBsZXR0ZXItc3BhY2luZz0iLTAuNSI+dGFwbHk8L3RleHQ+Cjwvc3ZnPgo=" },
     { title: "Taply", url: "taply.now", image: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMDAgNjAiIHdpZHRoPSI0MDAiIGhlaWdodD0iMTIwIj4KICA8cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjYwIiByeD0iMCIgZmlsbD0iIzFhMWEyZSIvPgogIDxjaXJjbGUgY3g9IjMwIiBjeT0iMzAiIHI9IjI2IiBmaWxsPSJub25lIiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjIuNSIgb3BhY2l0eT0iMC4yNSIvPgogIDxjaXJjbGUgY3g9IjMwIiBjeT0iMzAiIHI9IjE5IiBmaWxsPSJub25lIiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjIuNSIgb3BhY2l0eT0iMC40NSIvPgogIDxjaXJjbGUgY3g9IjMwIiBjeT0iMzAiIHI9IjEyIiBmaWxsPSJub25lIiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjIuNSIgb3BhY2l0eT0iMC43Ii8+CiAgPGNpcmNsZSBjeD0iMzAiIGN5PSIzMCIgcj0iNSIgZmlsbD0id2hpdGUiLz4KICA8dGV4dCB4PSI2NiIgeT0iMzgiIGZvbnQtZmFtaWx5PSItYXBwbGUtc3lzdGVtLCBCbGlua01hY1N5c3RlbUZvbnQsICdTZWdvZSBVSScsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMjgiIGZvbnQtd2VpZ2h0PSI3MDAiIGZpbGw9IndoaXRlIiBsZXR0ZXItc3BhY2luZz0iLTAuNSI+dGFwbHk8L3RleHQ+Cjwvc3ZnPgo=" },
   ],
-  uni_bio: "Tell people about yourself, your interests, and what you're working on...",
+  uni_bio: "",
   uni_gpa: "3.8",
   uni_grad_year: "2026",
   uni_projects: [
     { title: "Add Your Project", subtitle: "Subtitle To Your Project", desc: "", url: "https://taply.now" },
   ],
-buttons: [
-  { title: "Button 1", url: "", image: "" },
-  { title: "Button 2", url: "", image: "" },
-  { title: "Button 3", url: "", image: "" },
-]
+buttons: []
 });
 const handleSave = async () => {
   setSaving(true)
@@ -362,7 +352,7 @@ networking_y: networkingPos.y,
       banner_scale: bannerScale,
       banner_x: bannerPos.x,
       banner_y: bannerPos.y,
-      sizes: { fontSize, titleSize, buttonSize, uniContentSize, uniBioSize, uniStatsSize, uniAvatarSize, netAvatarSize, netNameSize, netTitleSize, netContactSize, netActionSize, netButtonSize, socialNameSize, socialTitleSize, socialIconSize, socialLinkSize, socialProductSize, socialAvatarSize, minNameSize, minTitleSize, minContactSize, execAvatarSize, execSaveSize, execContactSize },
+      sizes: { fontSize, titleSize, buttonSize, uniContentSize, uniBioSize, uniStatsSize, uniAvatarSize, netAvatarSize, netNameSize, netTitleSize, netContactSize, netActionSize, netButtonSize, socialNameSize, socialTitleSize, socialIconSize, socialLinkSize, socialProductSize, socialAvatarSize, minNameSize, minTitleSize, minContactSize, execAvatarSize, execSaveSize, execContactSize, fontFamily },
     })
     .eq("id", profileId);
 
@@ -430,7 +420,7 @@ networking_y: networkingPos.y,
       banner_scale: bannerScale,
       banner_x: bannerPos.x,
       banner_y: bannerPos.y,
-      sizes: { fontSize, titleSize, buttonSize, uniContentSize, uniBioSize, uniStatsSize, uniAvatarSize, netAvatarSize, netNameSize, netTitleSize, netContactSize, netActionSize, netButtonSize, socialNameSize, socialTitleSize, socialIconSize, socialLinkSize, socialProductSize, socialAvatarSize, minNameSize, minTitleSize, minContactSize, execAvatarSize, execSaveSize, execContactSize },
+      sizes: { fontSize, titleSize, buttonSize, uniContentSize, uniBioSize, uniStatsSize, uniAvatarSize, netAvatarSize, netNameSize, netTitleSize, netContactSize, netActionSize, netButtonSize, socialNameSize, socialTitleSize, socialIconSize, socialLinkSize, socialProductSize, socialAvatarSize, minNameSize, minTitleSize, minContactSize, execAvatarSize, execSaveSize, execContactSize, fontFamily },
     });
 
   error = insertError;
@@ -498,22 +488,22 @@ const [openMode, setOpenMode] = useState(null);
 const [avatarMenuOpen, setAvatarMenuOpen] = useState(false);
 const [openSections, setOpenSections] = useState({
   modes: true, profiles: false,
-  identity: true, contact: true, buttons: true,
-  socialIcons: true, links: true, products: true,
-  academic: true, resume: true, projects: true,
+  identity: false, contact: false, buttons: false,
+  socialIcons: false, links: false, products: false,
+  academic: false, resume: false, projects: false,
 });
-const [uniDesignOpen, setUniDesignOpen] = useState({ bg: true, colors: true, font: true, size: true });
+const [uniDesignOpen, setUniDesignOpen] = useState({ bg: false, colors: false, font: false, size: false });
 const [uniBgType, setUniBgType] = useState("solid");
 const toggleUD = (k) => setUniDesignOpen(p => ({ ...p, [k]: !p[k] }));
 
-const [bizDesignOpen, setBizDesignOpen] = useState({ bg: true, colors: true, font: true, size: true });
+const [bizDesignOpen, setBizDesignOpen] = useState({ bg: false, colors: false, font: false, size: false });
 const [bizBgType, setBizBgType] = useState("solid");
 const toggleBD = (k) => setBizDesignOpen(p => ({ ...p, [k]: !p[k] }));
 
-const [socDesignOpen, setSocDesignOpen] = useState({ bg: true, colors: true, font: true, size: true });
+const [socDesignOpen, setSocDesignOpen] = useState({ bg: false, colors: false, font: false, size: false });
 const toggleSD = (k) => setSocDesignOpen(p => ({ ...p, [k]: !p[k] }));
 
-const [netDesignOpen, setNetDesignOpen] = useState({ bg: true, colors: true, font: true, size: true });
+const [netDesignOpen, setNetDesignOpen] = useState({ bg: false, colors: false, font: false, size: false });
 const [netBgType, setNetBgType] = useState("solid");
 const toggleND = (k) => setNetDesignOpen(p => ({ ...p, [k]: !p[k] }));
 const toggleSection = (key) => setOpenSections(prev => ({ ...prev, [key]: !prev[key] }))
@@ -1092,7 +1082,9 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
     <div className="border border-gray-200 rounded-2xl overflow-hidden">
       <button onClick={() => toggleBD("bg")} className="w-full flex items-center justify-between px-4 py-3.5 bg-white">
         <div className="flex items-center gap-3">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6b7280" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+          <div className="w-8 h-8 rounded-xl bg-gray-100 flex items-center justify-center flex-shrink-0">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#6b7280" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+          </div>
           <span className="text-base font-semibold text-gray-900">Background</span>
         </div>
         <ChevronDown size={16} className={`text-gray-400 transition-transform duration-300 ${bizDesignOpen.bg ? "rotate-180" : ""}`} />
@@ -1165,7 +1157,7 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
     <div className="border border-gray-200 rounded-2xl overflow-hidden">
       <button onClick={() => toggleBD("colors")} className="w-full flex items-center justify-between px-4 py-3.5 bg-white">
         <div className="flex items-center gap-3">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6b7280" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg>
+          <div className="w-8 h-8 rounded-xl bg-gray-100 flex items-center justify-center flex-shrink-0"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#6b7280" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg></div>
           <span className="text-base font-semibold text-gray-900">Text Colors</span>
         </div>
         <ChevronDown size={16} className={`text-gray-400 transition-transform duration-300 ${bizDesignOpen.colors ? "rotate-180" : ""}`} />
@@ -1198,7 +1190,7 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
     <div className="border border-gray-200 rounded-2xl overflow-hidden">
       <button onClick={() => toggleBD("font")} className="w-full flex items-center justify-between px-4 py-3.5 bg-white">
         <div className="flex items-center gap-3">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6b7280" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><text x="4" y="18" fontSize="16" fontWeight="bold" fill="#6b7280">Aa</text></svg>
+          <div className="w-8 h-8 rounded-xl bg-gray-100 flex items-center justify-center flex-shrink-0"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#6b7280" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><text x="4" y="18" fontSize="16" fontWeight="bold" fill="#6b7280">Aa</text></svg></div>
           <span className="text-base font-semibold text-gray-900">Font</span>
         </div>
         <ChevronDown size={16} className={`text-gray-400 transition-transform duration-300 ${bizDesignOpen.font ? "rotate-180" : ""}`} />
@@ -1229,7 +1221,7 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
     <div className="border border-gray-200 rounded-2xl overflow-hidden">
       <button onClick={() => toggleBD("size")} className="w-full flex items-center justify-between px-4 py-3.5 bg-white">
         <div className="flex items-center gap-3">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6b7280" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+          <div className="w-8 h-8 rounded-xl bg-gray-100 flex items-center justify-center flex-shrink-0"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#6b7280" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg></div>
           <span className="text-base font-semibold text-gray-900">Content Size</span>
         </div>
         <ChevronDown size={16} className={`text-gray-400 transition-transform duration-300 ${bizDesignOpen.size ? "rotate-180" : ""}`} />
@@ -1269,7 +1261,7 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
       <div className="border border-gray-200 rounded-2xl overflow-hidden">
         <button onClick={() => toggleUD("bg")} className="w-full flex items-center justify-between px-4 py-3.5 bg-white">
           <div className="flex items-center gap-3">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6b7280" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+            <div className="w-8 h-8 rounded-xl bg-gray-100 flex items-center justify-center flex-shrink-0"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#6b7280" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></div>
             <span className="text-base font-semibold text-gray-900">Background</span>
           </div>
           <ChevronDown size={16} className={`text-gray-400 transition-transform duration-300 ${uniDesignOpen.bg ? "rotate-180" : ""}`} />
@@ -1340,7 +1332,7 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
       <div className="border border-gray-200 rounded-2xl overflow-hidden">
         <button onClick={() => toggleUD("colors")} className="w-full flex items-center justify-between px-4 py-3.5 bg-white">
           <div className="flex items-center gap-3">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6b7280" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg>
+            <div className="w-8 h-8 rounded-xl bg-gray-100 flex items-center justify-center flex-shrink-0"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#6b7280" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg></div>
             <span className="text-base font-semibold text-gray-900">Text Colors</span>
           </div>
           <ChevronDown size={16} className={`text-gray-400 transition-transform duration-300 ${uniDesignOpen.colors ? "rotate-180" : ""}`} />
@@ -1371,7 +1363,7 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
       <div className="border border-gray-200 rounded-2xl overflow-hidden">
         <button onClick={() => toggleUD("font")} className="w-full flex items-center justify-between px-4 py-3.5 bg-white">
           <div className="flex items-center gap-3">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6b7280" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><text x="4" y="18" fontSize="16" fontWeight="bold" fill="#6b7280">Aa</text></svg>
+            <div className="w-8 h-8 rounded-xl bg-gray-100 flex items-center justify-center flex-shrink-0"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#6b7280" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><text x="4" y="18" fontSize="16" fontWeight="bold" fill="#6b7280">Aa</text></svg></div>
             <span className="text-base font-semibold text-gray-900">Font</span>
           </div>
           <ChevronDown size={16} className={`text-gray-400 transition-transform duration-300 ${uniDesignOpen.font ? "rotate-180" : ""}`} />
@@ -1402,7 +1394,7 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
       <div className="border border-gray-200 rounded-2xl overflow-hidden">
         <button onClick={() => toggleUD("size")} className="w-full flex items-center justify-between px-4 py-3.5 bg-white">
           <div className="flex items-center gap-3">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6b7280" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+            <div className="w-8 h-8 rounded-xl bg-gray-100 flex items-center justify-center flex-shrink-0"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#6b7280" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg></div>
             <span className="text-base font-semibold text-gray-900">Content Size</span>
           </div>
           <ChevronDown size={16} className={`text-gray-400 transition-transform duration-300 ${uniDesignOpen.size ? "rotate-180" : ""}`} />
@@ -1439,7 +1431,9 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
     <div className="border border-gray-200 rounded-2xl overflow-hidden">
       <button onClick={() => toggleSD("bg")} className="w-full flex items-center justify-between px-4 py-3.5 bg-white">
         <div className="flex items-center gap-3">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6b7280" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+          <div className="w-8 h-8 rounded-xl bg-gray-100 flex items-center justify-center flex-shrink-0">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#6b7280" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+          </div>
           <span className="text-base font-semibold text-gray-900">Background</span>
         </div>
         <ChevronDown size={16} className={`text-gray-400 transition-transform duration-300 ${socDesignOpen.bg ? "rotate-180" : ""}`} />
@@ -1478,7 +1472,7 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
     <div className="border border-gray-200 rounded-2xl overflow-hidden">
       <button onClick={() => toggleSD("colors")} className="w-full flex items-center justify-between px-4 py-3.5 bg-white">
         <div className="flex items-center gap-3">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6b7280" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg>
+          <div className="w-8 h-8 rounded-xl bg-gray-100 flex items-center justify-center flex-shrink-0"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#6b7280" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg></div>
           <span className="text-base font-semibold text-gray-900">Text Colors</span>
         </div>
         <ChevronDown size={16} className={`text-gray-400 transition-transform duration-300 ${socDesignOpen.colors ? "rotate-180" : ""}`} />
@@ -1511,7 +1505,7 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
     <div className="border border-gray-200 rounded-2xl overflow-hidden">
       <button onClick={() => toggleSD("font")} className="w-full flex items-center justify-between px-4 py-3.5 bg-white">
         <div className="flex items-center gap-3">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6b7280" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><text x="4" y="18" fontSize="16" fontWeight="bold" fill="#6b7280">Aa</text></svg>
+          <div className="w-8 h-8 rounded-xl bg-gray-100 flex items-center justify-center flex-shrink-0"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#6b7280" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><text x="4" y="18" fontSize="16" fontWeight="bold" fill="#6b7280">Aa</text></svg></div>
           <span className="text-base font-semibold text-gray-900">Font</span>
         </div>
         <ChevronDown size={16} className={`text-gray-400 transition-transform duration-300 ${socDesignOpen.font ? "rotate-180" : ""}`} />
@@ -1542,7 +1536,7 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
     <div className="border border-gray-200 rounded-2xl overflow-hidden">
       <button onClick={() => toggleSD("size")} className="w-full flex items-center justify-between px-4 py-3.5 bg-white">
         <div className="flex items-center gap-3">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6b7280" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+          <div className="w-8 h-8 rounded-xl bg-gray-100 flex items-center justify-center flex-shrink-0"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#6b7280" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg></div>
           <span className="text-base font-semibold text-gray-900">Content Size</span>
         </div>
         <ChevronDown size={16} className={`text-gray-400 transition-transform duration-300 ${socDesignOpen.size ? "rotate-180" : ""}`} />
@@ -1574,11 +1568,12 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
 {mode === "networking" && (
   <div className="space-y-3 pb-20">
 
-    {/* BACKGROUND */}
     <div className="border border-gray-200 rounded-2xl overflow-hidden">
       <button onClick={() => toggleND("bg")} className="w-full flex items-center justify-between px-4 py-3.5 bg-white">
         <div className="flex items-center gap-3">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6b7280" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+          <div className="w-8 h-8 rounded-xl bg-gray-100 flex items-center justify-center flex-shrink-0">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#6b7280" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+          </div>
           <span className="text-base font-semibold text-gray-900">Background</span>
         </div>
         <ChevronDown size={16} className={`text-gray-400 transition-transform duration-300 ${netDesignOpen.bg ? "rotate-180" : ""}`} />
@@ -1645,11 +1640,10 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
       )}
     </div>
 
-    {/* TEXT COLORS */}
     <div className="border border-gray-200 rounded-2xl overflow-hidden">
       <button onClick={() => toggleND("colors")} className="w-full flex items-center justify-between px-4 py-3.5 bg-white">
         <div className="flex items-center gap-3">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6b7280" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg>
+          <div className="w-8 h-8 rounded-xl bg-gray-100 flex items-center justify-center flex-shrink-0"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#6b7280" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg></div>
           <span className="text-base font-semibold text-gray-900">Text Colors</span>
         </div>
         <ChevronDown size={16} className={`text-gray-400 transition-transform duration-300 ${netDesignOpen.colors ? "rotate-180" : ""}`} />
@@ -1678,11 +1672,10 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
       )}
     </div>
 
-    {/* FONT */}
     <div className="border border-gray-200 rounded-2xl overflow-hidden">
       <button onClick={() => toggleND("font")} className="w-full flex items-center justify-between px-4 py-3.5 bg-white">
         <div className="flex items-center gap-3">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6b7280" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><text x="4" y="18" fontSize="16" fontWeight="bold" fill="#6b7280">Aa</text></svg>
+          <div className="w-8 h-8 rounded-xl bg-gray-100 flex items-center justify-center flex-shrink-0"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#6b7280" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><text x="4" y="18" fontSize="16" fontWeight="bold" fill="#6b7280">Aa</text></svg></div>
           <span className="text-base font-semibold text-gray-900">Font</span>
         </div>
         <ChevronDown size={16} className={`text-gray-400 transition-transform duration-300 ${netDesignOpen.font ? "rotate-180" : ""}`} />
@@ -1709,11 +1702,10 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
       )}
     </div>
 
-    {/* CONTENT SIZE */}
     <div className="border border-gray-200 rounded-2xl overflow-hidden">
       <button onClick={() => toggleND("size")} className="w-full flex items-center justify-between px-4 py-3.5 bg-white">
         <div className="flex items-center gap-3">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6b7280" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+          <div className="w-8 h-8 rounded-xl bg-gray-100 flex items-center justify-center flex-shrink-0"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#6b7280" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg></div>
           <span className="text-base font-semibold text-gray-900">Content Size</span>
         </div>
         <ChevronDown size={16} className={`text-gray-400 transition-transform duration-300 ${netDesignOpen.size ? "rotate-180" : ""}`} />
@@ -1758,8 +1750,7 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
 <div className="mb-0" data-tutorial="identity-section">
 <button onClick={() => toggleSection("identity")} className={`w-full flex justify-between items-center px-4 py-3.5 rounded-2xl border transition mb-3 ${openSections.identity ? "bg-gray-50 border-gray-200" : "bg-white border-gray-200 shadow-sm"}`}>
   <div className="flex items-center gap-3">
-    <div className="w-8 h-8 rounded-xl bg-purple-500 flex items-center justify-center flex-shrink-0">
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+    <div className="w-8 h-8 rounded-xl bg-gray-100 flex items-center justify-center flex-shrink-0">      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#374151" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
     </div>
     <span className="text-base font-semibold text-gray-900">Identity</span>
   </div>
@@ -1841,16 +1832,16 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
 
     {/* RESUME */}
     <div className="mb-0" data-tutorial="uni-resume">
-<button onClick={() => toggleSection("projects")} className={`w-full flex justify-between items-center px-4 py-3.5 rounded-2xl border transition mb-3 ${openSections.projects ? "bg-gray-50 border-gray-200" : "bg-white border-gray-200 shadow-sm"}`}>
+<button onClick={() => toggleSection("resume")} className={`w-full flex justify-between items-center px-4 py-3.5 rounded-2xl border transition mb-3 ${openSections.resume ? "bg-gray-50 border-gray-200" : "bg-white border-gray-200 shadow-sm"}`}>
   <div className="flex items-center gap-3">
     <div className="w-8 h-8 rounded-xl bg-orange-500 flex items-center justify-center flex-shrink-0">
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
     </div>
     <span className="text-base font-semibold text-gray-900">Resume</span>
   </div>
-  <ChevronDown size={16} className={`text-gray-400 transition-transform duration-300 ${openSections.projects ? "rotate-180" : ""}`} />
+  <ChevronDown size={16} className={`text-gray-400 transition-transform duration-300 ${openSections.resume ? "rotate-180" : ""}`} />
 </button>
-{openSections.projects && <div className="rounded-2xl border border-gray-200 bg-white px-4 py-3">
+{openSections.resume && <div className="rounded-2xl border border-gray-200 bg-white px-4 py-3">
         <p className="text-xs font-medium text-gray-500 mb-1.5 ml-1"
 >Link to your resume (Google Drive, Notion, etc.)</p>
         <input
@@ -1866,8 +1857,8 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
     <div className="mb-0">
 <button onClick={() => toggleSection("contact")} className={`w-full flex justify-between items-center px-4 py-3.5 rounded-2xl border transition mb-3 ${openSections.contact ? "bg-gray-50 border-gray-200" : "bg-white border-gray-200 shadow-sm"}`}>
   <div className="flex items-center gap-3">
-    <div className="w-8 h-8 rounded-xl bg-blue-500 flex items-center justify-center flex-shrink-0">
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.48C2 2.41 2.9 1.68 4 1.68h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+    <div className="w-8 h-8 rounded-xl bg-gray-100 flex items-center justify-center flex-shrink-0">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#374151" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.48C2 2.41 2.9 1.68 4 1.68h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
     </div>
     <span className="text-base font-semibold text-gray-900">Contact</span>
   </div>
@@ -1915,8 +1906,7 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
   <ChevronDown size={16} className={`text-gray-400 transition-transform duration-300 ${openSections.projects ? "rotate-180" : ""}`} />
 </button>
 {openSections.projects && <div className="space-y-2">
-        {[0, 1, 2, 3].map((i) => {
-          const project = fieldValues?.uni_projects?.[i];
+        {(fieldValues?.uni_projects || []).map((project, i) => {
           const isActive = !!project;
           return (
  <div key={i} className={`rounded-2xl border overflow-hidden transition ${isActive ? "bg-blue-50 border-blue-400" : "bg-gray-50 border-gray-200"}`}>
@@ -1973,6 +1963,18 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
             </div>
           );
         })}
+      {openSections.projects && (
+        <button
+          onClick={() => {
+            const updated = [...(fieldValues?.uni_projects || [])];
+            updated.push({ title: "", subtitle: "", desc: "", url: "" });
+            setFieldValues({ ...fieldValues, uni_projects: updated });
+          }}
+          className="w-full mt-2 py-2.5 rounded-xl border border-dashed border-gray-300 text-sm text-gray-500 hover:border-gray-400 hover:text-gray-700 transition"
+        >
+          + Add Project
+        </button>
+      )}
       </div>}
     </div>
   </>
@@ -1985,8 +1987,7 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
 <div className="mb-0" data-tutorial="social-identity">
 <button onClick={() => toggleSection("identity")} className={`w-full flex justify-between items-center px-4 py-3.5 rounded-2xl border transition mb-3 ${openSections.identity ? "bg-gray-50 border-gray-200" : "bg-white border-gray-200 shadow-sm"}`}>
   <div className="flex items-center gap-3">
-    <div className="w-8 h-8 rounded-xl bg-purple-500 flex items-center justify-center flex-shrink-0">
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+    <div className="w-8 h-8 rounded-xl bg-gray-100 flex items-center justify-center flex-shrink-0">      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#374151" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
     </div>
     <span className="text-base font-semibold text-gray-900">Identity</span>
   </div>
@@ -2223,8 +2224,7 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
  <div className="mb-0" data-tutorial="net-identity">
 <button onClick={() => toggleSection("identity")} className={`w-full flex justify-between items-center px-4 py-3.5 rounded-2xl border transition mb-3 ${openSections.identity ? "bg-gray-50 border-gray-200" : "bg-white border-gray-200 shadow-sm"}`}>
   <div className="flex items-center gap-3">
-    <div className="w-8 h-8 rounded-xl bg-purple-500 flex items-center justify-center flex-shrink-0">
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+    <div className="w-8 h-8 rounded-xl bg-gray-100 flex items-center justify-center flex-shrink-0">      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#374151" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
     </div>
     <span className="text-base font-semibold text-gray-900">Identity</span>
   </div>
@@ -2248,8 +2248,8 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
     <div className="mb-0" data-tutorial="net-contact">
 <button onClick={() => toggleSection("contact")} className={`w-full flex justify-between items-center px-4 py-3.5 rounded-2xl border transition mb-3 ${openSections.contact ? "bg-gray-50 border-gray-200" : "bg-white border-gray-200 shadow-sm"}`}>
   <div className="flex items-center gap-3">
-    <div className="w-8 h-8 rounded-xl bg-blue-500 flex items-center justify-center flex-shrink-0">
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.48C2 2.41 2.9 1.68 4 1.68h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+    <div className="w-8 h-8 rounded-xl bg-gray-100 flex items-center justify-center flex-shrink-0">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#374151" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.48C2 2.41 2.9 1.68 4 1.68h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
     </div>
     <span className="text-base font-semibold text-gray-900">Contact</span>
   </div>
@@ -2298,7 +2298,7 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
 {openSections.buttons && <div>
 
   <div className="space-y-3">
-    {(fieldValues?.buttons || [{ title: "", url: "", image: "" }, { title: "", url: "", image: "" }, { title: "", url: "", image: "" }]).map((button, i) => {
+    {(fieldValues?.buttons || []).map((button, i) => {
 const isActive = button !== null && button !== undefined;
       return (
         <div
@@ -2318,17 +2318,7 @@ const isActive = button !== null && button !== undefined;
             </div>
 
             <div className="flex items-center gap-2">
-              {isActive && (
-                <button
-                  onClick={() => {
-                    const updated = (fieldValues.buttons || []).filter((_, idx) => idx !== i);
-                    setFieldValues({ ...fieldValues, buttons: updated });
-                  }}
-                  className="w-5 h-5 rounded-full bg-red-100 border border-red-300 flex items-center justify-center text-red-500 text-xs leading-none"
-                >
-                  ×
-                </button>
-              )}
+     
               <button
                 onClick={() => {
                   const updated = [...(fieldValues.buttons || [])];
@@ -2404,7 +2394,7 @@ const isActive = button !== null && button !== undefined;
   <button
     onClick={() => setFieldValues((prev) => ({
       ...prev,
-      buttons: [...(prev.buttons || []), { title: "", url: "", image: "" }]
+      buttons: [...(prev.buttons || []), null]
     }))}
     className="w-full mt-3 py-2.5 rounded-xl border border-dashed border-gray-300 text-sm text-gray-500 hover:border-gray-400 hover:text-gray-700 transition"
   >
@@ -2421,8 +2411,7 @@ const isActive = button !== null && button !== undefined;
 <div className="mb-0" data-tutorial="identity-section">
 <button onClick={() => toggleSection("identity")} className={`w-full flex justify-between items-center px-4 py-3.5 rounded-2xl border transition mb-3 ${openSections.identity ? "bg-gray-50 border-gray-200" : "bg-white border-gray-200 shadow-sm"}`}>
   <div className="flex items-center gap-3">
-    <div className="w-8 h-8 rounded-xl bg-purple-500 flex items-center justify-center flex-shrink-0">
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+    <div className="w-8 h-8 rounded-xl bg-gray-100 flex items-center justify-center flex-shrink-0">      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#374151" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
     </div>
     <span className="text-base font-semibold text-gray-900">Identity</span>
   </div>
@@ -2454,8 +2443,8 @@ const isActive = button !== null && button !== undefined;
 <div data-tutorial="contact-fields">
 <button onClick={() => toggleSection("contact")} className={`w-full flex justify-between items-center px-4 py-3.5 rounded-2xl border transition mb-3 ${openSections.contact ? "bg-gray-50 border-gray-200" : "bg-white border-gray-200 shadow-sm"}`}>
   <div className="flex items-center gap-3">
-    <div className="w-8 h-8 rounded-xl bg-blue-500 flex items-center justify-center flex-shrink-0">
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.48C2 2.41 2.9 1.68 4 1.68h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+    <div className="w-8 h-8 rounded-xl bg-gray-100 flex items-center justify-center flex-shrink-0">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#374151" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.48C2 2.41 2.9 1.68 4 1.68h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
     </div>
     <span className="text-base font-semibold text-gray-900">Contact Fields</span>
   </div>

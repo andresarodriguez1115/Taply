@@ -155,11 +155,11 @@ style={{
   fontFamily: fontFamily,
   }}
   className={`w-full min-h-screen flex justify-center ${
-    visualsOpen ? "pt-6 pb-[380px]" : "py-10"
+    visualsOpen ? "pt-6 pb-[380px]" : "py-4"
   }`}
 ><div className="w-full max-w-[650px] px-6 pt-6 sm:pt-20 pb-24 text-center flex flex-col min-h-screen">
         {/* ===== PROFILE IMAGE ===== */}
-        <div className="flex justify-center mb-6 sm:mb-8 relative">
+        <div className="flex justify-center mb-4 relative">
 <div
 className="relative rounded-full overflow-hidden bg-gray-200 border-[2px] border-white shadow-lg cursor-grab group"
 style={{ width: netAvatarSize, height: netAvatarSize }}  
@@ -264,7 +264,7 @@ onTouchEnd={()=> isEditing && setDragging(false)}
  
 
 {/* ===== CONTACT CIRCLES ===== */}
-{mounted && (fieldValues?.phone || fieldValues?.location || fieldValues?.email) && (
+{mounted && (fieldValues?.phone || fieldValues?.location || fieldValues?.email) ? (
 <div className="flex justify-center gap-2 mt-4">
 
 {fieldValues?.phone && (
@@ -311,7 +311,15 @@ style={{ width: `${56 * netContactSize / 100}px`, height: `${56 * netContactSize
 )}
 
 </div>
-)}
+) : isEditing ? (
+<div className="flex justify-center gap-2 mt-4 opacity-30">
+  {[0,1,2,3].map(i => (
+    <div key={i} className="rounded-full bg-white border border-gray-200 shadow-sm flex items-center justify-center" style={{ width: `${56 * netContactSize / 100}px`, height: `${56 * netContactSize / 100}px` }}>
+      <div className="w-5 h-5 rounded-full bg-gray-200" />
+    </div>
+  ))}
+</div>
+) : null}
 
     {/* ===== ACTION BUTTONS ===== */}
 {mounted && (
@@ -342,10 +350,12 @@ style={{ fontSize: `${0.875 * netActionSize / 100}rem` }}
 )}
 {/* ===== PERSONAL CTA CARDS ===== */}
 <div className="mt-10 space-y-6 flex flex-col items-center">
-
-{(fieldValues?.buttons || [])
-  .filter(Boolean)
-  .map((btn, i) => (
+{(() => {
+  const buttons = fieldValues?.buttons || [];
+  const hasAny = buttons.some(Boolean);
+  const displayButtons = hasAny ? buttons : (isEditing ? [null, null, null] : []);
+  return displayButtons.map((btn, i) => (
+    btn ? (
     <BigLinkCard
       key={i}
       title={btn.title}
@@ -364,7 +374,19 @@ style={{ fontSize: `${0.875 * netActionSize / 100}rem` }}
         setFieldValues({ ...fieldValues, buttons: updated })
       }}
     />
-  ))}
+    ) : !hasAny ? (
+      <div key={i} className="w-full bg-white rounded-3xl px-4 py-4 shadow-[0_12px_30px_rgba(0,0,0,0.08)] flex items-center justify-between opacity-40">
+        <div className="flex items-center gap-6">
+          <div className="w-16 h-16 rounded-2xl bg-gray-100 flex items-center justify-center">
+            <span className="text-gray-400 text-xs">Logo</span>
+          </div>
+          <div className="h-3 w-24 bg-gray-200 rounded-full" />
+        </div>
+        <div className="text-gray-300 text-xl">→</div>
+      </div>
+    ) : null
+  ));
+})()}
 
 
 </div>
@@ -392,14 +414,16 @@ function BigLinkCard({ title, image, url, profileId, isEditing, imgX, imgY, imgS
       href={isEditing ? undefined : safeUrl}
       target={isEditing ? undefined : "_blank"}
       onClick={() => !isEditing && logEvent(profileId, "tap")}
-      className="w-full bg-white rounded-3xl px-4 py-4 shadow-[0_12px_30px_rgba(0,0,0,0.08)] hover:shadow-[0_18px_40px_rgba(0,0,0,0.12)] transition-all duration-300 flex items-center justify-between cursor-pointer"
+className="bg-white rounded-3xl shadow-[0_12px_30px_rgba(0,0,0,0.08)] hover:shadow-[0_18px_40px_rgba(0,0,0,0.12)] transition-all duration-300 flex items-center justify-between cursor-pointer"
+            style={{ width: "100%", padding: `${16 * netButtonSize / 100}px` }}
+
     >
       {/* LEFT SIDE */}
       <div className="flex items-center gap-6">
 
         {/* LOGO */}
-        <div className="w-16 h-16 rounded-2xl bg-gray-100 flex items-center justify-center overflow-hidden relative group"
-          style={{ cursor: isEditing ? "grab" : "default" }}
+<div className="rounded-2xl bg-gray-100 flex items-center justify-center overflow-hidden relative group"
+          style={{ width: `${64 * netButtonSize / 100}px`, height: `${64 * netButtonSize / 100}px`, flexShrink: 0, cursor: isEditing ? "grab" : "default" }}
           onTouchStart={isEditing ? (e) => {
             e.preventDefault()
             const t = e.touches[0]
@@ -453,7 +477,7 @@ function BigLinkCard({ title, image, url, profileId, isEditing, imgX, imgY, imgS
 
         {/* TEXT */}
         <div className="flex flex-col justify-center">
-          <p className="font-semibold text-gray-900 leading-tight" style={{ fontSize: `${18 * netButtonSize / 100}px` }}>{title}</p>
+          <p className="font-semibold text-gray-900 leading-tight" style={{ fontSize: `${18 * netButtonSize / 100}px`, marginLeft: `${16 * netButtonSize / 100}px` }}>{title}</p>
         </div>
       </div>
 

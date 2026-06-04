@@ -225,8 +225,7 @@ onTouchEnd={profileMouseUp}
  fields?.linkedin ||
  fields?.instagram ||
  fields?.website)
-   
-   && (<div className="mt-6 space-y-4 flex flex-col items-center">  
+   ? (<div className="mt-6 space-y-4 flex flex-col items-center">  
   
   
   
@@ -353,7 +352,28 @@ className="w-[400px] sm:w-[650px] flex items-center justify-between pl-3 pr-4 py
 )}
 </div>
 
-)}
+) : isEditing ? (
+  <div className="mt-6 space-y-4 w-full flex flex-col items-center opacity-30">
+    {[
+      { color: "bg-green-600", label: "phone" },
+      { color: "bg-blue-600", label: "email" },
+      { color: "bg-indigo-600", label: "linkedin" },
+    ].map((item, i) => (
+      <div key={i} className="w-full sm:w-[650px] flex items-center justify-between pl-3 pr-4 py-4 bg-white rounded-xl border border-gray-200 shadow-sm">
+        <div className="flex items-center gap-4">
+          <div className={`w-9 h-9 sm:w-10 sm:h-10 rounded-full ${item.color} flex items-center justify-center`}>
+            <div className="w-3 h-3 rounded-full bg-white/50" />
+          </div>
+          <div className="space-y-1.5">
+            <div className="h-3 w-10 bg-gray-200 rounded-full" />
+            <div className="h-2.5 w-24 bg-gray-100 rounded-full" />
+          </div>
+        </div>
+        <div className="w-3 h-3 rounded-full bg-gray-200" />
+      </div>
+    ))}
+  </div>
+) : null}
 
 
 

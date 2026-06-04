@@ -169,7 +169,7 @@ useEffect(() => {
       {activeTab === "about" && (
         <div className="px-5 space-y-4 pb-20">
 {/* Stats */}
-{(fieldValues?.uni_gpa?.trim() || projects.length > 0 || fieldValues?.uni_grad_year?.trim()) && (
+{(fieldValues?.uni_gpa?.trim() || projects.length > 0 || fieldValues?.uni_grad_year?.trim()) ? (
   <div className="grid grid-cols-3 gap-3">
     {fieldValues?.uni_gpa?.trim() && (
       <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 text-center">
@@ -190,7 +190,16 @@ useEffect(() => {
       </div>
     )}
   </div>
-)}
+) : isEditing ? (
+  <div className="grid grid-cols-3 gap-3 opacity-30">
+    {["GPA", "Projects", "Grad"].map((label) => (
+      <div key={label} className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 text-center">
+        <div className="h-6 w-10 bg-gray-200 rounded-full mx-auto mb-1" />
+        <p className="text-[11px] uppercase tracking-wide text-gray-400 mt-1">{label}</p>
+      </div>
+    ))}
+  </div>
+) : null}
     {/* Bio */}
           <div>
             <p className="text-[15px] font-semibold text-gray-400 uppercase tracking-widest px-1 mb-2">About</p>            
@@ -205,7 +214,7 @@ useEffect(() => {
           </div>
 
           {/* Tappable contact rows */}
-          {(phone || email || linkedin) && (
+          {(phone || email || linkedin) ? (
             <div className="space-y-2">
               <p className="text-[15px] font-semibold text-gray-400 uppercase tracking-widest px-1">Contact</p>
             <div className="space-y-3">
@@ -258,16 +267,43 @@ useEffect(() => {
                 )}
               </div>
             </div>
-          )}
+          ) : isEditing ? (
+            <div className="space-y-2">
+              <p className="text-[15px] font-semibold text-gray-400 uppercase tracking-widest px-1">Contact</p>
+              <div className="space-y-3 opacity-30">
+                {[{ color: "bg-green-50", icon: "bg-green-200" }, { color: "bg-blue-50", icon: "bg-blue-200" }, { color: "bg-indigo-50", icon: "bg-indigo-200" }].map((item, i) => (
+                  <div key={i} className={`flex items-center gap-4 px-5 py-4 bg-white rounded-2xl border border-gray-100 shadow-sm`}>
+                    <div className={`w-11 h-11 rounded-full ${item.color} flex items-center justify-center flex-shrink-0`}>
+                      <div className={`w-5 h-5 rounded-full ${item.icon}`} />
+                    </div>
+                    <div className="flex-1 space-y-1.5">
+                      <div className="h-2.5 w-12 bg-gray-200 rounded-full" />
+                      <div className="h-3.5 w-28 bg-gray-300 rounded-full" />
+                    </div>
+                    <span className="text-gray-200 text-xl">›</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ) : null}
         </div>
       )}
 
       {/* ── PORTFOLIO TAB ── */}
       {activeTab === "portfolio" && (
         <div className="px-5 space-y-3 pb-20">
-          {projects.length === 0 && (
-            <div className="text-center text-gray-400 text-sm py-10">
-              {isEditing ? "Add projects in the Content tab" : "No projects yet"}
+          {projects.length === 0 && isEditing && (
+            <div className="grid grid-cols-2 gap-3 opacity-30">
+              {[0, 1, 2, 3].map((i) => (
+                <div key={i} className="bg-white rounded-3xl border border-gray-100 shadow-sm p-4 min-h-[185px] flex flex-col justify-between">
+                  <div>
+                    <div className="w-12 h-12 rounded-2xl bg-blue-50 mb-3" />
+                    <div className="h-4 w-20 bg-gray-200 rounded-full mb-2" />
+                    <div className="h-3 w-14 bg-gray-100 rounded-full" />
+                  </div>
+                  <div className="h-3 w-10 bg-blue-100 rounded-full" />
+                </div>
+              ))}
             </div>
           )}
 <div

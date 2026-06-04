@@ -29,29 +29,52 @@ console.log("logoUrl received:", logoUrl);
     pass.auxiliaryFields.push({ key: "phone", label: "PHONE", value: phone || "" });
     pass.auxiliaryFields.push({ key: "email", label: "EMAIL", value: email || "" });
     pass.backFields.push({ key: "profile", label: "View Profile", value: `https://taply.now/${username}` });
+if (logoUrl) {
+  console.log("Fetching logo from:", logoUrl);
 
-    if (logoUrl) {
-      console.log("Fetching logo from:", logoUrl);
-      const logoRes = await fetch(logoUrl);
-      if (!logoRes.ok) {
-        console.error("Logo fetch failed:", logoRes.status, logoRes.statusText);
-      }
-      const logoBuffer = Buffer.from(await logoRes.arrayBuffer());
-      const logo = await sharp(logoBuffer)
-        .resize(280, 90, { fit: "fill" })
+  const logoRes = await fetch(logoUrl);
 
-        .extend({ top: 5, bottom: 5, left: 20, right: 20, background: { r: 0, g: 0, b: 0, alpha: 0 } })
-        .png()
-        .toBuffer();
+  if (!logoRes.ok) {
+    console.error("Logo fetch failed:", logoRes.status, logoRes.statusText);
+  }
 
-      const logo2x = await sharp(logoBuffer)
-        .resize(560, 180, { fit: "fill" })
-        .extend({ top: 10, bottom: 10, left: 40, right: 40, background: { r: 0, g: 0, b: 0, alpha: 0 } })
-        .png()
-        .toBuffer();
-      pass.addBuffer("logo.png", logo);
-      pass.addBuffer("logo@2x.png", logo2x);
-    }
+  const logoBuffer = Buffer.from(await logoRes.arrayBuffer());
+
+  const logo = await sharp(logoBuffer)
+    .trim({ threshold: 18 })
+    .resize(260, 80, {
+      fit: "contain",
+      background: { r: 0, g: 0, b: 0, alpha: 0 },
+    })
+    .extend({
+      top: 4,
+      bottom: 4,
+      left: 4,
+      right: 4,
+      background: { r: 0, g: 0, b: 0, alpha: 0 },
+    })
+    .png()
+    .toBuffer();
+
+  const logo2x = await sharp(logoBuffer)
+    .trim({ threshold: 18 })
+    .resize(520, 160, {
+      fit: "contain",
+      background: { r: 0, g: 0, b: 0, alpha: 0 },
+    })
+    .extend({
+      top: 8,
+      bottom: 8,
+      left: 8,
+      right: 8,
+      background: { r: 0, g: 0, b: 0, alpha: 0 },
+    })
+    .png()
+    .toBuffer();
+
+  pass.addBuffer("logo.png", logo);
+  pass.addBuffer("logo@2x.png", logo2x);
+}
 
     if (photoUrl) {
       const imageRes = await fetch(photoUrl);
