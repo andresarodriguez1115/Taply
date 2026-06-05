@@ -62,19 +62,27 @@ export default function HowItWorksPage() {
     {
       num: "01",
       tag: "Sign up",
-      headline: "Claim your personal link.",
-      body: "Create your account and pick a username. Your link goes live instantly at taply.now/username — share it anywhere.",
+      headline: "Create your account.",
+      body: "Sign up and your personal link goes live instantly at taply.now/username — no setup, no claiming, it's yours the moment you join.",
       visual: (
-        <div className="bg-[#fafaf9] border border-gray-200 rounded-2xl p-4">
-          <p className="text-[11px] text-gray-400 mb-2 uppercase tracking-wider font-medium">Your link</p>
-          <div className="flex items-center gap-2">
-            <div className="flex-1 bg-white border border-gray-200 rounded-xl px-4 py-3 text-[15px]">
-              <span className="text-gray-400">taply.now/</span>
-              <span className="text-black font-bold">yourname</span>
-            </div>
-            <div className="bg-blue-600 rounded-xl px-4 py-3 text-white text-[13px] font-bold shrink-0">Claim</div>
+        <div className="bg-[#fafaf9] border border-gray-200 rounded-2xl p-5 flex flex-col gap-3">
+          <div className="flex items-center gap-2 bg-white border border-gray-200 rounded-xl px-4 py-3">
+            <div className="w-2 h-2 rounded-full bg-green-400 shrink-0" />
+            <span className="text-[14px] font-mono text-gray-400">taply.now/</span>
+            <span className="text-[14px] font-mono font-bold text-black">yourname</span>
           </div>
-          <p className="text-[11px] text-gray-400 mt-3">Your permanent Taply link</p>
+          <div className="flex gap-2">
+            {[
+              { label: "Share link", color: "#2563eb", bg: "#eff6ff" },
+              { label: "Show QR", color: "#7c3aed", bg: "#f5f3ff" },
+              { label: "NFC tap", color: "#059669", bg: "#ecfdf5" },
+            ].map(({ label, color, bg }) => (
+              <div key={label} className="flex-1 rounded-xl py-2 flex items-center justify-center text-[11px] font-semibold" style={{ background: bg, color }}>
+                {label}
+              </div>
+            ))}
+          </div>
+          <p className="text-[11px] text-gray-400">Live the moment you sign up · Never changes</p>
         </div>
       )
     },
@@ -82,7 +90,7 @@ export default function HowItWorksPage() {
       num: "02",
       tag: "Build profiles",
       headline: "Create a profile for each mode.",
-      body: "Each mode has its own layout and fields. Fill in Business, University, Networking, or Social — takes under a minute each.",
+      body: "Choose from Business, University, Networking, or Social. Each has its own unique layout and fields. Create up to 3 profiles and switch between them anytime.",
       visual: (
         <div>
           <div className="flex gap-2 flex-wrap mb-4">
@@ -102,10 +110,13 @@ export default function HowItWorksPage() {
             <motion.div key={activeMode}
               initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -6 }}
               transition={{ duration: 0.18 }}
-              className="bg-white border border-gray-100 rounded-2xl overflow-hidden shadow-sm">
-              <div className="h-[60px] flex items-center justify-center text-[11px] text-gray-400 border-b border-gray-100" style={{ background: m.bg }}>
-                [ {activeMode} profile visual — replace later ]
-              </div>
+              className="mx-auto relative"
+              style={{ width: 280 }}>
+              <div className="absolute inset-0 bg-black rounded-[36px] shadow-2xl" style={{ margin: "-8px" }} />
+              <div className="relative bg-white rounded-[28px] overflow-hidden border-[6px] border-black shadow-inner">
+                <div className="h-5 bg-black flex items-center justify-center">
+                  <div className="w-16 h-1.5 bg-gray-800 rounded-full" />
+                </div>
               <div className="p-4 flex flex-col gap-2">
                 {m.fields.map(({ label, value }) => (
                   <div key={label} className="flex items-center gap-3">
@@ -114,6 +125,7 @@ export default function HowItWorksPage() {
                   </div>
                 ))}
               </div>
+            </div>
             </motion.div>
           </AnimatePresence>
         </div>
@@ -121,9 +133,9 @@ export default function HowItWorksPage() {
     },
     {
       num: "03",
-      tag: "Set active",
+      tag: "Manage profiles",
       headline: "Choose what people see.",
-      body: "Set any profile as Active. That's what shows at your link instantly. You can switch modes in seconds — your link never changes.",
+      body: "Set any profile as Active from your dashboard. Your link instantly shows that profile. Switch between your saved profiles in one tap — your link never changes.",
       visual: (
         <div className="bg-[#fafaf9] border border-gray-200 rounded-2xl overflow-hidden">
           {[
@@ -153,7 +165,7 @@ export default function HowItWorksPage() {
       num: "04",
       tag: "Share it",
       headline: "Share three different ways.",
-      body: "Send your link, show your QR code, or tap your NFC card. All three open your active profile on any device instantly.",
+      body: "Send your link, show your QR code, or tap your NFC card. All three open your active profile on any device — no app needed on their end.",
       visual: (
         <div className="flex flex-col gap-2">
           {[

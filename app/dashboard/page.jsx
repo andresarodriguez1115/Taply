@@ -698,41 +698,26 @@ shadow-[0_8px_30px_rgba(0,0,0,0.08)] ring-2 ring-white/100">
         </div>
         <div>
           <p className="text-sm font-semibold text-gray-700 mb-2">Profile Photo</p>
-          <div className="flex items-center justify-between bg-white border border-gray-200 rounded-xl px-4 py-3">
-            <div className="flex items-center gap-3">
-              {(() => {
-                const activeProfile = profiles.find(p => p.is_active)
-                const photoSrc = walletPhotoUrl || activeProfile?.avatar_url
-                return photoSrc ? (
-                  <img src={photoSrc} className="w-10 h-10 rounded-full object-cover flex-shrink-0" />
-                ) : (
-                  <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center flex-shrink-0">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-                  </div>
-                )
-              })()}
-              <div>
-                <p className="text-sm font-medium text-gray-800">
-                  {(() => {
-                    const activeProfile = profiles.find(p => p.is_active)
-                    return walletPhotoUrl ? "Custom photo set" : activeProfile?.avatar_url ? activeProfile.name || "Profile photo" : "No photo uploaded"
-                  })()}
-                </p>
-                <button
-                  onClick={() => {
-                    const activeProfile = profiles.find(p => p.is_active)
-                    if (activeProfile?.avatar_url) setPhotoCropImageSrc(walletPhotoUrl || activeProfile.avatar_url)
-                  }}
-                  className="text-xs text-blue-500 font-medium"
-                >
-                  Adjust crop
-                </button>
-              </div>
-            </div>
-            {walletPhotoUrl && (
-              <button onClick={() => setWalletPhotoUrl(null)} className="text-xs text-red-400">Reset</button>
-            )}
-          </div>
+          `<label
+            onClick={() => {
+              const activeProfile = profiles.find(p => p.is_active)
+              if (activeProfile?.avatar_url) setPhotoCropImageSrc(walletPhotoUrl || activeProfile.avatar_url)
+            }}
+            className="flex items-center gap-3 bg-white border border-gray-200 rounded-xl px-4 py-3 cursor-pointer hover:bg-gray-50 transition"
+          >
+            {(() => {
+              const activeProfile = profiles.find(p => p.is_active)
+              const photoSrc = walletPhotoUrl || activeProfile?.avatar_url
+              return photoSrc ? (
+                <img src={photoSrc} className="w-10 h-10 rounded-full object-cover flex-shrink-0" />
+              ) : (
+                <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center flex-shrink-0">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                </div>
+              )
+            })()}
+            <span className="text-sm text-gray-500">Adjust photo</span>
+          </label>`
         </div>
         <div>
           

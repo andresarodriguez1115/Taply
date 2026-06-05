@@ -210,9 +210,8 @@ export default function FeaturesPage() {
 
       {/* MODES SPOTLIGHT */}
       <div className="px-6 py-12 border-b border-gray-100 bg-[#fafaf9]">
-        <div className="inline-flex items-center gap-2 mb-2">
-          <div className="w-2 h-2 rounded-full bg-black" />
-          <p className="text-[13px] font-semibold text-black">4 Modes</p>
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-gray-100 text-[12px] font-semibold text-gray-700 mb-2">
+          4 Modes
         </div>
         <h2 className="text-[1.8rem] font-black tracking-tight leading-tight mb-2">Built for every<br />situation.</h2>
         <p className="text-[14px] text-gray-500 mb-6">Switch modes in one tap. Your link shows something completely different.</p>
@@ -261,9 +260,8 @@ export default function FeaturesPage() {
             className="px-6 py-12">
 
             <div className="flex items-center justify-between mb-5">
-              <div className="inline-flex items-center gap-2">
-                <div className="w-2 h-2 rounded-full" style={{ background: color }} />
-                <p className="text-[13px] font-semibold" style={{ color }}>{tag}</p>
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-[12px] font-semibold" style={{ background: color + "15", color }}>
+                {tag}
               </div>
               <span className="text-[11px] font-bold text-gray-200 tracking-wider">{num}</span>
             </div>
