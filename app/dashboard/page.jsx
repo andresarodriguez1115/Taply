@@ -748,7 +748,16 @@ shadow-[0_8px_30px_rgba(0,0,0,0.08)] ring-2 ring-white/100">
               const file = e.target.files[0]
               if (!file) return
               const reader = new FileReader()
-              reader.onload = () => setCropImageSrc(reader.result)
+              reader.onload = () => {
+                const result = reader.result
+                if (file.type === "image/svg+xml") {
+                  const blob = new Blob([result.split(",")[1] ? atob(result.split(",")[1]) : result], { type: "image/svg+xml" })
+                  const url = URL.createObjectURL(blob)
+                  setCropImageSrc(url)
+                } else {
+                  setCropImageSrc(result)
+                }
+              }
               reader.readAsDataURL(file)
             }} />
           </label>
@@ -967,13 +976,26 @@ shadow-[0_8px_30px_rgba(0,0,0,0.08)] ring-2 ring-white/100">
           <button
             onClick={async () => {
               const image = new Image()
+              image.crossOrigin = "anonymous"
               image.src = cropImageSrc
-              await new Promise(r => image.onload = r)
+              await new Promise((resolve, reject) => {
+                image.onload = resolve
+                image.onerror = reject
+              })
+              const offscreen = document.createElement("canvas")
+              offscreen.width = image.naturalWidth || 1200
+              offscreen.height = image.naturalHeight || 400
+              const octx = offscreen.getContext("2d")
+              octx.drawImage(image, 0, 0)
+              const pngSrc = offscreen.toDataURL("image/png")
+              const pngImage = new Image()
+              pngImage.src = pngSrc
+              await new Promise(r => pngImage.onload = r)
               const canvas = document.createElement("canvas")
               canvas.width = 900
               canvas.height = 300
               const ctx = canvas.getContext("2d")
-              ctx.drawImage(image,
+              ctx.drawImage(pngImage,
                 croppedAreaPixels.x, croppedAreaPixels.y,
                 croppedAreaPixels.width, croppedAreaPixels.height,
                 0, 0, 900, 300
