@@ -376,7 +376,7 @@ style={{ fontSize: `${0.875 * netActionSize / 100}rem` }}
     />
     ) : !hasAny ? (
       <div key={i} className="w-full bg-white rounded-3xl px-4 py-4 shadow-[0_12px_30px_rgba(0,0,0,0.08)] flex items-center justify-between opacity-40">
-        <div className="flex items-center gap-6">
+        <div className="flex items-center gap-3">
           <div className="w-16 h-16 rounded-2xl bg-gray-100 flex items-center justify-center">
             <span className="text-gray-400 text-xs">Logo</span>
           </div>
@@ -419,7 +419,7 @@ className="bg-white rounded-3xl shadow-[0_12px_30px_rgba(0,0,0,0.08)] hover:shad
 
     >
       {/* LEFT SIDE */}
-      <div className="flex items-center gap-6">
+      <div className="flex items-center gap-3">
 
         {/* LOGO */}
 <div className="rounded-2xl bg-gray-100 flex items-center justify-center overflow-hidden relative group"
@@ -457,18 +457,7 @@ className="bg-white rounded-3xl shadow-[0_12px_30px_rgba(0,0,0,0.08)] hover:shad
                   userSelect: "none",
                 }}
               />
-              {isEditing && (
-                <div className="absolute bottom-0 left-1/2 -translate-x-1/2 flex items-center gap-1 bg-white/90 border border-gray-200 rounded-full px-1 py-0.5 shadow-sm opacity-0 group-hover:opacity-100 transition" style={{ width: 70, zIndex: 10 }}>
-                  <span className="text-[9px] text-gray-400">−</span>
-                  <input type="range" min="0.5" max="3" step="0.05"
-                    value={imgScale || 1}
-                    onChange={(e) => onImgChange({ x: imgX || 0, y: imgY || 0, scale: parseFloat(e.target.value) })}
-                    className="flex-1 accent-black" style={{ width: 45 }}
-                    onClick={(e) => e.preventDefault()}
-                  />
-                  <span className="text-[9px] text-gray-400">+</span>
-                </div>
-              )}
+    
             </>
           ) : (
             <div className="text-gray-400 text-xs">Logo</div>
@@ -477,7 +466,7 @@ className="bg-white rounded-3xl shadow-[0_12px_30px_rgba(0,0,0,0.08)] hover:shad
 
         {/* TEXT */}
         <div className="flex flex-col justify-center">
-          <p className="font-semibold text-gray-900 leading-tight" style={{ fontSize: `${18 * netButtonSize / 100}px`, marginLeft: `${16 * netButtonSize / 100}px` }}>{title}</p>
+          <p className="font-semibold text-gray-900 leading-tight" style={{ fontSize: `${18 * netButtonSize / 100}px`, marginLeft: `${6 * netButtonSize / 100}px` }}>{title}</p>
         </div>
       </div>
 

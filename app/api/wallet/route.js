@@ -40,37 +40,8 @@ if (logoUrl) {
 
   const logoBuffer = Buffer.from(await logoRes.arrayBuffer());
 
-  const logo = await sharp(logoBuffer)
-    .trim({ threshold: 18 })
-    .resize(260, 80, {
-      fit: "contain",
-      background: { r: 0, g: 0, b: 0, alpha: 0 },
-    })
-    .extend({
-      top: 4,
-      bottom: 4,
-      left: 4,
-      right: 4,
-      background: { r: 0, g: 0, b: 0, alpha: 0 },
-    })
-    .png()
-    .toBuffer();
-
-  const logo2x = await sharp(logoBuffer)
-    .trim({ threshold: 18 })
-    .resize(520, 160, {
-      fit: "contain",
-      background: { r: 0, g: 0, b: 0, alpha: 0 },
-    })
-    .extend({
-      top: 8,
-      bottom: 8,
-      left: 8,
-      right: 8,
-      background: { r: 0, g: 0, b: 0, alpha: 0 },
-    })
-    .png()
-    .toBuffer();
+  const logo = await sharp(logoBuffer).png().toBuffer();
+  const logo2x = await sharp(logoBuffer).png().toBuffer();
 
   pass.addBuffer("logo.png", logo);
   pass.addBuffer("logo@2x.png", logo2x);

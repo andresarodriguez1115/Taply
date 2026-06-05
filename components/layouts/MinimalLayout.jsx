@@ -256,6 +256,27 @@ onChange={(e) => setProfileScale && setProfileScale(Number(e.target.value))}
     </a>
   </>
 )}
+  {!fields?.phone && !fields?.email && !fields?.linkedin && !fields?.instagram && !fields?.website && isEditing && (
+    <div className="opacity-30 divide-y divide-gray-100">
+      {[
+        { color: "#22c55e" },
+        { color: "#3b82f6" },
+        { color: "#6366f1" },
+        { color: "#ec4899" },
+        { color: "#06b6d4" },
+      ].map((item, i) => (
+        <div key={i} className="flex items-center gap-4 py-4">
+          <div className="w-[44px] h-[44px] rounded-full flex items-center justify-center flex-shrink-0" style={{ background: item.color }}>
+            <div className="w-4 h-4 rounded-full bg-white/40" />
+          </div>
+          <div className="space-y-1.5">
+            <div className="h-3 w-10 bg-gray-200 rounded-full" />
+            <div className="h-2.5 w-24 bg-gray-100 rounded-full" />
+          </div>
+        </div>
+      ))}
+    </div>
+  )}
   </div>
 </div>
 

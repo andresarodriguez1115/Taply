@@ -32,6 +32,11 @@ const [cropImageSrc, setCropImageSrc] = useState(null)
 const [crop, setCrop] = useState({ x: 0, y: 0 })
 const [zoom, setZoom] = useState(1)
 const [croppedAreaPixels, setCroppedAreaPixels] = useState(null)
+const [photoCropImageSrc, setPhotoCropImageSrc] = useState(null)
+const [photoCrop, setPhotoCrop] = useState({ x: 0, y: 0 })
+const [photoZoom, setPhotoZoom] = useState(1)
+const [photoCroppedAreaPixels, setPhotoCroppedAreaPixels] = useState(null)
+const [walletPhotoUrl, setWalletPhotoUrl] = useState(null)
 
 const handleShowQR = async (profileUsername) => {
   const url = `https://taply.now/${profileUsername}`;
@@ -557,7 +562,7 @@ shadow-[0_8px_30px_rgba(0,0,0,0.08)] ring-2 ring-white/100">
             phone: activeProfile.field_values?.phone || "",
             email: activeProfile.field_values?.email || "",
             username: username,
-            photoUrl: activeProfile.avatar_url || null,
+            photoUrl: walletPhotoUrl || activeProfile.avatar_url || null,
             bgColor: walletBgColor,
             logoUrl: walletLogoUrl?.startsWith("/") ? `${window.location.origin}${walletLogoUrl}` : walletLogoUrl,            textColor: walletTextColor,
           }),
@@ -689,6 +694,44 @@ shadow-[0_8px_30px_rgba(0,0,0,0.08)] ring-2 ring-white/100">
                 setWalletTextColor(`rgb(${r},${g},${b})`);
               }} />
             </label>
+          </div>
+        </div>
+        <div>
+          <p className="text-sm font-semibold text-gray-700 mb-2">Profile Photo</p>
+          <div className="flex items-center justify-between bg-white border border-gray-200 rounded-xl px-4 py-3">
+            <div className="flex items-center gap-3">
+              {(() => {
+                const activeProfile = profiles.find(p => p.is_active)
+                const photoSrc = walletPhotoUrl || activeProfile?.avatar_url
+                return photoSrc ? (
+                  <img src={photoSrc} className="w-10 h-10 rounded-full object-cover flex-shrink-0" />
+                ) : (
+                  <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center flex-shrink-0">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                  </div>
+                )
+              })()}
+              <div>
+                <p className="text-sm font-medium text-gray-800">
+                  {(() => {
+                    const activeProfile = profiles.find(p => p.is_active)
+                    return walletPhotoUrl ? "Custom photo set" : activeProfile?.avatar_url ? activeProfile.name || "Profile photo" : "No photo uploaded"
+                  })()}
+                </p>
+                <button
+                  onClick={() => {
+                    const activeProfile = profiles.find(p => p.is_active)
+                    if (activeProfile?.avatar_url) setPhotoCropImageSrc(walletPhotoUrl || activeProfile.avatar_url)
+                  }}
+                  className="text-xs text-blue-500 font-medium"
+                >
+                  Adjust crop
+                </button>
+              </div>
+            </div>
+            {walletPhotoUrl && (
+              <button onClick={() => setWalletPhotoUrl(null)} className="text-xs text-red-400">Reset</button>
+            )}
           </div>
         </div>
         <div>
@@ -837,6 +880,65 @@ shadow-[0_8px_30px_rgba(0,0,0,0.08)] ring-2 ring-white/100">
       )}
     </AnimatePresence>
 
+{photoCropImageSrc && (
+  <div className="fixed inset-0 z-[9999] bg-black/80 flex flex-col items-center justify-center px-4">
+    <div className="bg-white rounded-3xl overflow-hidden w-full max-w-sm">
+      <div className="relative w-full h-64 bg-gray-900">
+        <Cropper
+          image={photoCropImageSrc}
+          crop={photoCrop}
+          zoom={photoZoom}
+          aspect={1}
+          cropShape="round"
+          onCropChange={setPhotoCrop}
+          onZoomChange={setPhotoZoom}
+          onCropComplete={(_, croppedPixels) => setPhotoCroppedAreaPixels(croppedPixels)}
+        />
+      </div>
+      <div className="p-4 space-y-3">
+        <p className="text-sm text-gray-500 text-center">Drag to reposition, pinch to zoom</p>
+        <input type="range" min={1} max={3} step={0.1} value={photoZoom}
+          onChange={(e) => setPhotoZoom(Number(e.target.value))}
+          className="w-full" />
+        <div className="flex gap-2">
+          <button onClick={() => setPhotoCropImageSrc(null)}
+            className="flex-1 py-3 rounded-2xl border border-gray-200 text-sm font-medium">
+            Cancel
+          </button>
+          <button
+            onClick={async () => {
+              const image = new Image()
+              image.crossOrigin = "anonymous"
+              image.src = photoCropImageSrc
+              await new Promise(r => image.onload = r)
+              const canvas = document.createElement("canvas")
+              canvas.width = 240
+              canvas.height = 240
+              const ctx = canvas.getContext("2d")
+              ctx.drawImage(image,
+                photoCroppedAreaPixels.x, photoCroppedAreaPixels.y,
+                photoCroppedAreaPixels.width, photoCroppedAreaPixels.height,
+                0, 0, 240, 240
+              )
+              canvas.toBlob(async (blob) => {
+                const { data: userData } = await supabase.auth.getUser()
+                const fileName = `wallet-photo-${userData.user.id}-${Date.now()}.png`
+                const { error } = await supabase.storage.from("avatars").upload(fileName, blob)
+                if (error) return
+                const { data } = supabase.storage.from("avatars").getPublicUrl(fileName)
+                setWalletPhotoUrl(data.publicUrl)
+                setPhotoCropImageSrc(null)
+              }, "image/png")
+            }}
+            className="flex-1 py-3 rounded-2xl bg-black text-white text-sm font-medium">
+            Use this crop
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+)}
+
 {cropImageSrc && (
   <div className="fixed inset-0 z-[9999] bg-black/80 flex flex-col items-center justify-center px-4">
     <div className="bg-white rounded-3xl overflow-hidden w-full max-w-sm">
@@ -874,7 +976,7 @@ shadow-[0_8px_30px_rgba(0,0,0,0.08)] ring-2 ring-white/100">
               ctx.drawImage(image,
                 croppedAreaPixels.x, croppedAreaPixels.y,
                 croppedAreaPixels.width, croppedAreaPixels.height,
-                0, 0, 300, 300
+                0, 0, 900, 300
               )
               canvas.toBlob(async (blob) => {
                 const { data: userData } = await supabase.auth.getUser()

@@ -29,6 +29,8 @@ export default function SocialLayout({
   socialLinkSize = 100,
   socialProductSize = 100,
   socialAvatarSize = 144,
+  nameColor = "#000000",
+  titleColor = "#6b7280",
 }) {
 const [activeTab, setActiveTab] = useState("links");
 const [mounted, setMounted] = useState(false);
@@ -154,7 +156,7 @@ useEffect(() => {
         <div className="pt-16 pb-2 flex flex-col items-center">
           <div ref={avatarRef} className="relative group" onTouchStart={() => isEditing && setShowZoom(true)}>
             <div
-              className="rounded-full overflow-hidden bg-gray-200 border-4 border-white shadow-lg cursor-grab"
+              className="rounded-full overflow-hidden bg-gray-200 border-2 border-white shadow-lg cursor-grab"
               style={{ touchAction: "none", width: socialAvatarSize, height: socialAvatarSize }}
               onMouseDown={isEditing ? profileMouseDown : undefined}
               onMouseMove={isEditing ? profileMouseMove : undefined}
@@ -198,11 +200,18 @@ useEffect(() => {
 
       {/* ── PROFILE INFO ── */}
       <div className={`px-6 text-center relative z-10 ${layout === "circle" ? "mt-4" : "-mt-2"}`}>
-        <h1 className="font-bold tracking-tight" style={{ fontSize: `${1.875 * socialNameSize / 100}rem` }}>{name}</h1>
-        <p className="text-gray-500 mt-1 leading-relaxed" style={{ fontSize: `${1 * socialTitleSize / 100}rem` }}>{title}</p>
+        <h1 className="font-bold tracking-tight" style={{ fontSize: `${1.875 * socialNameSize / 100}rem`, color: nameColor }}>{name}</h1>
+        <p className="mt-1 leading-relaxed" style={{ fontSize: `${1 * socialTitleSize / 100}rem`, color: titleColor }}>{title}</p>
 
         {/* Social Icons */}
-        {mounted && Object.keys(socials).length > 0 && (
+        {mounted && Object.keys(socials).filter(k => socials[k]).length === 0 && isEditing && (
+          <div className="flex justify-center gap-3 mt-4">
+            {[1,2,3,4].map(i => (
+              <div key={i} className="rounded-full bg-gray-200 opacity-60 border border-dashed border-gray-300" style={{ width: 52, height: 52 }} />
+            ))}
+          </div>
+        )}
+        {mounted && Object.keys(socials).filter(k => socials[k]).length > 0 && (
           <div className="flex justify-center gap-3 mt-4">
             {Object.entries(socials).map(([key, url]) =>
               url && SOCIAL_ICONS[key] ? (
@@ -231,10 +240,18 @@ useEffect(() => {
       {/* ── LINKS TAB ── */}
       {activeTab === "links" && (
         <div className="px-5 mt-5 space-y-3 pb-16">
-          {links.length === 0 && (
-            <div className="text-center text-gray-400 text-sm py-10">
-              {isEditing ? "Add links in the Content tab" : "No links yet"}
+          {links.length === 0 && isEditing && (
+            <div className="space-y-3">
+              {[1, 2].map(i => (
+                <div key={i} className="w-full rounded-2xl overflow-hidden bg-white border border-dashed border-gray-300 opacity-60">
+                  <div className="w-full h-44 bg-gray-200" />
+                  <div className="px-4 py-3"><div className="h-4 w-32 bg-gray-300 rounded-full" /></div>
+                </div>
+              ))}
             </div>
+          )}
+          {links.length === 0 && !isEditing && (
+            <div className="text-center text-gray-400 text-sm py-10">No links yet</div>
           )}
           {links.map((link, i) => (
             <a key={i} href={link.url ? (link.url.startsWith("http") ? link.url : `https://${link.url}`) : "#"} target="_blank"
@@ -303,10 +320,18 @@ useEffect(() => {
       {/* ── SHOP TAB ── */}
       {activeTab === "shop" && (
         <div className="px-5 mt-5 pb-16">
-          {products.length === 0 && (
-            <div className="text-center text-gray-400 text-sm py-10">
-              {isEditing ? "Add products in the Content tab" : "No products yet"}
+          {products.length === 0 && isEditing && (
+            <div className="grid grid-cols-2 gap-3">
+              {[1, 2, 3, 4].map(i => (
+                <div key={i} className="rounded-2xl overflow-hidden bg-white border border-dashed border-gray-300 opacity-60">
+                  <div className="w-full aspect-square bg-gray-200" />
+                  <div className="px-3 py-2"><div className="h-3 w-20 bg-gray-300 rounded-full" /></div>
+                </div>
+              ))}
             </div>
+          )}
+          {products.length === 0 && !isEditing && (
+            <div className="text-center text-gray-400 text-sm py-10">No products yet</div>
           )}
           <div className="grid grid-cols-2 gap-3">
             {products.map((product, i) => (

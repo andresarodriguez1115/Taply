@@ -358,6 +358,8 @@ className="w-[400px] sm:w-[650px] flex items-center justify-between pl-3 pr-4 py
       { color: "bg-green-600", label: "phone" },
       { color: "bg-blue-600", label: "email" },
       { color: "bg-indigo-600", label: "linkedin" },
+      { color: "bg-pink-600", label: "instagram" },
+      { color: "bg-cyan-600", label: "website" },
     ].map((item, i) => (
       <div key={i} className="w-full sm:w-[650px] flex items-center justify-between pl-3 pr-4 py-4 bg-white rounded-xl border border-gray-200 shadow-sm">
         <div className="flex items-center gap-4">
