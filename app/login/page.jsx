@@ -627,24 +627,37 @@ useEffect(() => {
       <div className="bg-[#0a0a0a] px-6 pt-10 pb-8">
         <div className="flex justify-between items-center mb-4">
           <img src="/taply-logo.svg" className="h-10 object-contain brightness-0 invert" />
-          <button className="text-[11px] font-semibold text-gray-500 border border-white/10 rounded-xl px-4 py-2 bg-white/5">Get the app</button>
         </div>
         <p className="text-[13px] text-gray-600 mb-8 leading-relaxed">Your digital identity, for every occasion.</p>
-        <div className="grid grid-cols-2 gap-6 mb-8">
-          {[
-            { title: "Product", links: ["Features", "How it works", "Pricing", "Analytics"] },
-            { title: "Account", links: ["Sign up", "Log in", "Dashboard", "Support"] },
-            { title: "Company", links: ["About", "Blog", "Careers", "Contact"] },
-            { title: "Legal", links: ["Privacy", "Terms", "Cookies"] },
-          ].map(({ title, links }) => (
-            <div key={title}>
-              <p className="text-[10px] font-bold text-gray-600 uppercase tracking-[1.5px] mb-3">{title}</p>
-              <div className="flex flex-col gap-2">
-                {links.map(l => <span key={l} className="text-[13px] text-gray-500 font-medium">{l}</span>)}
-              </div>
-            </div>
-          ))}
-        </div>
+<div className="grid grid-cols-2 gap-6 mb-8">
+  <div>
+    <p className="text-[10px] font-bold text-gray-600 uppercase tracking-[1.5px] mb-3">Product</p>
+    <div className="flex flex-col gap-2">
+      <button onClick={() => window.open("/features", "_blank")} className="text-[13px] text-gray-500 font-medium hover:text-gray-400 transition text-left">Features</button>
+      <button onClick={() => window.open("/how-it-works", "_blank")} className="text-[13px] text-gray-500 font-medium hover:text-gray-400 transition text-left">How it works</button>
+      <span className="text-[13px] text-gray-500 font-medium">Pricing</span>
+    </div>
+  </div>
+  {[
+    { title: "Company", links: ["About", "Blog", "Careers", "Contact"] },
+    { title: "Legal", links: ["Privacy", "Terms", "Cookies"] },
+  ].map(({ title, links }) => (
+    <div key={title}>
+      <p className="text-[10px] font-bold text-gray-600 uppercase tracking-[1.5px] mb-3">{title}</p>
+      <div className="flex flex-col gap-2">
+        {links.map(l => <span key={l} className="text-[13px] text-gray-500 font-medium">{l}</span>)}
+      </div>
+    </div>
+  ))}
+  <div>
+    <p className="text-[10px] font-bold text-gray-600 uppercase tracking-[1.5px] mb-3">Account</p>
+    <div className="flex flex-col gap-2">
+      <button onClick={() => window.open("/signup", "_blank")} className="text-[13px] text-gray-500 font-medium hover:text-gray-400 transition text-left">Sign up</button>
+      <button onClick={() => window.open("/signup", "_blank")} className="text-[13px] text-gray-500 font-medium hover:text-gray-400 transition text-left">Log in</button>
+      <span className="text-[13px] text-gray-500 font-medium">Support</span>
+    </div>
+  </div>
+</div>
         <div className="h-px bg-white/5 mb-5" />
         <span className="text-[11px] text-gray-600">© 2025 Taply Inc.</span>
       </div>
@@ -663,8 +676,7 @@ useEffect(() => {
            { label: "Features", href: "/features", newTab: true },
 { label: "How it works", href: "/how-it-works", newTab: true },
 { label: "Pricing", href: "/pricing" },
-{ label: "Demo", href: "/demo" },
-{ label: "Login", href: "/signup" },
+{ label: "Login", href: "/signup", newTab: true },
               ].map(({ label, href, newTab }, i) => (
                 <motion.button key={label}
                   initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }}

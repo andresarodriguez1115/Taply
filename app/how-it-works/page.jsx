@@ -93,7 +93,7 @@ export default function HowItWorksPage() {
       body: "Choose from Business, University, Networking, or Social. Each has its own unique layout and fields. Create up to 3 profiles and switch between them anytime.",
       visual: (
         <div>
-          <div className="flex gap-2 flex-wrap mb-4">
+          <div className="flex gap-2 flex-wrap mb-6">
             {Object.keys(modes).map((mode) => (
               <button key={mode} onClick={() => setActiveMode(mode)}
                 className="px-3 py-1.5 rounded-full text-[12px] font-semibold border transition-all"
@@ -108,24 +108,261 @@ export default function HowItWorksPage() {
           </div>
           <AnimatePresence mode="wait">
             <motion.div key={activeMode}
-              initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -6 }}
-              transition={{ duration: 0.18 }}
-              className="mx-auto relative"
-              style={{ width: 280 }}>
-              <div className="absolute inset-0 bg-black rounded-[36px] shadow-2xl" style={{ margin: "-8px" }} />
-              <div className="relative bg-white rounded-[28px] overflow-hidden border-[6px] border-black shadow-inner">
-                <div className="h-5 bg-black flex items-center justify-center">
-                  <div className="w-16 h-1.5 bg-gray-800 rounded-full" />
-                </div>
-              <div className="p-4 flex flex-col gap-2">
-                {m.fields.map(({ label, value }) => (
-                  <div key={label} className="flex items-center gap-3">
-                    <span className="text-[10px] text-gray-400 w-14 shrink-0 uppercase tracking-wide font-medium">{label}</span>
-                    <span className="text-[13px] text-gray-800 font-medium">{value}</span>
-                  </div>
-                ))}
-              </div>
+              initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }}
+              transition={{ duration: 0.2 }}
+              className="rounded-3xl overflow-hidden border border-gray-100 shadow-[0_20px_60px_rgba(0,0,0,0.08)]"
+              style={{ maxWidth: 360, margin: "0 auto" }}>
+                    <div className="overflow-hidden bg-[#dbeafe]" style={{ minHeight: 560 }}>
+{activeMode === "Business" && (
+  <div className="bg-gradient-to-br from-[#bfd8ff] via-[#c7d2fe] to-[#e8f7f3] px-3 pt-4 pb-6 min-h-[560px]">
+    <div className="bg-white rounded-[28px] shadow-[0_10px_30px_rgba(0,0,0,0.10)] mb-5">
+      <div
+        className="relative h-[125px] rounded-t-[28px]"
+        style={{
+          background: "linear-gradient(135deg,#8db2f0,#a5afc5,#d7deea)",
+        }}
+      >
+        <div className="absolute -bottom-9 left-5 w-[70px] h-[70px] rounded-full border-[3px] border-white bg-gradient-to-br from-gray-700 to-gray-500 flex items-center justify-center text-white text-[20px] font-black shadow-md">
+          AR
+        </div>
+      </div>
+
+      <div className="px-5 pt-12 pb-5">
+        <p className="text-[20px] font-extrabold tracking-tight leading-tight">
+          Andres Rodriguez
+        </p>
+        <p className="text-[14px] text-gray-500 mt-2">
+          Founder of Taply
+        </p>
+      </div>
+    </div>
+
+    <button className="w-full bg-black text-white rounded-[20px] py-3.5 text-[14px] font-bold shadow-[0_8px_18px_rgba(0,0,0,0.16)] mb-5">
+      Save Contact
+    </button>
+
+    <div className="flex flex-col gap-3">
+      {[
+        { label: "Call", sub: "(561) 419-4363", color: "#59b35a", icon: "☎" },
+        { label: "Email", sub: "andres@taply.now", color: "#4f6fe8", icon: "✉" },
+        { label: "LinkedIn", sub: "andresarodriguez", color: "#6558ea", icon: "in" },
+        { label: "Instagram", sub: "@andres_rodriguez", color: "#cc4b8e", icon: "ig" },
+      ].map(({ label, sub, color, icon }) => (
+        <div
+          key={label}
+          className="bg-white rounded-2xl px-4 py-3.5 flex items-center gap-4 shadow-sm border border-black/5"
+        >
+          <div
+            className="w-11 h-11 rounded-full flex items-center justify-center text-white text-[12px] font-black shrink-0"
+            style={{ background: color }}
+          >
+            {icon}
+          </div>
+
+          <div className="flex-1 min-w-0">
+            <p className="text-[15px] font-bold leading-tight">{label}</p>
+            <p className="text-[13px] text-gray-500 truncate mt-1">{sub}</p>
+          </div>
+
+          <span className="text-gray-300 text-xl">›</span>
+        </div>
+      ))}
+    </div>
+  </div>
+)}
+{activeMode === "University" && (
+  <div className="bg-[#dce8fb] px-3 pt-4 pb-6 min-h-[560px]">
+    
+
+
+    <div className="bg-white rounded-[24px] px-5 py-4 shadow-sm mb-4 flex items-center gap-4">
+      <div className="w-[70px] h-[70px] rounded-full bg-gradient-to-br from-gray-700 to-gray-500 border-2 border-white shadow-md flex items-center justify-center text-white text-[20px] font-black shrink-0">
+        AR
+      </div>
+
+      <div className="flex-1 min-w-0 leading-none">
+        <p className="text-[17px] font-extrabold tracking-tight leading-tight">
+          Andres Rodriguez
+        </p>
+        <p className="text-[15px] text-gray-500 mt-2">
+          Senior at Texas A&M
+        </p>
+
+        <button className="mt-2.5 bg-black text-white rounded-full px-4 py-2 text-[12px] font-bold flex items-center gap-2">
+          <span>▣</span>
+          <span>View Resume</span>
+        </button>
+      </div>
+    </div>
+
+    <div className="bg-white/60 rounded-full p-1 mb-4 grid grid-cols-2 gap-1">
+      <div className="bg-white rounded-full py-3 text-center text-[14px] font-bold shadow-sm">
+        About
+      </div>
+      <div className="rounded-full py-3 text-center text-[14px] font-semibold text-gray-500">
+        Portfolio
+      </div>
+    </div>
+
+    <div className="grid grid-cols-3 gap-3 mb-5">
+      {[
+        { label: "GPA", value: "3.5" },
+        { label: "PROJECTS", value: "1" },
+        { label: "GRAD", value: "27" },
+      ].map(({ label, value }) => (
+        <div key={label} className="bg-white rounded-2xl p-4 text-center shadow-sm">
+          <p className="text-[24px] font-black text-blue-500 leading-tight">
+            {value}
+          </p>
+          <p className="text-[10px] text-gray-400 uppercase tracking-wide mt-2">
+            {label}
+          </p>
+        </div>
+      ))}
+    </div>
+
+    <div className="mb-5">
+      <p className="text-[12px] font-bold text-gray-400 uppercase tracking-[0.25em] mb-3 px-1">
+        About
+      </p>
+
+      <div className="bg-white rounded-2xl p-5 shadow-sm">
+        <p className="text-[15px] text-gray-700 leading-[1.8]">
+          I’m a marketing entrepreneur focused on building simple, modern tools that make networking easier.
+        </p>
+      </div>
+    </div>
+
+    <div>
+      <p className="text-[12px] font-bold text-gray-400 uppercase tracking-[0.25em] mb-3 px-1">
+        Contact
+      </p>
+
+      <div className="flex flex-col gap-3">
+        {[
+          { label: "Phone", sub: "(561) 419-4363", color: "#dcfce7", text: "#43a047", icon: "☎" },
+          { label: "Email", sub: "andresarodriguez1115@gmail.com", color: "#eef2ff", text: "#4169e1", icon: "✉" },
+          { label: "LinkedIn", sub: "@andresarodriguez1115", color: "#f0f0ff", text: "#5b4ee6", icon: "in" },
+        ].map(({ label, sub, color, text, icon }) => (
+          <div
+            key={label}
+            className="bg-white rounded-2xl px-4 py-4 flex items-center gap-4 shadow-sm border border-black/5"
+          >
+            <div
+              className="w-12 h-12 rounded-full flex items-center justify-center text-[15px] font-black shrink-0"
+              style={{ background: color, color: text }}
+            >
+              {icon}
             </div>
+
+            <div className="flex-1 min-w-0">
+              <p className="text-[13px] font-bold text-gray-400 leading-tight">
+                {label}
+              </p>
+              <p className="text-[15px] font-semibold text-black truncate mt-1">
+                {sub}
+              </p>
+            </div>
+
+            <span className="text-gray-300 text-xl">›</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+)}
+{activeMode === "Networking" && (
+  <div className="bg-[#f0efff] px-4 pt-8 pb-7 min-h-[700px] flex flex-col items-center">
+    
+    <div className="w-[150px] h-[150px] rounded-full bg-gradient-to-br from-gray-700 to-gray-500 border-[3px] border-white shadow-lg flex items-center justify-center text-white text-[38px] font-black mb-6">
+      AR
+    </div>
+
+    <p className="text-[25px] font-extrabold tracking-tight leading-tight text-center">
+      Andres Rodriguez
+    </p>
+
+    <div className="mt-4 mb-5 border border-gray-300 rounded-full px-5 py-1.5 text-[16px] text-black">
+      Founder of Taply
+    </div>
+
+    <div className="flex justify-center gap-4 mb-6">
+      {[
+        { icon: "☎" },
+        { icon: "□" },
+        { icon: "⌖" },
+        { icon: "✉" },
+      ].map(({ icon }, i) => (
+        <div
+          key={i}
+          className="w-[48px] h-[48px] rounded-full bg-white shadow-sm flex items-center justify-center text-[22px] text-gray-700"
+        >
+          {icon}
+        </div>
+      ))}
+    </div>
+
+    <div className="grid grid-cols-2 gap-3 w-full mb-8">
+      <button className="bg-white rounded-full py-3.5 text-[15px] font-bold shadow-sm flex items-center justify-center gap-2">
+        <span>↓</span>
+        <span>Add to Contacts</span>
+      </button>
+
+      <button className="bg-white rounded-full py-3.5 text-[15px] font-bold shadow-sm flex items-center justify-center gap-2">
+        <span>⌯</span>
+        <span>Share</span>
+      </button>
+    </div>
+
+    <div className="w-full flex flex-col gap-4">
+      {[
+        { label: "Visit Taply" },
+        { label: "How it works" },
+        { label: "Features" },
+      ].map(({ label }) => (
+        <div
+          key={label}
+          className="bg-white rounded-[22px] px-4 py-4 flex items-center gap-4 shadow-sm border border-black/5"
+        >
+          <div className="w-[54px] h-[54px] rounded-2xl bg-[#4565e8] flex flex-col items-center justify-center text-white shrink-0">
+            <div className="text-[18px] leading-none">◎</div>
+            <div className="text-[10px] font-black leading-none mt-1">taply</div>
+          </div>
+
+          <p className="text-[17px] font-bold flex-1">
+            {label}
+          </p>
+
+          <span className="text-gray-400 text-xl">→</span>
+        </div>
+      ))}
+    </div>
+  </div>
+)}
+                      {activeMode === "Social" && (
+                        <div className="flex flex-col items-center text-center pt-3">
+                          <div className="w-16 h-16 rounded-full bg-gradient-to-br from-orange-400 to-red-500 flex items-center justify-center text-white font-black text-lg mb-2 border-2 border-white shadow-lg">AR</div>
+                          <p className="text-[14px] font-extrabold">@andres_ar</p>
+                          <p className="text-[10px] text-gray-400 mb-4">Content Creator</p>
+                          <div className="flex gap-2 mb-3 w-full justify-center">
+                            {[{ label: "TikTok", color: "#010101", followers: "50k" }, { label: "IG", color: "#E1306C", followers: "30k" }, { label: "YT", color: "#FF0000", followers: "20k" }].map(({ label, color, followers }) => (
+                              <div key={label} className="flex flex-col items-center bg-white rounded-xl px-3 py-2 border border-gray-100 shadow-sm">
+                                <div className="w-6 h-6 rounded-lg mb-1 flex items-center justify-center text-white text-[8px] font-black" style={{ background: color }}>{label}</div>
+                                <p className="text-[10px] font-bold">{followers}</p>
+                              </div>
+                            ))}
+                          </div>
+                          <div className="w-full flex flex-col gap-1.5">
+                            {[{ label: "Latest Video", sub: "YouTube →", color: "#FF0000" }, { label: "My Merch", sub: "Shop now →", color: "#ea580c" }].map(({ label, sub, color }) => (
+                              <div key={label} className="bg-white rounded-xl px-3 py-2.5 border border-gray-100 shadow-sm flex items-center justify-between w-full">
+                                <p className="text-[11px] font-bold">{label}</p>
+                                <span className="text-[10px] font-semibold" style={{ color }}>{sub}</span>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                    </div>
             </motion.div>
           </AnimatePresence>
         </div>

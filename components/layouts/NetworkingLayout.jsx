@@ -5,6 +5,7 @@ import { Phone, Mail, MapPin, MessageSquare, Share2, Download } from "lucide-rea
 import { useRef, useState, useEffect } from "react";
 import { logEvent } from "@/lib/logEvent";
 import { motion } from "framer-motion";
+import Cropper from "react-easy-crop"
 export default function NetworkingLayout({
   name,
   title,
@@ -52,6 +53,11 @@ const [link3Title, setLink3Title] = useState("Get to know my Program");
 const [link3Url, setLink3Url] = useState("");
 const [dragging, setDragging] = useState(false);
 const [startPos, setStartPos] = useState({ x: 0, y: 0 });
+const [buttonCropSrc, setButtonCropSrc] = useState(null)
+const [buttonCropIndex, setButtonCropIndex] = useState(null)
+const [buttonCrop, setButtonCrop] = useState({ x: 0, y: 0 })
+const [buttonZoom, setButtonZoom] = useState(1)
+const [buttonCroppedAreaPixels, setButtonCroppedAreaPixels] = useState(null)
 useEffect(() => {
   setMounted(true);
 }, []);
@@ -363,16 +369,7 @@ style={{ fontSize: `${0.875 * netActionSize / 100}rem` }}
       image={btn.image}
       profileId={profileId}
       isEditing={isEditing}
-      imgX={btn.imgX}
-      imgY={btn.imgY}
-      imgScale={btn.imgScale}
       netButtonSize={netButtonSize}
-      onImgChange={({ x, y, scale }) => {
-        if (!setFieldValues) return
-        const updated = [...(fieldValues?.buttons || [])]
-        updated[i] = { ...updated[i], imgX: x, imgY: y, imgScale: scale }
-        setFieldValues({ ...fieldValues, buttons: updated })
-      }}
     />
     ) : !hasAny ? (
       <div key={i} className="w-full bg-white rounded-3xl px-4 py-4 shadow-[0_12px_30px_rgba(0,0,0,0.08)] flex items-center justify-between opacity-40">
@@ -391,7 +388,67 @@ style={{ fontSize: `${0.875 * netActionSize / 100}rem` }}
 
 </div>
       </div>
-      
+
+{buttonCropSrc && (
+  <div className="fixed inset-0 z-[9999] bg-black/80 flex flex-col items-center justify-center px-4">
+    <div className="bg-white rounded-3xl overflow-hidden w-full max-w-sm">
+      <div className="relative w-full h-64 bg-gray-900">
+        <Cropper
+          image={buttonCropSrc}
+          crop={buttonCrop}
+          zoom={buttonZoom}
+          aspect={1}
+          onCropChange={setButtonCrop}
+          onZoomChange={setButtonZoom}
+          onCropComplete={(_, croppedPixels) => setButtonCroppedAreaPixels(croppedPixels)}
+        />
+      </div>
+      <div className="p-4 space-y-3">
+        <p className="text-sm text-gray-500 text-center">Drag to reposition, pinch to zoom</p>
+        <input type="range" min={1} max={3} step={0.1} value={buttonZoom}
+          onChange={(e) => setButtonZoom(Number(e.target.value))}
+          className="w-full" />
+        <div className="flex gap-2">
+          <button onClick={() => { setButtonCropSrc(null); setButtonCropIndex(null); }}
+            className="flex-1 py-3 rounded-2xl border border-gray-200 text-sm font-medium">
+            Cancel
+          </button>
+          <button
+            onClick={async () => {
+              const image = new Image();
+              image.crossOrigin = "anonymous";
+              image.src = buttonCropSrc;
+              await new Promise(r => image.onload = r);
+              const canvas = document.createElement("canvas");
+              canvas.width = 300;
+              canvas.height = 300;
+              const ctx = canvas.getContext("2d");
+              ctx.drawImage(image,
+                buttonCroppedAreaPixels.x, buttonCroppedAreaPixels.y,
+                buttonCroppedAreaPixels.width, buttonCroppedAreaPixels.height,
+                0, 0, 300, 300
+              );
+              canvas.toBlob(async (blob) => {
+                const { data: userData } = await supabase.auth.getUser();
+                const fileName = `button-logo-${userData.user.id}-${Date.now()}.png`;
+                const { error } = await supabase.storage.from("button-logos").upload(fileName, blob);
+                if (error) return;
+                const { data } = supabase.storage.from("button-logos").getPublicUrl(fileName);
+                const updated = [...(fieldValues?.buttons || [])];
+                updated[buttonCropIndex] = { ...updated[buttonCropIndex], image: data.publicUrl };
+                setFieldValues({ ...fieldValues, buttons: updated });
+                setButtonCropSrc(null);
+                setButtonCropIndex(null);
+              }, "image/png");
+            }}
+            className="flex-1 py-3 rounded-2xl bg-black text-white text-sm font-medium">
+            Use this crop
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+)}
 
     </div>
   );
@@ -407,70 +464,50 @@ function LinkCard({ title }) {
     </div>
   );
 }
-function BigLinkCard({ title, image, url, profileId, isEditing, imgX, imgY, imgScale, onImgChange, netButtonSize = 100 }) {
+function BigLinkCard({ title, image, url, profileId, isEditing, netButtonSize = 100 }) {
   const safeUrl = url ? (url.startsWith("http") ? url : `https://${url}`) : "#";
+
   return (
     <a
       href={isEditing ? undefined : safeUrl}
       target={isEditing ? undefined : "_blank"}
       onClick={() => !isEditing && logEvent(profileId, "tap")}
-className="bg-white rounded-3xl shadow-[0_12px_30px_rgba(0,0,0,0.08)] hover:shadow-[0_18px_40px_rgba(0,0,0,0.12)] transition-all duration-300 flex items-center justify-between cursor-pointer"
-            style={{ width: "100%", padding: `${16 * netButtonSize / 100}px` }}
-
+      className="bg-white rounded-3xl shadow-[0_12px_30px_rgba(0,0,0,0.08)] hover:shadow-[0_18px_40px_rgba(0,0,0,0.12)] transition-all duration-300 flex items-center justify-between cursor-pointer"
+      style={{ width: "100%", padding: `${16 * netButtonSize / 100}px` }}
     >
-      {/* LEFT SIDE */}
       <div className="flex items-center gap-3">
-
-        {/* LOGO */}
-<div className="rounded-2xl bg-gray-100 flex items-center justify-center overflow-hidden relative group"
-          style={{ width: `${64 * netButtonSize / 100}px`, height: `${64 * netButtonSize / 100}px`, flexShrink: 0, cursor: isEditing ? "grab" : "default" }}
-          onTouchStart={isEditing ? (e) => {
-            e.preventDefault()
-            const t = e.touches[0]
-            const startX = t.clientX
-            const startY = t.clientY
-            const startPosX = imgX || 0
-            const startPosY = imgY || 0
-            const onMove = (ev) => {
-              ev.preventDefault()
-              const touch = ev.touches[0]
-              onImgChange({ x: startPosX + (touch.clientX - startX), y: startPosY + (touch.clientY - startY), scale: imgScale || 1 })
-            }
-            const onEnd = () => { window.removeEventListener("touchmove", onMove); window.removeEventListener("touchend", onEnd) }
-            window.addEventListener("touchmove", onMove, { passive: false })
-            window.addEventListener("touchend", onEnd)
-          } : undefined}
+        <div
+          className="rounded-2xl bg-gray-100 flex items-center justify-center overflow-hidden"
+          style={{
+            width: `${64 * netButtonSize / 100}px`,
+            height: `${64 * netButtonSize / 100}px`,
+            flexShrink: 0,
+          }}
         >
           {image ? (
-            <>
-              <img
-                src={image}
-                draggable={false}
-                style={{
-                  position: "absolute",
-                  width: "100%",
-                  height: "100%",
-                  objectFit: "cover",
-                  transform: `translate(${imgX || 0}px, ${imgY || 0}px) scale(${imgScale || 1})`,
-                  transformOrigin: "center",
-                  pointerEvents: "none",
-                  userSelect: "none",
-                }}
-              />
-    
-            </>
+            <img
+              src={image}
+              draggable={false}
+              style={{ width: "100%", height: "100%", objectFit: "cover" }}
+            />
           ) : (
             <div className="text-gray-400 text-xs">Logo</div>
           )}
         </div>
 
-        {/* TEXT */}
         <div className="flex flex-col justify-center">
-          <p className="font-semibold text-gray-900 leading-tight" style={{ fontSize: `${18 * netButtonSize / 100}px`, marginLeft: `${6 * netButtonSize / 100}px` }}>{title}</p>
+          <p
+            className="font-semibold text-gray-900 leading-tight"
+            style={{
+              fontSize: `${18 * netButtonSize / 100}px`,
+              marginLeft: `${6 * netButtonSize / 100}px`,
+            }}
+          >
+            {title}
+          </p>
         </div>
       </div>
 
-      {/* RIGHT ARROW */}
       <div className="text-gray-400 text-xl">→</div>
     </a>
   );

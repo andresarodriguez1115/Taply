@@ -698,7 +698,7 @@ shadow-[0_8px_30px_rgba(0,0,0,0.08)] ring-2 ring-white/100">
         </div>
         <div>
           <p className="text-sm font-semibold text-gray-700 mb-2">Profile Photo</p>
-          `<label
+          <label
             onClick={() => {
               const activeProfile = profiles.find(p => p.is_active)
               if (activeProfile?.avatar_url) setPhotoCropImageSrc(walletPhotoUrl || activeProfile.avatar_url)
@@ -717,7 +717,7 @@ shadow-[0_8px_30px_rgba(0,0,0,0.08)] ring-2 ring-white/100">
               )
             })()}
             <span className="text-sm text-gray-500">Adjust photo</span>
-          </label>`
+          </label>
         </div>
         <div>
           

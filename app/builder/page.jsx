@@ -8,6 +8,7 @@ import { driver } from "driver.js";
 import "driver.js/dist/driver.css";
 import { useRouter } from "next/navigation"
 import supabase from "@/lib/supabase"
+import Cropper from "react-easy-crop"
 // Layouts
 import BusinessLayout from "@/components/layouts/BusinessLayout.jsx";
 import UniversityLayout from "@/components/layouts/UniversityLayout.jsx";
@@ -78,6 +79,11 @@ const [networkingScale, setNetworkingScale] = useState(1);
 const [networkingPos, setNetworkingPos] = useState({ x: 0, y: 0 });
 const [bannerScale, setBannerScale] = useState(1);
 const [bannerPos, setBannerPos] = useState({ x: 0, y: 0 });
+const [buttonCropSrc, setButtonCropSrc] = useState(null)
+const [buttonCropIndex, setButtonCropIndex] = useState(null)
+const [buttonCrop, setButtonCrop] = useState({ x: 0, y: 0 })
+const [buttonZoom, setButtonZoom] = useState(1)
+const [buttonCroppedAreaPixels, setButtonCroppedAreaPixels] = useState(null)
 const [showModePanel, setShowModePanel] = useState(false);
 const searchParams = useSearchParams();
 const profileId = searchParams.get("id");
@@ -482,7 +488,7 @@ const [openSections, setOpenSections] = useState({
   modes: true, profiles: false,
   identity: false, contact: false, buttons: false,
   socialIcons: false, links: false, products: false,
-  academic: false, resume: false, projects: false,
+  academic: false, resume: false, bio: false, projects: false,
 });
 const [uniDesignOpen, setUniDesignOpen] = useState({ bg: false, colors: false, font: false, size: false });
 const [uniBgType, setUniBgType] = useState("solid");
@@ -797,11 +803,12 @@ case "networking":
   handleProfileUpload={handleAvatarUpload}
   fieldValues={fieldValues}
   setFieldValues={setFieldValues}
-
-profileScale={networkingScale}
-setProfileScale={setNetworkingScale}
-profilePos={networkingPos}
-setProfilePos={setNetworkingPos}
+  profileScale={networkingScale}
+  setProfileScale={setNetworkingScale}
+  profilePos={networkingPos}
+  setProfilePos={setNetworkingPos}
+  setButtonCropSrc={setButtonCropSrc}
+  setButtonCropIndex={setButtonCropIndex}
 />
   );
 
@@ -1804,16 +1811,16 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
 
     {/* BIO */}
     <div className="mb-0">
-<button onClick={() => toggleSection("resume")} className={`w-full flex justify-between items-center px-4 py-3.5 rounded-2xl border transition mb-3 ${openSections.resume ? "bg-gray-50 border-gray-200" : "bg-white border-gray-200 shadow-sm"}`}>
+<button onClick={() => toggleSection("bio")} className={`w-full flex justify-between items-center px-4 py-3.5 rounded-2xl border transition mb-3 ${openSections.bio ? "bg-gray-50 border-gray-200" : "bg-white border-gray-200 shadow-sm"}`}>
   <div className="flex items-center gap-3">
     <div className="w-8 h-8 rounded-xl bg-gray-100 flex items-center justify-center flex-shrink-0">
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#374151" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
     </div>
     <span className="text-base font-semibold text-gray-900">Bio</span>
   </div>
-  <ChevronDown size={16} className={`text-gray-400 transition-transform duration-300 ${openSections.resume ? "rotate-180" : ""}`} />
+  <ChevronDown size={16} className={`text-gray-400 transition-transform duration-300 ${openSections.bio ? "rotate-180" : ""}`} />
 </button>
-{openSections.resume && <textarea
+{openSections.bio && <textarea
         value={fieldValues?.uni_bio || ""}
         onChange={(e) => setFieldValues((prev) => ({ ...prev, uni_bio: e.target.value }))}
         placeholder="Tell people about yourself, your interests, and what you're working on..."
@@ -1833,7 +1840,7 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
   </div>
   <ChevronDown size={16} className={`text-gray-400 transition-transform duration-300 ${openSections.resume ? "rotate-180" : ""}`} />
 </button>
-{openSections.resume && <div className="rounded-2xl border border-gray-200 bg-white px-4 py-3">S
+{openSections.resume && <div className="rounded-2xl border border-gray-200 bg-white px-4 py-3">
         <p className="text-xs font-medium text-gray-500 mb-1.5 ml-1"
 >Link to your resume (Google Drive, Notion, etc.)</p>
         <input
@@ -2357,16 +2364,15 @@ const isActive = button !== null && button !== undefined;
                 )}
                 <span className="text-sm text-gray-500">Upload logo</span>
                 <input type="file" accept="image/*" className="hidden"
-                  onChange={async (e) => {
+                  onChange={(e) => {
                     const file = e.target.files[0];
                     if (!file) return;
-                    const fileName = `button-${Date.now()}-${file.name}`;
-                    const { error } = await supabase.storage.from("button-logos").upload(fileName, file);
-                    if (error) return;
-                    const { data } = supabase.storage.from("button-logos").getPublicUrl(fileName);
-                    const updated = [...(fieldValues?.buttons || [])];
-                    updated[i] = { ...updated[i], image: data.publicUrl };
-                    setFieldValues({ ...fieldValues, buttons: updated });
+                    const reader = new FileReader();
+                    reader.onload = () => {
+                      setButtonCropSrc(reader.result);
+                      setButtonCropIndex(i);
+                    };
+                    reader.readAsDataURL(file);
                   }}
                 />
               </label>
@@ -2402,7 +2408,7 @@ const isActive = button !== null && button !== undefined;
   <button
     onClick={() => setFieldValues((prev) => ({
       ...prev,
-      buttons: [...(prev.buttons || []), null]
+      buttons: [...(prev.buttons || []), { title: "", url: "", image: "" }]
     }))}
     className="w-full mt-3 py-2.5 rounded-xl border border-dashed border-gray-300 text-sm text-gray-500 hover:border-gray-400 hover:text-gray-700 transition"
   >
@@ -2679,16 +2685,74 @@ const isActive = button !== null && button !== undefined;
   )}
 </AnimatePresence>
 </AnimatePresence>
-{showBuilderTutorial && (
-  <BuilderTutorial
+{buttonCropSrc && (
+  <div className="fixed inset-0 z-[9999] bg-black/80 flex flex-col items-center justify-center px-4">
+    <div className="bg-white rounded-3xl overflow-hidden w-full max-w-sm">
+      <div className="relative w-full h-64 bg-gray-900">
+        <Cropper
+          image={buttonCropSrc}
+          crop={buttonCrop}
+          zoom={buttonZoom}
+          aspect={1}
+          onCropChange={setButtonCrop}
+          onZoomChange={setButtonZoom}
+          onCropComplete={(_, croppedPixels) => setButtonCroppedAreaPixels(croppedPixels)}
+        />
+      </div>
+      <div className="p-4 space-y-3">
+        <p className="text-sm text-gray-500 text-center">Drag to reposition, pinch to zoom</p>
+        <input type="range" min={1} max={3} step={0.1} value={buttonZoom}
+          onChange={(e) => setButtonZoom(Number(e.target.value))}
+          className="w-full" />
+        <div className="flex gap-2">
+          <button onClick={() => { setButtonCropSrc(null); setButtonCropIndex(null); }}
+            className="flex-1 py-3 rounded-2xl border border-gray-200 text-sm font-medium">
+            Cancel
+          </button>
+          <button
+            onClick={async () => {
+              const image = new Image();
+              image.crossOrigin = "anonymous";
+              image.src = buttonCropSrc;
+              await new Promise(r => image.onload = r);
+              const canvas = document.createElement("canvas");
+              canvas.width = 300;
+              canvas.height = 300;
+              const ctx = canvas.getContext("2d");
+              ctx.drawImage(image,
+                buttonCroppedAreaPixels.x, buttonCroppedAreaPixels.y,
+                buttonCroppedAreaPixels.width, buttonCroppedAreaPixels.height,
+                0, 0, 300, 300
+              );
+              canvas.toBlob(async (blob) => {
+                const { data: userData } = await supabase.auth.getUser();
+                const fileName = `button-logo-${userData.user.id}-${Date.now()}.png`;
+                const { error } = await supabase.storage.from("button-logos").upload(fileName, blob);
+                if (error) return;
+                const { data } = supabase.storage.from("button-logos").getPublicUrl(fileName);
+                const updated = [...(fieldValues?.buttons || [])];
+                updated[buttonCropIndex] = { ...updated[buttonCropIndex], image: data.publicUrl };
+                setFieldValues({ ...fieldValues, buttons: updated });
+                setButtonCropSrc(null);
+                setButtonCropIndex(null);
+              }, "image/png");
+            }}
+            className="flex-1 py-3 rounded-2xl bg-black text-white text-sm font-medium">
+            Use this crop
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+)}
+  {showBuilderTutorial && <BuilderTutorial
     mode={tutorialMode}
     onComplete={() => setShowBuilderTutorial(false)}
     onOpenStudio={() => setStudioOpen(true)}
     onGoToContent={() => setActiveTab("content")}
     onGoToDesign={() => setActiveTab("design")}
     onCloseStudio={() => setStudioOpen(false)}
-  />
-)}
+  />}
 {isEditing && (
   <button
     onClick={() => setShowBuilderTutorial(true)}
