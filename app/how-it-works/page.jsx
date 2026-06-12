@@ -142,18 +142,57 @@ export default function HowItWorksPage() {
     </button>
 
     <div className="flex flex-col gap-3">
-      {[
-        { label: "Call", sub: "(561) 419-4363", color: "#59b35a", icon: "☎" },
-        { label: "Email", sub: "andres@taply.now", color: "#4f6fe8", icon: "✉" },
-        { label: "LinkedIn", sub: "andresarodriguez", color: "#6558ea", icon: "in" },
-        { label: "Instagram", sub: "@andres_rodriguez", color: "#cc4b8e", icon: "ig" },
-      ].map(({ label, sub, color, icon }) => (
+  {[
+  {
+    label: "Call",
+    sub: "(561) 419-4363",
+    color: "#59b35a",
+    icon: (
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.12.9.33 1.77.62 2.6a2 2 0 0 1-.45 2.11L8.1 9.9a16 16 0 0 0 6 6l1.47-1.18a2 2 0 0 1 2.11-.45c.83.29 1.7.5 2.6.62A2 2 0 0 1 22 16.92z" />
+      </svg>
+    ),
+  },
+  {
+    label: "Email",
+    sub: "andres@taply.now",
+    color: "#4f6fe8",
+    icon: (
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
+        <rect x="3" y="5" width="18" height="14" rx="2" />
+        <path d="m3 7 9 6 9-6" />
+      </svg>
+    ),
+  },
+  {
+    label: "LinkedIn",
+    sub: "andresarodriguez",
+    color: "#6558ea",
+    icon: (
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="white">
+        <path d="M4.98 3.5C4.98 4.88 3.86 6 2.5 6S0 4.88 0 3.5 1.12 1 2.5 1s2.48 1.12 2.48 2.5zM.4 8h4.2v13H.4V8zm7.1 0h4v1.8h.1c.6-1.1 2-2.2 4.1-2.2 4.4 0 5.2 2.9 5.2 6.6V21h-4.2v-6.1c0-1.5 0-3.4-2.1-3.4s-2.4 1.6-2.4 3.3V21H7.5V8z" />
+      </svg>
+    ),
+  },
+  {
+    label: "Instagram",
+    sub: "@andres_rodriguez",
+    color: "#cc4b8e",
+    icon: (
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
+        <rect x="3" y="3" width="18" height="18" rx="5" />
+        <circle cx="12" cy="12" r="4" />
+        <circle cx="17.5" cy="6.5" r="1.2" fill="white" stroke="none" />
+      </svg>
+    ),
+  },
+].map(({ label, sub, color, icon }) => (
         <div
           key={label}
           className="bg-white rounded-2xl px-4 py-3.5 flex items-center gap-4 shadow-sm border border-black/5"
         >
           <div
-            className="w-11 h-11 rounded-full flex items-center justify-center text-white text-[12px] font-black shrink-0"
+            className="w-11 h-11 rounded-full flex items-center justify-center shrink-0"
             style={{ background: color }}
           >
             {icon}
@@ -171,7 +210,7 @@ export default function HowItWorksPage() {
   </div>
 )}
 {activeMode === "University" && (
-  <div className="bg-[#dce8fb] px-3 pt-4 pb-6 min-h-[560px]">
+  <div className="bg-gradient-to-br from-[#bfd8ff] via-[#c7d2fe] to-[#e8f7f3] px-3 pt-4 pb-6 min-h-[560px]">
     
 
 
@@ -239,17 +278,48 @@ export default function HowItWorksPage() {
       </p>
 
       <div className="flex flex-col gap-3">
-        {[
-          { label: "Phone", sub: "(561) 419-4363", color: "#dcfce7", text: "#43a047", icon: "☎" },
-          { label: "Email", sub: "andresarodriguez1115@gmail.com", color: "#eef2ff", text: "#4169e1", icon: "✉" },
-          { label: "LinkedIn", sub: "@andresarodriguez1115", color: "#f0f0ff", text: "#5b4ee6", icon: "in" },
-        ].map(({ label, sub, color, text, icon }) => (
+     {[
+  {
+    label: "Phone",
+    sub: "(561) 419-4363",
+    color: "#dcfce7",
+    text: "#43a047",
+    icon: (
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.12.9.33 1.77.62 2.6a2 2 0 0 1-.45 2.11L8.1 9.9a16 16 0 0 0 6 6l1.47-1.18a2 2 0 0 1 2.11-.45c.83.29 1.7.5 2.6.62A2 2 0 0 1 22 16.92z" />
+      </svg>
+    ),
+  },
+  {
+    label: "Email",
+    sub: "andresarodriguez1115@gmail.com",
+    color: "#eef2ff",
+    text: "#4169e1",
+    icon: (
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
+        <rect x="3" y="5" width="18" height="14" rx="2" />
+        <path d="m3 7 9 6 9-6" />
+      </svg>
+    ),
+  },
+  {
+    label: "LinkedIn",
+    sub: "@andresarodriguez1115",
+    color: "#f0f0ff",
+    text: "#5b4ee6",
+    icon: (
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M4.98 3.5C4.98 4.88 3.86 6 2.5 6S0 4.88 0 3.5 1.12 1 2.5 1s2.48 1.12 2.48 2.5zM.4 8h4.2v13H.4V8zm7.1 0h4v1.8h.1c.6-1.1 2-2.2 4.1-2.2 4.4 0 5.2 2.9 5.2 6.6V21h-4.2v-6.1c0-1.5 0-3.4-2.1-3.4s-2.4 1.6-2.4 3.3V21H7.5V8z" />
+      </svg>
+    ),
+  },
+].map(({ label, sub, color, text, icon }) => (
           <div
             key={label}
             className="bg-white rounded-2xl px-4 py-4 flex items-center gap-4 shadow-sm border border-black/5"
           >
             <div
-              className="w-12 h-12 rounded-full flex items-center justify-center text-[15px] font-black shrink-0"
+              className="w-12 h-12 rounded-full flex items-center justify-center shrink-0"
               style={{ background: color, color: text }}
             >
               {icon}
@@ -272,7 +342,7 @@ export default function HowItWorksPage() {
   </div>
 )}
 {activeMode === "Networking" && (
-  <div className="bg-[#f0efff] px-4 pt-8 pb-7 min-h-[700px] flex flex-col items-center">
+  <div className="bg-gradient-to-br from-[#bfd8ff] via-[#c7d2fe] to-[#e8f7f3] px-4 pt-8 pb-7 min-h-[700px] flex flex-col items-center">
     
     <div className="w-[150px] h-[150px] rounded-full bg-gradient-to-br from-gray-700 to-gray-500 border-[3px] border-white shadow-lg flex items-center justify-center text-white text-[38px] font-black mb-6">
       AR
@@ -286,31 +356,67 @@ export default function HowItWorksPage() {
       Founder of Taply
     </div>
 
-    <div className="flex justify-center gap-4 mb-6">
-      {[
-        { icon: "☎" },
-        { icon: "□" },
-        { icon: "⌖" },
-        { icon: "✉" },
-      ].map(({ icon }, i) => (
-        <div
-          key={i}
-          className="w-[48px] h-[48px] rounded-full bg-white shadow-sm flex items-center justify-center text-[22px] text-gray-700"
-        >
-          {icon}
-        </div>
-      ))}
+<div className="flex justify-center gap-4 mb-6">
+  {[
+    {
+      icon: (
+        <svg width="25" height="25" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.12.9.33 1.77.62 2.6a2 2 0 0 1-.45 2.11L8.1 9.9a16 16 0 0 0 6 6l1.47-1.18a2 2 0 0 1 2.11-.45c.83.29 1.7.5 2.6.62A2 2 0 0 1 22 16.92z" />
+        </svg>
+      ),
+    },
+    {
+      icon: (
+        <svg width="25" height="25" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M21 15a4 4 0 0 1-4 4H7l-4 4V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4z" />
+        </svg>
+      ),
+    },
+    {
+      icon: (
+        <svg width="25" height="25" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 1 1 16 0z" />
+          <circle cx="12" cy="10" r="3" />
+        </svg>
+      ),
+    },
+    {
+      icon: (
+        <svg width="25" height="25" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+          <rect x="3" y="5" width="18" height="14" rx="2" />
+          <path d="m3 7 9 6 9-6" />
+        </svg>
+      ),
+    },
+  ].map(({ icon }, i) => (
+    <div
+      key={i}
+      className="w-[54px] h-[54px] rounded-full bg-white shadow-sm flex items-center justify-center text-gray-700"
+    >
+      {icon}
     </div>
+  ))}
+</div>
 
     <div className="grid grid-cols-2 gap-3 w-full mb-8">
       <button className="bg-white rounded-full py-3.5 text-[15px] font-bold shadow-sm flex items-center justify-center gap-2">
-        <span>↓</span>
-        <span>Add to Contacts</span>
+   <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+  <path d="M7 10l5 5 5-5" />
+  <path d="M12 15V3" />
+</svg>
+<span>Add to Contacts</span>
       </button>
 
       <button className="bg-white rounded-full py-3.5 text-[15px] font-bold shadow-sm flex items-center justify-center gap-2">
-        <span>⌯</span>
-        <span>Share</span>
+ <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+  <circle cx="18" cy="5" r="3" />
+  <circle cx="6" cy="12" r="3" />
+  <circle cx="18" cy="19" r="3" />
+  <path d="M8.6 13.5l6.8 4" />
+  <path d="M15.4 6.5l-6.8 4" />
+</svg>
+<span>Share</span>
       </button>
     </div>
 
@@ -339,29 +445,111 @@ export default function HowItWorksPage() {
     </div>
   </div>
 )}
-                      {activeMode === "Social" && (
-                        <div className="flex flex-col items-center text-center pt-3">
-                          <div className="w-16 h-16 rounded-full bg-gradient-to-br from-orange-400 to-red-500 flex items-center justify-center text-white font-black text-lg mb-2 border-2 border-white shadow-lg">AR</div>
-                          <p className="text-[14px] font-extrabold">@andres_ar</p>
-                          <p className="text-[10px] text-gray-400 mb-4">Content Creator</p>
-                          <div className="flex gap-2 mb-3 w-full justify-center">
-                            {[{ label: "TikTok", color: "#010101", followers: "50k" }, { label: "IG", color: "#E1306C", followers: "30k" }, { label: "YT", color: "#FF0000", followers: "20k" }].map(({ label, color, followers }) => (
-                              <div key={label} className="flex flex-col items-center bg-white rounded-xl px-3 py-2 border border-gray-100 shadow-sm">
-                                <div className="w-6 h-6 rounded-lg mb-1 flex items-center justify-center text-white text-[8px] font-black" style={{ background: color }}>{label}</div>
-                                <p className="text-[10px] font-bold">{followers}</p>
-                              </div>
-                            ))}
-                          </div>
-                          <div className="w-full flex flex-col gap-1.5">
-                            {[{ label: "Latest Video", sub: "YouTube →", color: "#FF0000" }, { label: "My Merch", sub: "Shop now →", color: "#ea580c" }].map(({ label, sub, color }) => (
-                              <div key={label} className="bg-white rounded-xl px-3 py-2.5 border border-gray-100 shadow-sm flex items-center justify-between w-full">
-                                <p className="text-[11px] font-bold">{label}</p>
-                                <span className="text-[10px] font-semibold" style={{ color }}>{sub}</span>
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                      )}
+             {activeMode === "Social" && (
+  <div className="bg-gradient-to-br from-[#bfd8ff] via-[#c7d2fe] to-[#e8f7f3] px-4 pt-8 pb-8 min-h-[760px] flex flex-col items-center">
+    
+    <div className="w-[132px] h-[132px] rounded-full bg-gradient-to-br from-gray-700 to-gray-500 border-[3px] border-white shadow-lg flex items-center justify-center text-white text-[34px] font-black mb-6">
+      AR
+    </div>
+
+    <p className="text-[26px] font-extrabold tracking-tight leading-tight text-center">
+      Andres Rodriguez
+    </p>
+
+    <p className="text-[16px] text-gray-500 mt-3 mb-6">
+      Marketing Consultant
+    </p>
+<div className="flex justify-center gap-4 mb-7">
+  {[
+    {
+      color: "#000000",
+      icon: (
+        <svg width="23" height="23" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 3v12.2A4.2 4.2 0 1 1 9.8 11.5V6.5h8.5V3H12z" />
+        </svg>
+      ),
+    },
+    {
+      color: "#60a5fa",
+      icon: (
+        <svg width="23" height="23" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M18.2 3h3.3l-7.2 8.2L22.8 21h-6.6l-5.2-6.4L5.1 21H1.8l7.7-8.8L1.4 3h6.8l4.7 5.7L18.2 3zM17 19.3h1.8L7.2 4.6H5.3L17 19.3z" />
+        </svg>
+      ),
+    },
+    {
+      color: "#ef3b2d",
+      icon: (
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M21.6 7.2s-.2-1.5-.8-2.1c-.8-.8-1.7-.8-2.1-.9C15.8 4 12 4 12 4s-3.8 0-6.7.2c-.4.1-1.3.1-2.1.9-.6.6-.8 2.1-.8 2.1S2.2 9 2.2 10.8v1.7c0 1.8.2 3.6.2 3.6s.2 1.5.8 2.1c.8.8 1.8.8 2.3.9 1.7.2 6.5.2 6.5.2s3.8 0 6.7-.2c.4-.1 1.3-.1 2.1-.9.6-.6.8-2.1.8-2.1s.2-1.8.2-3.6v-1.7c0-1.8-.2-3.6-.2-3.6zM10.1 14.9V8.7l5.8 3.1-5.8 3.1z" />
+        </svg>
+      ),
+    },
+    {
+      color: "#cc4b7c",
+      icon: (
+        <svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+          <rect x="3" y="3" width="18" height="18" rx="5" />
+          <circle cx="12" cy="12" r="4" />
+          <circle cx="17.5" cy="6.5" r="1.2" fill="currentColor" stroke="none" />
+        </svg>
+      ),
+    },
+  ].map(({ icon, color }, i) => (
+    <div
+      key={i}
+      className="w-[48px] h-[48px] rounded-full bg-white shadow-sm flex items-center justify-center"
+      style={{ color }}
+    >
+      {icon}
+    </div>
+  ))}
+</div>
+
+    <div className="mb-6 inline-flex bg-gray-100 rounded-full p-1">
+      <div className="bg-white rounded-full px-8 py-3 text-[15px] font-bold shadow-sm">
+        Links
+      </div>
+      <div className="rounded-full px-8 py-3 text-[15px] font-semibold text-gray-500">
+        Shop
+      </div>
+    </div>
+
+    <div className="w-full flex flex-col gap-4">
+      {[
+        { title: "Taply", image: "taply" },
+        { title: "How it works", image: "taply" },
+      ].map(({ title }, i) => (
+        <div
+          key={i}
+          className="bg-white rounded-2xl overflow-hidden shadow-sm border border-black/5"
+        >
+          <div className="h-[150px] bg-[#10111f] flex items-center justify-center">
+            <div className="flex items-center gap-5 text-white">
+              <div className="w-[78px] h-[78px] rounded-full border-[7px] border-white flex items-center justify-center">
+                <div className="w-[38px] h-[38px] rounded-full border-[7px] border-white flex items-center justify-center">
+                  <div className="w-[10px] h-[10px] bg-white rounded-full" />
+                </div>
+              </div>
+
+              <p className="text-[44px] font-black tracking-tight">
+                taply
+              </p>
+            </div>
+          </div>
+
+          <div className="px-4 py-3.5 flex items-center justify-between">
+            <p className="text-[14px] font-bold">
+              {title}
+            </p>
+
+            <span className="text-gray-400 text-xl">→</span>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+)}
                     </div>
             </motion.div>
           </AnimatePresence>

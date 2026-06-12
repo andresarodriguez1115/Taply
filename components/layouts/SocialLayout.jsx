@@ -126,7 +126,7 @@ useEffect(() => {
           {profileImage ? (
             <motion.img
               src={profileImage}
-              className="absolute inset-0 w-full h-full object-cover"
+              className="absolute inset-0 w-full h-full object-contain"
               style={{ scale: profileScale, translateX: profilePos.x, translateY: profilePos.y }}
               draggable={false}
             />
@@ -169,7 +169,7 @@ useEffect(() => {
               {profileImage ? (
                 <motion.img
                   src={profileImage}
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-contain"
                   style={{ scale: profileScale, translateX: profilePos.x, translateY: profilePos.y }}
                   draggable={false}
                 />
@@ -180,8 +180,8 @@ useEffect(() => {
               )}
             </div>
      {isEditing && (
-              <label className="absolute -bottom-1 -right-1 w-7 h-7 bg-black rounded-full flex items-center justify-center cursor-pointer shadow z-10">
-                <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+              <label className="absolute bottom-1 right-1 w-9 h-9 bg-black rounded-full flex items-center justify-center cursor-pointer shadow z-10">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
                 <input type="file" accept="image/*" className="hidden" onChange={handleProfileUpload} />
               </label>
             )}
@@ -285,7 +285,7 @@ useEffect(() => {
                       position: "absolute",
                       width: "100%",
                       height: "100%",
-                      objectFit: "fill",
+                      objectFit: "cover",
                       transform: `translate(${link.imgX || 0}px, ${link.imgY || 0}px) scale(${link.imgScale || 1})`,
                       transformOrigin: "center",
                       pointerEvents: "none",
@@ -364,7 +364,7 @@ useEffect(() => {
                         position: "absolute",
                         width: "100%",
                         height: "100%",
-                        objectFit: "cover",
+                        objectFit: "contain",
                         transform: `translate(${product.imgX || 0}px, ${product.imgY || 0}px) scale(${product.imgScale || 1})`,
                         transformOrigin: "center",
                         pointerEvents: "none",
