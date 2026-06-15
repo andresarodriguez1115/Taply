@@ -20,15 +20,30 @@ export default function DashboardTutorial({ onComplete }) {
   const [rect, setRect] = useState(null)
   const [visible, setVisible] = useState(false)
 useEffect(() => {
-
-  document.body.style.overflow = "hidden"
-  document.documentElement.style.overflow = "hidden"
-
-  return () => {
-    document.body.style.overflow = ""
-    document.documentElement.style.overflow = ""
+  const preventUserScroll = (e) => {
+    e.preventDefault()
   }
 
+  const preventKeys = (e) => {
+    const keys = ["ArrowUp", "ArrowDown", "PageUp", "PageDown", "Home", "End", " "]
+    if (keys.includes(e.key)) e.preventDefault()
+  }
+
+  document.body.style.overflowX = "hidden"
+  document.documentElement.style.overflowX = "hidden"
+
+  window.addEventListener("wheel", preventUserScroll, { passive: false })
+  window.addEventListener("touchmove", preventUserScroll, { passive: false })
+  window.addEventListener("keydown", preventKeys)
+
+  return () => {
+    document.body.style.overflowX = ""
+    document.documentElement.style.overflowX = ""
+
+    window.removeEventListener("wheel", preventUserScroll)
+    window.removeEventListener("touchmove", preventUserScroll)
+    window.removeEventListener("keydown", preventKeys)
+  }
 }, [])
   const current = STEPS[displayStep]
 
@@ -48,23 +63,6 @@ useEffect(() => {
   }
 
 const updateRect = (id) => {
-if (step === 4) {
-
-  const phoneFrame = document.querySelector("[data-phone-frame]")
-
-  if (phoneFrame) {
-    const p = phoneFrame.getBoundingClientRect()
-
-setRect({
-  top: window.innerHeight * 0.472,
-  left: p.left + 38,
-  width: 165,
-  height: 52,
-})
-    return
-  }
-}
-
     const el = getElement(id)
     if (!el) return
 
@@ -78,30 +76,53 @@ setRect({
     })
 }
 
-  useEffect(() => {
-    const el = getElement(STEPS[step].id)
-    if (!el) return
-    el.scrollIntoView({ behavior: "smooth", block: "center" })
-    const t1 = setTimeout(() => { updateRect(STEPS[step].id); setVisible(true) }, 0)
-    // delay text update until spotlight has moved
-    const t2 = setTimeout(() => setDisplayStep(step), 0)
-    return () => { clearTimeout(t1); clearTimeout(t2) }
-  }, [step])
+useEffect(() => {
+  const id = STEPS[step].id
+  const el = getElement(id)
+  if (!el) return
+
+  setDisplayStep(step)
+
+  const r = el.getBoundingClientRect()
+  const absoluteTop = window.scrollY + r.top
+
+  const offset =
+    step === 4 || step === 5
+      ? 80
+      : window.innerHeight / 2 - r.height / 2
+
+  window.scrollTo({
+    top: Math.max(0, absoluteTop - offset),
+    behavior: "smooth",
+  })
+
+  const t1 = setTimeout(() => {
+    updateRect(id)
+    setVisible(true)
+  }, 0)
+
+  const t2 = setTimeout(() => updateRect(id), 120)
+  const t3 = setTimeout(() => updateRect(id), 300)
+  const t4 = setTimeout(() => updateRect(id), 500)
+
+  return () => {
+    clearTimeout(t1)
+    clearTimeout(t2)
+    clearTimeout(t3)
+    clearTimeout(t4)
+  }
+}, [step])
 
 useEffect(() => {
-
-  if (step === 4) return
-
   const update = () => updateRect(STEPS[step].id)
 
   window.addEventListener("resize", update)
-  window.addEventListener("scroll", update)
+  window.addEventListener("scroll", update, true)
 
   return () => {
     window.removeEventListener("resize", update)
-    window.removeEventListener("scroll", update)
+    window.removeEventListener("scroll", update, true)
   }
-
 }, [step])
   const handleNext = () => {
     if (step < STEPS.length - 1) setStep(s => s + 1)

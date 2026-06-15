@@ -746,7 +746,18 @@ shadow-[0_8px_30px_rgba(0,0,0,0.08)] ring-2 ring-white/100">
               reader.readAsDataURL(file)
             }} />
           </label>
-          {walletLogoUrl && walletLogoUrl !== "/taply-logo.png" && <button onClick={() => setWalletLogoUrl("/taply-logo.png")} className="text-xs text-red-400 mt-1">Remove logo</button>}
+<div className="flex gap-3 mt-1.5">
+            {walletLogoUrl && walletLogoUrl !== "/taply-logo.png" && (
+              <button onClick={() => setWalletLogoUrl("/taply-logo.png")} className="text-xs text-gray-400 hover:text-gray-600 transition">
+                Use Taply logo
+              </button>
+            )}
+            {walletLogoUrl && (
+              <button onClick={() => setWalletLogoUrl(null)} className="text-xs text-red-400 hover:text-red-500 transition">
+                Remove logo
+              </button>
+            )}
+          </div>
         </div>
       </div>
     </motion.div>

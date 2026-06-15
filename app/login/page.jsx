@@ -25,7 +25,7 @@ useEffect(() => {
     const { error } = await supabase.auth.signInWithPassword({ email, password })
     if (error) { setError(error.message); setLoading(false); return }
     setLoading(false)
-    router.replace("/home")
+    router.replace("/dashboard")
   }
 
   const row1 = [
@@ -644,7 +644,6 @@ useEffect(() => {
   <div>
     <p className="text-[10px] font-bold text-gray-600 uppercase tracking-[1.5px] mb-3">Product</p>
     <div className="flex flex-col gap-2">
-      <button onClick={() => window.open("/features", "_blank")} className="text-[13px] text-gray-500 font-medium hover:text-gray-400 transition text-left">Features</button>
       <button onClick={() => window.open("/how-it-works", "_blank")} className="text-[13px] text-gray-500 font-medium hover:text-gray-400 transition text-left">How it works</button>
       <span className="text-[13px] text-gray-500 font-medium">Pricing</span>
     </div>
@@ -673,7 +672,6 @@ useEffect(() => {
             transition={{ duration: 0.4, ease: [0.4, 0, 0.2, 1] }}>
             <div className="flex flex-col">
               {[
-           { label: "Features", href: "/features", newTab: true },
 { label: "How it works", href: "/how-it-works", newTab: true },
 { label: "Pricing", href: "/pricing" },
 { label: "Login", href: "/signup", newTab: true },

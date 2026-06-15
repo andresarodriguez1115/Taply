@@ -10,7 +10,13 @@ export default async function PublicProfile(props) {
 
   const supabase = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+    {
+      GLOBAL: {
+        FETCH: (URL, OPTIONS) =>
+          FETCH(URL, { ...OPTIONS, NEXT: { REVALIDATE: 60 } }),
+      },
+    }
   );
 
   const normalizedUsername = username?.toLowerCase();
@@ -43,7 +49,7 @@ if (!profile) {
   );
 }
 // LOG VIEW
-await supabase
+supabase
   .from("profile_events")
   .insert({ profile_id: profile.id, event_type: "view" });
 const s = profile.sizes || {};
