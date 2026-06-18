@@ -776,29 +776,25 @@ export default function HowItWorksPage() {
       </div>
 
 {/* HERO */}
-<section className="pt-[92px] px-4 pb-10 overflow-hidden border-b border-gray-100">
-  <div className="relative w-full max-w-[390px] mx-auto rounded-[30px] bg-gradient-to-br from-[#f8fbff] via-[#f4f1ff] to-[#eef7ff] border border-gray-100 shadow-[0_20px_60px_rgba(79,70,229,0.08)] px-4 pt-6 pb-5 overflow-hidden">
-    
-    <div className="absolute -top-12 -right-12 w-36 h-36 rounded-full bg-blue-200/40 blur-3xl" />
-    <div className="absolute top-36 -right-20 w-48 h-48 rounded-full bg-purple-200/35 blur-3xl" />
-    <div className="absolute -bottom-16 -left-16 w-44 h-44 rounded-full bg-emerald-100/60 blur-3xl" />
+<section className="pt-[92px] px-5 pb-10 border-b border-gray-100 bg-white">
+  <div className="relative w-full">
 
-    <div className="relative inline-flex items-center gap-2 bg-white/75 backdrop-blur border border-white shadow-sm rounded-full px-4 py-2 mb-6">
+    <div className="inline-flex items-center gap-2 bg-white border border-blue-200 rounded-full px-5 py-2 mb-6 shadow-sm">
       <span className="text-blue-600 text-[12px]">✦</span>
-      <span className="text-[13px] font-bold text-blue-600">How it works</span>
+      <span className="text-[13px] font-semibold text-blue-600 tracking-wide">How it works</span>
     </div>
 
     <div className="relative z-10">
-<h1 className="text-[3.2rem] min-[390px]:text-[3.6rem] font-black tracking-[-0.06em] leading-[0.95] mb-5">        How
+      <h1 className="text-[3.2rem] min-[390px]:text-[3.6rem] font-black tracking-[-0.06em] leading-[0.95] mb-5">
+        How
         <br />
         Taply
         <br />
-        <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-violet-600">
-          works.
-        </span>
+        works.
       </h1>
 
-      <p className="text-[16px] text-gray-600 leading-[1.65] mb-6">        Create your card, build your profiles, and share one link that works everywhere.
+      <p className="text-[16px] text-gray-500 leading-[1.65] mb-6">
+        Create your card, build your profiles, and share one link that works everywhere.
         <span className="font-bold text-blue-600"> One identity for every occasion.</span>
       </p>
     </div>
