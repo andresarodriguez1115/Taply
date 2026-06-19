@@ -83,10 +83,10 @@ useEffect(() => {
         <div className="px-5 py-2 rounded-full bg-white/90 backdrop-blur border border-blue-200 text-blue-600 text-sm font-semibold mb-6 shadow-sm tracking-wide">
           All your info. One tap.
         </div>
-        <h1 className="text-[2.8rem] font-extrabold leading-[1.05] tracking-tighter max-w-md">
+        <h1 className="text-[2.2rem] min-[390px]:text-[2.6rem] font-extrabold leading-[1.05] tracking-tighter max-w-md">
           Your{" "}
           <span className="bg-gradient-to-r from-blue-500 to-purple-500 bg-clip-text text-transparent">digital</span>
-          <br />identity,<br />for every occasion.
+          {" "}identity,<br />for every occasion.
         </h1>
         <p className="mt-5 text-gray-500 text-[1.1rem] max-w-md leading-relaxed">
           Create your Taply card, share instantly, and make every connection memorable.
@@ -482,6 +482,7 @@ useEffect(() => {
     { bg: "#ecfdf5", iconBg: "#059669", title: "Company logo", desc: "Add a transparent PNG logo to the top of your pass.", svg: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg> },
     { bg: "#fdf2f8", iconBg: "#db2777", title: "Profile photo", desc: "Your photo shows as a circle thumbnail on the pass.", svg: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg> },
     { bg: "#fff7ed", iconBg: "#ea580c", title: "Lock screen access", desc: "Pull it up instantly — no app needed, ever.", svg: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg> },
+    { bg: "#fafaf9", iconBg: "#374151", title: "Unlimited passes", desc: "Regenerate your pass anytime your profile changes.", svg: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M21 12a9 9 0 0 1-9 9"/><path d="M3 12a9 9 0 0 1 9-9"/><path d="M21 3l-3 3 3 3"/><path d="M3 21l3-3-3-3"/></svg> },
   ].map(({ bg, iconBg, title, desc, svg }) => (
     <div key={title} className="bg-white rounded-[24px] p-4 border border-black/[0.04] shadow-[0_10px_30px_rgba(0,0,0,0.06)] flex flex-col gap-3">
       <div className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: iconBg }}>

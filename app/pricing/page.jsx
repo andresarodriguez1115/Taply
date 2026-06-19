@@ -165,20 +165,16 @@ export default function PricingPage() {
 
       {/* HERO */}
       <div className="pt-[92px] px-5 pb-10 border-b border-gray-100">
-        <div className="inline-flex items-center gap-2 bg-white border border-blue-200 rounded-full px-5 py-2 mb-6 shadow-sm">
-          <span className="text-blue-600 text-[12px]">✦</span>
-          <span className="text-[13px] font-semibold text-blue-600 tracking-wide">Pricing</span>
-        </div>
-        <h1 className="text-[3rem] font-black tracking-[-0.05em] leading-[0.95] mb-4">
-          Simple,<br />honest pricing.
+        <h1 className="text-[3rem] font-black tracking-[-0.05em] leading-[0.95] mb-8">
+          Free to start.<br />Upgrade anytime.
         </h1>
         <p className="text-[16px] text-gray-500 leading-relaxed">
-          Start free. Upgrade when you're ready.
+          Your card is live the moment you sign up. No credit card needed.
         </p>
       </div>
 
       {/* PLANS */}
-      <div className="px-5 py-10 flex flex-col gap-5">
+      <div className="px-5 pt-3 pb-10 flex flex-col gap-5">
 
         {/* FREE */}
         <div className="rounded-[28px] border border-gray-100 shadow-sm overflow-hidden">

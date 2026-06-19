@@ -607,91 +607,25 @@ export default function HowItWorksPage() {
     {
       num: "04",
       tag: "Share it",
-      headline: "Share three different ways.",
-      body: "Send your link, show your QR code, or tap your NFC card. All three open your active profile on any device — no app needed on their end.",
+      headline: "Tap. Scan. Done.",
+      body: "Hold your NFC card to anyone's phone — they see your active profile instantly. No app, no friction, no fumbling with contacts. Or show your QR. Either way, every person you meet has your link forever.",
       visual: (
         <div className="flex flex-col gap-3">
-          {/* 3 method cards */}
-          <div className="grid grid-cols-3 gap-2.5">
-            {[
-              {
-                title: "Send link",
-                detail: "Share anywhere instantly.",
-                color: "#2563eb", bg: "#eff6ff",
-                icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
-              },
-              {
-                title: "QR code",
-                detail: "Scan to open instantly.",
-                color: "#7c3aed", bg: "#f5f3ff",
-                icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="5" height="5"/><rect x="16" y="3" width="5" height="5"/><rect x="3" y="16" width="5" height="5"/><path d="M21 16h-3v3m0-3v3m-3-6h3m3 0v3m-6 3h3"/></svg>
-              },
-              {
-                title: "NFC tap",
-                detail: "Physical tap, no link needed.",
-                color: "#059669", bg: "#ecfdf5",
-                icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><circle cx="12" cy="20" r="1" fill="currentColor"/></svg>
-              },
-            ].map(({ title, detail, color, bg, icon }) => (
-              <div key={title} className="bg-white border border-gray-100 rounded-2xl p-3 flex flex-col gap-2 shadow-sm">
-                <div className="w-9 h-9 rounded-xl flex items-center justify-center" style={{ background: bg, color }}>
-                  {icon}
-                </div>
-                <p className="text-[12px] font-black leading-tight">{title}</p>
-                <p className="text-[10px] text-gray-400 leading-tight flex-1">{detail}</p>
-                <div className="w-5 h-5 rounded-full flex items-center justify-center" style={{ background: bg, color }}>
-                  <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-                </div>
+          {[
+            { icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><circle cx="12" cy="20" r="1" fill="currentColor"/></svg>, label: "NFC tap", desc: "Hold your card to their phone. They see your active profile. No app, no download, nothing to install.", color: "#059669", bg: "#ecfdf5" },
+            { icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="5" height="5"/><rect x="16" y="3" width="5" height="5"/><rect x="3" y="16" width="5" height="5"/><path d="M21 16h-3v3m0-3v3m-3-6h3m3 0v3m-6 3h3"/></svg>, label: "QR code", desc: "Show your screen. They scan. Done. Works on every phone camera.", color: "#7c3aed", bg: "#f5f3ff" },
+            { icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>, label: "Your link, forever", desc: "Every person you've ever shared with can always come back — your link never changes.", color: "#2563eb", bg: "#eff6ff" },
+          ].map(({ icon, label, desc, color, bg }) => (
+            <div key={label} className="flex items-start gap-4 bg-white border border-gray-100 rounded-2xl px-5 py-4 shadow-sm">
+              <div className="w-10 h-10 rounded-2xl flex items-center justify-center shrink-0 mt-0.5" style={{ background: bg, color }}>
+                {icon}
               </div>
-            ))}
-          </div>
-
-          {/* Premium NFC card */}
-          <div className="relative rounded-3xl overflow-hidden" style={{ background: "linear-gradient(135deg, #0a0a1a 0%, #1a1040 50%, #0d1f3c 100%)", minHeight: 120 }}>
-            {/* Glow blobs */}
-            <div className="absolute top-[-20px] left-[-20px] w-32 h-32 rounded-full opacity-30" style={{ background: "radial-gradient(circle, #6366f1, transparent)" }} />
-            <div className="absolute bottom-[-20px] right-[60px] w-24 h-24 rounded-full opacity-20" style={{ background: "radial-gradient(circle, #06b6d4, transparent)" }} />
-
-            <div className="relative flex items-center px-5 py-5 gap-4">
               <div className="flex-1 min-w-0">
-                <p className="text-[10px] text-white/30 font-mono tracking-widest uppercase mb-1">taply.now/</p>
-                <p className="text-[28px] font-black text-white leading-none tracking-tight mb-2">andres</p>
-                <div className="flex items-center gap-1.5">
-                  <div className="w-1.5 h-1.5 rounded-full bg-green-400 shadow-[0_0_6px_rgba(74,222,128,0.8)]" />
-                  <p className="text-[11px] text-white/40 font-medium">Active · Business profile</p>
-                </div>
-              </div>
-
-              {/* NFC rings */}
-              <div className="relative w-[80px] h-[80px] flex items-center justify-center shrink-0">
-                <div className="absolute w-[80px] h-[80px] rounded-full border border-white/5" />
-                <div className="absolute w-[62px] h-[62px] rounded-full border border-white/8" />
-                <div className="absolute w-[44px] h-[44px] rounded-full border border-white/12" />
-                <div className="absolute w-[28px] h-[28px] rounded-full border border-white/20" />
-                <div className="w-[18px] h-[18px] rounded-full bg-white/10 backdrop-blur flex items-center justify-center border border-white/20">
-                  <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.7)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><circle cx="12" cy="20" r="1" fill="rgba(255,255,255,0.7)"/></svg>
-                </div>
+                <p className="text-[15px] font-black mb-1">{label}</p>
+                <p className="text-[13px] text-gray-400 leading-relaxed">{desc}</p>
               </div>
             </div>
-
-            <div className="absolute bottom-3 right-4 text-[10px] font-black tracking-widest text-white/10 uppercase">taply</div>
-          </div>
-
-          {/* Live preview */}
-          <div className="bg-white border border-gray-100 rounded-2xl px-4 py-3 shadow-sm">
-            <div className="flex items-center gap-2 mb-3">
-              <div className="w-1.5 h-1.5 rounded-full bg-green-400" />
-              <p className="text-[11px] text-gray-400 font-semibold uppercase tracking-wide">Live preview</p>
-            </div>
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-gray-700 to-gray-900 flex items-center justify-center text-white text-[12px] font-black shrink-0 shadow-sm">AR</div>
-              <div className="flex-1 min-w-0">
-                <p className="text-[14px] font-black leading-tight">Andres Rodriguez</p>
-                <p className="text-[11px] text-gray-400 mt-0.5">Founder of Taply</p>
-              </div>
-              <span className="text-[11px] font-bold px-2.5 py-1 rounded-full bg-blue-50 text-blue-600 shrink-0">Business</span>
-            </div>
-          </div>
+          ))}
         </div>
       )
     },
@@ -783,10 +717,6 @@ export default function HowItWorksPage() {
     <div className="absolute top-36 -right-20 w-48 h-48 rounded-full bg-purple-200/35 blur-3xl" />
     <div className="absolute -bottom-16 -left-16 w-44 h-44 rounded-full bg-emerald-100/60 blur-3xl" />
 
-    <div className="relative inline-flex items-center gap-2 bg-white/75 backdrop-blur border border-white shadow-sm rounded-full px-4 py-2 mb-6">
-      <span className="text-blue-600 text-[12px]">✦</span>
-      <span className="text-[13px] font-bold text-blue-600">How it works</span>
-    </div>
 
     <div className="relative z-10">
 <h1 className="text-[3.2rem] min-[390px]:text-[3.6rem] font-black tracking-[-0.06em] leading-[0.95] mb-5">        How
@@ -855,7 +785,7 @@ export default function HowItWorksPage() {
           { n: "1", title: "Create", sub: "your card", bg: "#f1efff", color: "#7c3aed", icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> },
           { n: "2", title: "Build", sub: "profiles", bg: "#ecfdf5", color: "#059669", icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg> },
           { n: "3", title: "Set one", sub: "active", bg: "#fffbeb", color: "#d97706", icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg> },
-          { n: "4", title: "Share", sub: "anywhere", bg: "#eff6ff", color: "#2563eb", icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg> },
+          { n: "4", title: "Network", sub: "everywhere", bg: "#eff6ff", color: "#2563eb", icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg> },
         ].map((step) => (
           <div key={step.n} className="rounded-[20px] bg-[#fafafa] border border-gray-100 p-3 min-w-0">
             <div className="flex items-center gap-2 mb-3">
