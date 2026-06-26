@@ -94,8 +94,7 @@ useEffect(() => {
     const getUser = async () => {
       const chosen = localStorage.getItem("has_chosen");
       if (!chosen) {
-        setTimeout(() => router.replace("/home"), 500);
-        return;
+        localStorage.setItem("has_chosen", "true");
       }
       const { data: userData } = await supabase.auth.getUser();
     
@@ -322,15 +321,15 @@ shadow-[0_8px_30px_rgba(0,0,0,0.08)] ring-2 ring-white/100">
         <button
           data-tutorial="create"
           onClick={() => {
-            if (profiles.length >= 3) {
-              alert("You've reached the maximum of 3 profiles. Delete one to create a new one.");
+            if (profiles.length >= 4) {
+              alert("You've reached the maximum of 4 profiles. Delete one to create a new one.");
               return;
             }
             router.push("/create");
           }}
-          className={`w-full text-[14px] font-semibold py-3 rounded-2xl transition ${profiles.length >= 3 ? "bg-gray-100 text-gray-400 cursor-not-allowed" : "bg-black text-white"}`}
+          className={`w-full text-[14px] font-semibold py-3 rounded-2xl transition ${profiles.length >= 4 ? "bg-gray-100 text-gray-400 cursor-not-allowed" : "bg-black text-white"}`}
         >
-          {profiles.length >= 3 ? "Max profiles reached" : "+ Create new profile"}
+          {profiles.length >= 4 ? "Max profiles reached" : "+ Create new profile"}
         </button>
       </div>
 
@@ -345,7 +344,7 @@ shadow-[0_8px_30px_rgba(0,0,0,0.08)] ring-2 ring-white/100">
   ) : profiles.length === 0 ? (
     "No profiles yet"
   ) : (
-    ready ? `${profiles.length}/3 saved profiles` : "..."
+    ready ? `${profiles.length}/4 saved profiles` : "..."
   )}
 </p>
 
@@ -355,7 +354,7 @@ shadow-[0_8px_30px_rgba(0,0,0,0.08)] ring-2 ring-white/100">
     initial={{ width: 0 }}
     animate={{
       width: ready
-  ? `${Math.min((profiles.length / 3) * 100, 100)}%`
+  ? `${Math.min((profiles.length / 4) * 100, 100)}%`
   : "0%"
     }}
     transition={{ duration: 0.6, ease: "easeOut" }}

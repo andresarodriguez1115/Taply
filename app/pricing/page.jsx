@@ -3,6 +3,8 @@
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
+import { motion, AnimatePresence } from "framer-motion"
+import { Menu } from "lucide-react"
 
 const Check = () => (
   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -27,7 +29,7 @@ const freePlan = {
     { label: "Access to Business mode", included: true },
     { label: "1 saved profile", included: true },
     { label: "Your personal taply.now/username link", included: true },
-    { label: "Up to 3 saved profiles", included: false },
+    { label: "Up to 4 saved profiles", included: false },
     { label: "Social, Networking & University modes", included: false },
     { label: "Unlimited QR code generation", included: false },
     { label: "Unlimited Apple Wallet passes", included: false },
@@ -45,7 +47,7 @@ const proPlan = {
     { label: "Access to Business mode", included: true },
     { label: "1 saved profile", included: true },
     { label: "Your personal taply.now/username link", included: true },
-    { label: "Up to 3 saved profiles", included: true },
+    { label: "Up to 4 saved profiles", included: true },
     { label: "Social, Networking & University modes", included: true },
     { label: "Unlimited QR code generation", included: true },
     { label: "Unlimited Apple Wallet passes", included: true },
@@ -64,8 +66,9 @@ const companyFeatures = [
 
 function CompanyCard({ router }) {
   const [seats, setSeats] = useState(5)
-  const pricePerSeat = Math.max(3, 5 - Math.floor((seats - 1) / 5))
-  const monthlyTotal = pricePerSeat * seats
+  const discountPct = Math.min(40, Math.floor((seats - 1) / 5) * 10)
+  const pricePerSeat = parseFloat((Math.max(3, 5 * (1 - discountPct / 100))).toFixed(2))
+  const monthlyTotal = parseFloat((pricePerSeat * seats).toFixed(2))
 
   return (
     <div className="rounded-[28px] border border-gray-100 shadow-sm overflow-hidden">
@@ -103,16 +106,17 @@ function CompanyCard({ router }) {
         </div>
 
         <div className="bg-blue-50 border border-blue-100 rounded-xl px-4 py-2.5 flex items-center justify-between mb-3">
-          <p className="text-[12px] text-blue-600 font-semibold">$1 off per person every 5 accounts</p>
+          <p className="text-[12px] text-blue-600 font-semibold">10% off per person every 5 seats</p>
           <p className="text-[12px] text-blue-400">floor $3/person</p>
         </div>
 
         {/* Tier indicators */}
         <div className="flex gap-2">
           {[
-            { label: "1–5", price: "$5", active: seats <= 5 },
-            { label: "6–10", price: "$4", active: seats >= 6 && seats <= 10 },
-            { label: "11+", price: "$3", active: seats >= 11 },
+            { label: "1–5", price: "$5.00", active: seats <= 5 },
+            { label: "6–10", price: "$4.50", active: seats >= 6 && seats <= 10 },
+            { label: "11–15", price: "$4.00", active: seats >= 11 && seats <= 15 },
+            { label: "16+", price: "$3.00", active: seats >= 16 },
           ].map(({ label, price, active }) => (
             <div key={label} className={`flex-1 rounded-lg px-2 py-1.5 text-center border transition-all ${active ? "bg-black border-black" : "bg-white border-gray-100"}`}>
               <p className={`text-[10px] font-bold ${active ? "text-white" : "text-gray-400"}`}>{label}</p>
@@ -148,24 +152,62 @@ function CompanyCard({ router }) {
 
 export default function PricingPage() {
   const router = useRouter()
+  const [menuOpen, setMenuOpen] = useState(false)
+  const [billing, setBilling] = useState("monthly")
 
   return (
     <div className="min-h-screen bg-white text-black">
 
       {/* NAV */}
-      <div className="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-6 h-[70px] bg-white/90 backdrop-blur border-b border-gray-100">
-        <Link href="/">
-          <img src="/taply-logo.svg" className="h-12 object-contain" />
-        </Link>
-        <button onClick={() => router.push("/signup")}
-          className="bg-black text-white text-[13px] font-semibold px-5 py-2.5 rounded-xl">
-          Get started
+      <div className={`fixed top-0 left-0 w-full z-50 flex justify-between items-center pl-2 pr-6 h-[75px] bg-white ${menuOpen ? "" : "border-b border-gray-200"}`}>
+        <button onClick={() => router.push("/")} className="flex items-center h-full">
+          <img src="/taply-logo.svg" className="h-14 object-contain" />
+        </button>
+        <button onClick={() => setMenuOpen(prev => !prev)} className="p rounded-lg hover:bg-gray-100 transition">
+          <motion.div animate={{ rotate: menuOpen ? 90 : 0 }} transition={{ duration: 0.2 }}>
+            <Menu size={28} strokeWidth={2} />
+          </motion.div>
         </button>
       </div>
 
+      <AnimatePresence>
+        {menuOpen && (
+          <motion.div className="fixed top-[75px] left-0 w-full h-[calc(100vh-75px)] bg-white z-40 overflow-y-auto"
+            style={{ transformOrigin: "top" }}
+            initial={{ clipPath: "inset(0 0 100% 0)", opacity: 0 }}
+            animate={{ clipPath: "inset(0 0 0% 0)", opacity: 1 }}
+            exit={{ clipPath: "inset(0 0 100% 0)", opacity: 0 }}
+            transition={{ duration: 0.4, ease: [0.4, 0, 0.2, 1] }}>
+            <div className="flex flex-col">
+              {[
+                { label: "How it works", href: "/how-it-works", newTab: true },
+                { label: "Pricing", href: "/pricing", newTab: true },
+                { label: "Cards", href: "/cards", newTab: true },
+                { label: "Login", href: "/signup", newTab: true },
+              ].map(({ label, href, newTab }, i) => (
+                <motion.button key={label}
+                  initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: i * 0.06 + 0.15 }}
+                  onClick={() => { setMenuOpen(false); newTab ? window.open(href, "_blank") : router.push(href) }}
+                  className="w-full flex items-center justify-between border-b border-gray-100 text-gray-900 active:bg-gray-50 transition"
+                  style={{ fontSize: "1.25rem", fontWeight: 500, letterSpacing: "-0.02em", padding: "18px 24px" }}>
+                  <span>{label}</span>
+                  <span style={{ color: "#d1d5db" }}>›</span>
+                </motion.button>
+              ))}
+              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.45 }} className="px-6 pt-6">
+                <button onClick={() => { setMenuOpen(false); window.open("/signup", "_blank") }}
+                  className="w-full bg-black text-white py-4 rounded-2xl flex items-center justify-between px-6 text-[1rem] font-bold">
+                  Create your Taply card <span>→</span>
+                </button>
+              </motion.div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* HERO */}
-      <div className="pt-[92px] px-5 pb-10 border-b border-gray-100">
-        <h1 className="text-[3rem] font-black tracking-[-0.05em] leading-[0.95] mb-8">
+      <div className="pt-[110px] px-5 pb-10 border-b border-gray-100">        <h1 className="text-[3rem] font-black tracking-[-0.05em] leading-[0.95] mb-8">
           Free to start.<br />Upgrade anytime.
         </h1>
         <p className="text-[16px] text-gray-500 leading-relaxed">
@@ -173,10 +215,27 @@ export default function PricingPage() {
         </p>
       </div>
 
-      {/* PLANS */}
-      <div className="px-5 pt-3 pb-10 flex flex-col gap-5">
+      {/* BILLING TOGGLE */}
+      <div className="px-5 pt-4 pb-0 flex justify-center">
+        <div className="inline-flex bg-gray-100 rounded-full p-1">
+          <button
+            onClick={() => setBilling("monthly")}
+            className={`px-5 py-2 rounded-full text-[14px] font-bold transition-all ${billing === "monthly" ? "bg-white shadow-sm text-black" : "text-gray-400"}`}>
+            Monthly
+          </button>
+          <button
+            onClick={() => setBilling("yearly")}
+            className={`px-5 py-2 rounded-full text-[14px] font-bold transition-all flex items-center gap-2 ${billing === "yearly" ? "bg-white shadow-sm text-black" : "text-gray-400"}`}>
+            Yearly
+            <span className="text-[11px] font-black text-green-600 bg-green-100 px-2 py-0.5 rounded-full">Save 20%</span>
+          </button>
+        </div>
+      </div>
 
+      {/* PLANS */}
+      <div className="px-5 pt-2 pb-10 flex flex-col gap-5">
         {/* FREE */}
+        {billing === "monthly" && (
         <div className="rounded-[28px] border border-gray-100 shadow-sm overflow-hidden">
           <div className="px-6 pt-6 pb-5 bg-white">
             <p className="text-[13px] font-bold uppercase tracking-[0.12em] mb-1 text-gray-400">Free</p>
@@ -206,16 +265,64 @@ export default function PricingPage() {
             </button>
           </div>
         </div>
+        )}
 
         {/* PRO */}
+        {billing === "yearly" ? (
         <div className="rounded-[28px] border border-black shadow-[0_20px_60px_rgba(0,0,0,0.1)] overflow-hidden">
           <div className="px-6 pt-6 pb-5 bg-black text-white">
             <div className="flex items-start justify-between mb-4">
               <div>
                 <p className="text-[13px] font-bold uppercase tracking-[0.12em] mb-1 text-white/50">Pro</p>
                 <div className="flex items-end gap-1.5">
-                  <p className="text-[3rem] font-black tracking-tight leading-none text-white">$5</p>
-                  <p className="text-[13px] pb-1.5 text-white/40">/per month</p>
+                  <p className="text-[3rem] font-black tracking-tight leading-none text-white">$48</p>
+                  <div className="pb-1.5">
+                    <p className="text-[13px] text-white/40">/year</p>
+                  </div>
+                </div>
+              </div>
+              <span className="bg-white text-black text-[11px] font-black px-3 py-1.5 rounded-full tracking-wide">
+                Best value
+              </span>
+            </div>
+            <p className="text-[14px] text-white/60 leading-relaxed">For people who network seriously.</p>
+          </div>
+          <div className="h-px bg-white/10" />
+          <div className="px-6 py-5 flex flex-col gap-3.5 bg-[#0d0d0d]">
+            {proPlan.features.map(({ label }) => (
+              <div key={label} className="flex items-center gap-3">
+                <div className="w-5 h-5 rounded-full bg-white text-black flex items-center justify-center shrink-0">
+                  <Check />
+                </div>
+                <p className="text-[14px] text-white leading-tight">{label}</p>
+              </div>
+            ))}
+          </div>
+          <div className="px-6 pb-6 bg-[#0d0d0d]">
+            <button onClick={() => router.push("/signup")}
+              className="w-full py-4 rounded-2xl text-[15px] font-bold bg-white text-black hover:bg-gray-100 transition">
+              Start Pro →
+            </button>
+          </div>
+        </div>
+        ) : (
+        <div className="rounded-[28px] border border-black shadow-[0_20px_60px_rgba(0,0,0,0.1)] overflow-hidden">
+          <div className="px-6 pt-6 pb-5 bg-black text-white">
+            <div className="flex items-start justify-between mb-4">
+              <div>
+                <p className="text-[13px] font-bold uppercase tracking-[0.12em] mb-1 text-white/50">Pro</p>
+                <div className="flex items-end gap-1.5">
+                  <p className="text-[3rem] font-black tracking-tight leading-none text-white">
+                    {billing === "yearly" ? "$48" : "$5"}
+                  </p>
+                  <div className="pb-1.5">
+                    <p className="text-[13px] text-white/40">
+                      {billing === "yearly" ? "/year" : "/per month"}
+                    </p>
+                    {billing === "yearly" && (
+                      <p className="text-[11px] text-green-400 font-semibold">~$4/mo</p>
+                    )}
+                  </div>
                 </div>
               </div>
               <span className="bg-white text-black text-[11px] font-black px-3 py-1.5 rounded-full tracking-wide">
@@ -242,9 +349,10 @@ export default function PricingPage() {
             </button>
           </div>
         </div>
+        )}
 
         {/* COMPANY */}
-        <CompanyCard router={router} />
+        {billing === "monthly" && <CompanyCard router={router} />}
 
       </div>
 
@@ -256,8 +364,9 @@ export default function PricingPage() {
             { q: "Can I stay on the free plan forever?", a: "Yes. The free plan never expires. You get your Business profile and personal link with no time limit." },
             { q: "What happens to my profile if I downgrade?", a: "Your link stays live and your Business profile stays active. Additional profiles are saved but won't be switchable until you re-upgrade." },
             { q: "Is there a contract for Pro or Company?", a: "No. Both plans are month-to-month. Cancel any time from your account settings." },
+            { q: "How does yearly billing work?", a: "Yearly Pro is billed as a single $48 payment — that's 2 months free compared to monthly. You can cancel before renewal from your account settings." },
             { q: "What does 'unlimited' Apple Wallet mean?", a: "You can regenerate and re-download your Wallet pass as many times as you want — any time you update your profile, you can get a fresh pass." },
-            { q: "How does Company pricing work?", a: "Company starts at $5/seat. Every 5 seats you add drops the per-seat price by $1, down to a floor of $3/seat. Use the calculator on the plan card to see your exact price." },
+            { q: "How does Company pricing work?", a: "Company starts at $5/seat. Every 5 seats drops the per-seat price by 10%, down to a floor of $3/seat. Use the calculator on the plan card to see your exact price." },
           ].map(({ q, a }) => (
             <div key={q} className="border border-gray-100 rounded-2xl p-4 bg-white">
               <p className="text-[15px] font-bold mb-2">{q}</p>

@@ -13,9 +13,20 @@ export default function LandingPage() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
   const [menuOpen, setMenuOpen] = useState(false)
+const heroPhoneImages = [
+  "/social-mode-render.png",
+  "/business-mode-render.png",
+  "/networking-mode-render.png",
+  "/university-mode-render.png",
+]
+
 const [phoneScreen, setPhoneScreen] = useState(0)
+
 useEffect(() => {
-  const interval = setInterval(() => setPhoneScreen(prev => (prev + 1) % 3), 4000)
+  const interval = setInterval(() => {
+    setPhoneScreen((prev) => (prev + 1) % heroPhoneImages.length)
+  }, 3500)
+
   return () => clearInterval(interval)
 }, [])
   const handleLogin = async (e) => {
@@ -86,7 +97,7 @@ useEffect(() => {
         <h1 className="text-[2.2rem] min-[390px]:text-[2.6rem] font-extrabold leading-[1.05] tracking-tighter max-w-md">
           Your{" "}
           <span className="bg-gradient-to-r from-blue-500 to-purple-500 bg-clip-text text-transparent">digital</span>
-          {" "}identity,<br />for every occasion.
+          <br />identity,<br />for every occasion.
         </h1>
         <p className="mt-5 text-gray-500 text-[1.1rem] max-w-md leading-relaxed">
           Create your Taply card, share instantly, and make every connection memorable.
@@ -102,115 +113,38 @@ useEffect(() => {
         </div>
       </div>
 
-      {/* ── PHONE FLIP ── */}
-      <div className="relative z-10 flex justify-center mt-16">
-        <div style={{ position: "absolute", width: 280, height: 280, background: "radial-gradient(circle, rgba(37,99,235,0.08) 0%, transparent 70%)", bottom: 40, left: "50%", transform: "translateX(-50%)", pointerEvents: "none" }} />
-        <div style={{ width: 270, height: 550, perspective: "1000px" }}>
-          <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            animate={{ opacity: 1, y: 0, rotateY: [0, 0, 180, 180, 360] }}
-            transition={{
-              opacity: { duration: 0.6 }, y: { duration: 0.6 },
-              rotateY: { duration: 6, repeat: Infinity, ease: "easeInOut", times: [0, 0.38, 0.5, 0.88, 1], delay: 1.5 },
-            }}
-            style={{ width: "100%", height: "100%", position: "relative", transformStyle: "preserve-3d", WebkitTransformStyle: "preserve-3d" }}
-          >
-            {/* FRONT */}
-            <div style={{ position: "absolute", width: "100%", height: "100%", backfaceVisibility: "hidden", WebkitBackfaceVisibility: "hidden", isolation: "isolate" }}>
-              <div className="relative" style={{ width: "100%", height: "100%", background: "#0f0f0f", borderRadius: 44, padding: 3, boxShadow: "0 0 0 1px rgba(255,255,255,0.07), 0 40px 100px rgba(0,0,0,0.28), 0 10px 30px rgba(0,0,0,0.14), inset 0 1px 0 rgba(255,255,255,0.12)" }}>
-                <div className="absolute right-[-3px] top-[100px] w-[3px] h-[58px] bg-[#1a1a1a] rounded-r-sm" />
-                <div className="absolute left-[-3px] top-[78px] w-[3px] h-[34px] bg-[#1a1a1a] rounded-l-sm" />
-                <div className="absolute left-[-3px] top-[124px] w-[3px] h-[34px] bg-[#1a1a1a] rounded-l-sm" />
-                <div className="w-full h-full rounded-[41px] bg-[#f0f2f8] overflow-hidden relative flex flex-col">
-                  <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[108px] h-[25px] bg-[#0f0f0f] rounded-b-[17px] z-20" />
-                  <div className="flex justify-between items-end px-4 pb-1 h-[30px] flex-shrink-0 relative z-10">
-                    <span className="text-[9px] font-bold tracking-tight">9:41</span>
-                    <div className="flex items-center gap-1">
-                      <svg width="11" height="7" viewBox="0 0 12 8" fill="#0a0a0a"><rect x="0" y="3" width="2" height="5" rx="0.5"/><rect x="3" y="2" width="2" height="6" rx="0.5"/><rect x="6" y="1" width="2" height="7" rx="0.5"/><rect x="9" y="0" width="2" height="8" rx="0.5"/></svg>
-                      <svg width="16" height="7" viewBox="0 0 18 8" fill="none"><rect x="0.5" y="0.5" width="15" height="7" rx="2" stroke="#0a0a0a" strokeOpacity="0.35"/><rect x="1.5" y="1.5" width="12" height="5" rx="1.2" fill="#0a0a0a"/></svg>
-                    </div>
-                  </div>
-                  <div className="flex-1 overflow-hidden">
-                    <div className="bg-white rounded-[20px] mx-2.5 overflow-hidden shadow-md">
-                      <div className="w-full h-[76px] relative overflow-visible" style={{ background: "linear-gradient(135deg,#1a6b9a,#2d9b6f,#1e7ab5)" }}>
-                        <div className="absolute inset-0 opacity-60" style={{ background: "linear-gradient(180deg,transparent 40%,rgba(0,0,0,0.25) 100%)" }} />
-                        <div className="absolute -bottom-5 left-3.5 w-[42px] h-[42px] rounded-full border-[3px] border-white bg-gradient-to-br from-gray-700 to-gray-500 flex items-center justify-center text-white text-xs font-black shadow-md">AR</div>
-                      </div>
-                      <div className="px-3.5 pt-8 pb-3.5">
-                        <p className="text-[15px] font-extrabold tracking-tight">Andres Rodriguez</p>
-                        <p className="text-[10px] text-gray-500 mb-3">Founder of Taply</p>
-                        <button className="w-full border border-gray-200 rounded-xl py-2 text-[11px] font-bold">Save Contact</button>
-                      </div>
-                    </div>
-                    <div className="flex flex-col gap-1.5 px-2.5 mt-2 pb-4">
-                      {[
-                        { label: "Call", sub: "(561) 419-4363", color: "#22c55e", icon: <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.58 3.38 2 2 0 0 1 3.55 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.5a16 16 0 0 0 6 6l.91-.91a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg> },
-                        { label: "Email", sub: "andres@taply.now", color: "#3b82f6", icon: "@" },
-                        { label: "LinkedIn", sub: "andresarodriguez", color: "#6366f1", icon: "in" },
-                        { label: "Instagram", sub: "@andres_rodriguez", color: "#ec4899", icon: "ig" },
-                      ].map(({ label, sub, color, icon }) => (
-                        <div key={label} className="flex items-center gap-2.5 bg-white rounded-[14px] px-3 py-2.5 border border-black/5 shadow-sm">
-                          <div className="w-[30px] h-[30px] rounded-full flex items-center justify-center flex-shrink-0 text-white text-[9px] font-black" style={{ background: color }}>{icon}</div>
-                          <div className="flex-1 min-w-0">
-                            <p className="text-[10px] font-bold">{label}</p>
-                            <p className="text-[8.5px] text-gray-400 truncate">{sub}</p>
-                          </div>
-                          <span className="text-gray-300 text-sm">›</span>
-                        </div>
-                      ))}
-                    </div>
-                    <div className="text-center pb-3">
-                      <span className="text-[8px] font-semibold text-gray-400 bg-black/5 px-3 py-1 rounded-full">Powered by Taply</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            {/* BACK: QR */}
-            <div style={{ position: "absolute", width: "100%", height: "100%", backfaceVisibility: "hidden", WebkitBackfaceVisibility: "hidden", transform: "rotateY(180deg)" }}>
-              <div className="relative" style={{ width: "100%", height: "100%", background: "#0f0f0f", borderRadius: 44, padding: 3, boxShadow: "0 0 0 1px rgba(255,255,255,0.07), 0 40px 100px rgba(0,0,0,0.28)" }}>
-                <div className="absolute right-[-3px] top-[100px] w-[3px] h-[58px] bg-[#1a1a1a] rounded-r-sm" />
-                <div className="absolute left-[-3px] top-[78px] w-[3px] h-[34px] bg-[#1a1a1a] rounded-l-sm" />
-                <div className="absolute left-[-3px] top-[124px] w-[3px] h-[34px] bg-[#1a1a1a] rounded-l-sm" />
-                <div className="w-full h-full rounded-[41px] bg-white overflow-hidden relative flex flex-col items-center justify-center gap-4 px-6">
-                  <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[108px] h-[25px] bg-[#0f0f0f] rounded-b-[17px] z-20" />
-                  <img src="/taply-logo.svg" className="h-8 object-contain mt-8" />
-                  <p className="text-[10px] text-gray-400 -mt-2">Scan to view Andres' card</p>
-                  <div className="bg-white rounded-2xl p-3 border border-gray-100 shadow-sm">
-                    <svg width="160" height="160" viewBox="0 0 150 150" fill="none">
-                      <rect x="10" y="10" width="40" height="40" rx="4" fill="#0a0a0a"/><rect x="16" y="16" width="28" height="28" rx="2" fill="white"/><rect x="22" y="22" width="16" height="16" rx="1" fill="#0a0a0a"/>
-                      <rect x="100" y="10" width="40" height="40" rx="4" fill="#0a0a0a"/><rect x="106" y="16" width="28" height="28" rx="2" fill="white"/><rect x="112" y="22" width="16" height="16" rx="1" fill="#0a0a0a"/>
-                      <rect x="10" y="100" width="40" height="40" rx="4" fill="#0a0a0a"/><rect x="16" y="106" width="28" height="28" rx="2" fill="white"/><rect x="22" y="112" width="16" height="16" rx="1" fill="#0a0a0a"/>
-                      <rect x="62" y="62" width="26" height="26" rx="4" fill="white" stroke="#e5e7eb" strokeWidth="1"/>
-                      <circle cx="75" cy="75" r="5" fill="#2563eb"/><circle cx="75" cy="75" r="9" stroke="#2563eb" strokeWidth="1.5" fill="none" opacity="0.4"/>
-                      <rect x="58" y="10" width="6" height="6" rx="1" fill="#0a0a0a"/><rect x="70" y="10" width="6" height="6" rx="1" fill="#0a0a0a"/><rect x="82" y="10" width="6" height="6" rx="1" fill="#0a0a0a"/>
-                      <rect x="58" y="22" width="6" height="6" rx="1" fill="#0a0a0a"/><rect x="82" y="22" width="6" height="6" rx="1" fill="#0a0a0a"/>
-                      <rect x="64" y="34" width="6" height="6" rx="1" fill="#0a0a0a"/><rect x="76" y="34" width="6" height="6" rx="1" fill="#0a0a0a"/>
-                      <rect x="10" y="58" width="6" height="6" rx="1" fill="#0a0a0a"/><rect x="10" y="70" width="6" height="6" rx="1" fill="#0a0a0a"/><rect x="10" y="82" width="6" height="6" rx="1" fill="#0a0a0a"/>
-                      <rect x="22" y="58" width="6" height="6" rx="1" fill="#0a0a0a"/><rect x="22" y="82" width="6" height="6" rx="1" fill="#0a0a0a"/>
-                      <rect x="34" y="64" width="6" height="6" rx="1" fill="#0a0a0a"/><rect x="34" y="76" width="6" height="6" rx="1" fill="#0a0a0a"/>
-                      <rect x="100" y="58" width="6" height="6" rx="1" fill="#0a0a0a"/><rect x="112" y="58" width="6" height="6" rx="1" fill="#0a0a0a"/>
-                      <rect x="124" y="64" width="6" height="6" rx="1" fill="#0a0a0a"/><rect x="106" y="70" width="6" height="6" rx="1" fill="#0a0a0a"/>
-                      <rect x="118" y="70" width="6" height="6" rx="1" fill="#0a0a0a"/><rect x="100" y="76" width="6" height="6" rx="1" fill="#0a0a0a"/>
-                      <rect x="124" y="82" width="6" height="6" rx="1" fill="#0a0a0a"/>
-                      <rect x="58" y="100" width="6" height="6" rx="1" fill="#0a0a0a"/><rect x="70" y="100" width="6" height="6" rx="1" fill="#0a0a0a"/>
-                      <rect x="58" y="112" width="6" height="6" rx="1" fill="#0a0a0a"/><rect x="82" y="112" width="6" height="6" rx="1" fill="#0a0a0a"/>
-                      <rect x="64" y="124" width="6" height="6" rx="1" fill="#0a0a0a"/><rect x="76" y="124" width="6" height="6" rx="1" fill="#0a0a0a"/><rect x="88" y="124" width="6" height="6" rx="1" fill="#0a0a0a"/>
-                      <rect x="112" y="100" width="6" height="6" rx="1" fill="#0a0a0a"/><rect x="124" y="100" width="6" height="6" rx="1" fill="#0a0a0a"/>
-                      <rect x="118" y="112" width="6" height="6" rx="1" fill="#0a0a0a"/><rect x="106" y="124" width="6" height="6" rx="1" fill="#0a0a0a"/><rect x="124" y="118" width="6" height="6" rx="1" fill="#0a0a0a"/>
-                    </svg>
-                  </div>
-                  <p className="text-[13px] font-bold text-[#2563eb] tracking-tight">taply.now/andres</p>
-                  <div className="flex items-center gap-2 mb-6">
-                    <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#2563eb", display: "inline-block", animation: "pulse 1.5s ease-in-out infinite" }} />
-                    <span className="text-[9px] text-gray-400">Point camera to scan</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </motion.div>
-        </div>
-      </div>
+{/* ── PHONE IMAGE SWITCH ── */}
+<div className="relative z-10 flex justify-center mt-8 px-0">
+<div className="relative w-[140%] -mx-[20%]">
+    <AnimatePresence mode="wait">
+      <motion.img
+        key={phoneScreen}
+        src={heroPhoneImages[phoneScreen]}
+        alt="Taply profile mode preview"
+        initial={{ opacity: 0, x: 30, scale: 0.97 }}
+        animate={{ opacity: 1, x: 0, scale: 1 }}
+        exit={{ opacity: 0, x: -30, scale: 0.97 }}
+        transition={{ duration: 0.4, ease: "easeInOut" }}
+        className="w-full h-auto block drop-shadow-[0_35px_70px_rgba(0,0,0,0.18)]"
+      />
+    </AnimatePresence>
+
+    <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
+      {heroPhoneImages.map((_, index) => (
+        <button
+          key={index}
+          onClick={() => setPhoneScreen(index)}
+          className={`h-2 rounded-full transition-all ${
+            phoneScreen === index
+              ? "w-6 bg-blue-600"
+              : "w-2 bg-gray-300"
+          }`}
+          aria-label={`Show Taply preview ${index + 1}`}
+        />
+      ))}
+    </div>
+</div>
+</div>
 
       {/* ── TICKER ── */}
       <div className="relative z-10 mt-16 w-full bg-black py-6 overflow-hidden">
@@ -228,63 +162,196 @@ useEffect(() => {
           REDESIGNED SECTIONS START HERE
       ════════════════════════════════════════ */}
 
-   {/* ── SECTION 1: ONE LINK, EVERYTHING ── */}
-<div className="px-4 py-10 bg-[#f5f5f7]">
-  <div className="max-w-[420px] mx-auto bg-white rounded-[32px] border border-black/5 shadow-[0_20px_60px_rgba(0,0,0,0.08)] overflow-visible pb-8">
-    
-    <div className="px-6 pt-14 pb-14">
-        <p className="text-sm font-semibold text-blue-600 tracking-wide mb-6">What is Taply</p>
-        <h2 className="text-[2.4rem] font-black tracking-tighter leading-[1.05] mb-5">
-          One link.<br />Your whole world.
-        </h2>
-        <p className="text-[16px] text-gray-500 leading-relaxed mb-10">
-          Stop sending 10 different links. Taply gives you one smart card that holds everything — your contact info, socials, and more.
-        </p>
+ {/* ── SECTION 1: CUSTOMIZE YOUR CARD ── */}
+<div className="px-4 pt-10 pb-3 bg-[#f5f5f7]">  <div className="max-w-[420px] mx-auto bg-white rounded-[32px] border border-black/5 shadow-[0_20px_60px_rgba(0,0,0,0.08)] overflow-hidden">
+    <div className="px-6 pt-10 pb-8">
+      <p className="text-sm font-black text-blue-600 tracking-[0.08em] uppercase mb-4">
+        Customize your card
+      </p>
 
-        {/* 3 stat boxes */}
-        <div className="grid grid-cols-3 gap-3 mb-10">
-          {[
-            { num: "16+", sub: "Platforms" },
-            { num: "1 link", sub: "All your info" },
-            { num: "4 modes", sub: "For every occasion" },
-          ].map(({ num, sub }, i) => (
-  <div
-  key={i}
-  className="bg-[#f3f7ff] rounded-[24px] h-[110px] flex flex-col items-center justify-center text-center px-2 border border-[#dbeafe] shadow-[0_6px_20px_rgba(37,99,235,0.06)]"
->
-  <div className="text-[1.75rem] font-black tracking-[-0.04em] leading-none">
-    {num}
+      <h2 className="text-[2.35rem] font-black tracking-[-0.055em] leading-[1.02] mb-4">
+        Designed by you.
+        <br />
+        <span className="text-blue-600">Made to stand out.</span>
+      </h2>
+
+      <p className="text-[16px] text-gray-500 leading-relaxed mb-8">
+        Create a card that represents you. Choose your material, color, finish, and what’s on it.
+      </p>
+
+  {/* Card render image */}
+<div className="relative mb-1 -mx-2">
+  <img
+    src="/taply-card-render.png"
+    alt="Taply custom card render"
+    className="w-full h-auto object-contain block"
+  />
+</div>
+      <div className="flex flex-col gap-5 mb-8">
+        {[
+          {
+            title: "Premium materials",
+            desc: "Metal or PVC. Built to last.",
+            icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2563eb" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="5" width="20" height="14" rx="3"/><path d="M2 10h20"/></svg>,
+          },
+          {
+            title: "Colors & finishes",
+            desc: "Pick your color and finish.",
+            icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2563eb" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/><path d="M2 12h20"/></svg>,
+          },
+          {
+            title: "Your way",
+            desc: "Add your logo, name, and Taply QR code.",
+            icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2563eb" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/></svg>,
+          },
+          {
+            title: "Tap or scan",
+            desc: "NFC enabled and QR ready.",
+            icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2563eb" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><circle cx="12" cy="20" r="1.5" fill="#2563eb" stroke="none"/></svg>,
+          },
+          {
+            title: "Works on iPhone & Android",
+            desc: "Compatible with any NFC phone or QR scanner.",
+            icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2563eb" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M12 18h.01"/></svg>,
+          },
+        ].map(({ title, desc, icon }) => (
+          <div key={title} className="flex items-start gap-4">
+            <div className="w-11 h-11 rounded-full bg-blue-50 flex items-center justify-center shrink-0">
+              {icon}
+            </div>
+
+            <div>
+              <p className="text-[15px] font-black tracking-tight mb-0.5">
+                {title}
+              </p>
+              <p className="text-[13px] text-gray-500 leading-relaxed">
+                {desc}
+              </p>
+            </div>
+          </div>
+        ))}
+      </div>
+
+   
+
   </div>
-
-  <div className="text-[10px] text-[#7c8aa0] font-semibold uppercase tracking-[0.18em] mt-2 leading-tight">
-    {sub}
   </div>
 </div>
-          ))}
-        </div>
 
-{/* HOW IT WORKS — 3 steps */}
-<div className="flex flex-col gap-4 mt-6 pb-6">
-          {[
-            { step: "01", title: "Create your card", desc: "Pick a mode, add your info, upload a photo. Takes 30 seconds." },
-            { step: "02", title: "Share your link", desc: "Send taply.now/you — or tap your NFC card on anyone's phone." },
-            { step: "03", title: "Watch it work", desc: "They see everything. One tap to call, follow, or save your contact." },
-          ].map(({ step, title, desc }) => (
-            <motion.div
-  whilehover={{ y: -2 }}
-  transition={{ duration: 0.18 }}
-  key={step}
-  className="flex gap-4 items-start rounded-[26px] p-5 bg-white border border-black/[0.04] shadow-[0_10px_30px_rgba(0,0,0,0.06)]"
->
-              <span className="w-8 h-8 rounded-full bg-[#dbeafe] flex items-center justify-center text-[10px] font-black text-blue-600 shrink-0 mt-0.5 border border-blue-200">{step}</span>
-              <div> 
-                <p className="text-[16px] font-bold tracking-tight mb-1">{title}</p>
-                <p className="text-[14px] text-gray-500 leading-relaxed">{desc}</p>
-              </div>
-            </motion.div>
-          ))}
+      {/* ── WORKS EVERYWHERE ── */}
+      <div className="px-4 pt-3 pb-10 bg-[#f5f5f7]">
+        <div className="max-w-[420px] mx-auto bg-white rounded-[32px] border border-black/5 shadow-[0_20px_60px_rgba(0,0,0,0.08)] overflow-hidden">
+          <div className="px-6 pt-8 pb-8">
+            <p className="text-sm font-black text-blue-600 tracking-[0.08em] uppercase mb-4">Works everywhere</p>
+            <h2 className="text-[2.35rem] font-black tracking-[-0.055em] leading-[1.02] mb-4">
+              Works everywhere<br />you do.
+            </h2>
+            <p className="text-[16px] text-gray-500 leading-relaxed mb-8">
+            </p>
+  <div className="grid grid-cols-2 gap-5">
+  {[
+    { label: "Tap", image: "/tap-render.png" },
+    { label: "Scan", image: "/scan-render.jpg" },
+    { label: "Wallet", image: "/wallet-render.jpg" },
+    { label: "Share", image: "/share-render.jpg" },
+  ].map(({ label, image }) => (
+    <div key={label} className="text-center">
+      <div className="aspect-square rounded-[24px] bg-[#eef3ff] border-2 border-blue-200 overflow-hidden shadow-sm mb-3">
+        <img
+          src={image}
+          alt={`${label} Taply preview`}
+          className="w-full h-full object-cover block"
+        />
+      </div>
+
+      <p className="text-[14px] text-gray-500 font-bold">
+        {label}
+      </p>
+    </div>
+  ))}
+</div>
+          </div>
         </div>
       </div>
+{/* ── SECTION 3: APPLE WALLET ── */}
+<div className="bg-[#f5f7ff] px-4 py-10">
+  <div className="max-w-[420px] mx-auto rounded-[32px] bg-white border border-blue-100/70 shadow-[0_20px_60px_rgba(37,99,235,0.10)] overflow-hidden">
+    <div className="px-6 pt-10">
+      <p className="text-sm font-black text-blue-600 tracking-[0.08em] uppercase mb-4">
+        Apple Wallet
+      </p>
+
+      <h2 className="text-[2.35rem] font-black tracking-[-0.055em] leading-[1.02] mb-4">
+        Your card,
+        <br />
+        <span className="text-blue-600">always on you.</span>
+      </h2>
+
+      <p className="text-[16px] text-gray-500 leading-relaxed mb-8">
+        Add your Taply profile to Apple Wallet and share instantly with a tap.
+      </p>
+
+      <div className="flex flex-col gap-5 mb-8">
+        {[
+          {
+            title: "Add in one tap",
+            desc: "Generate a native Apple Wallet pass.",
+            icon: (
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2563eb" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="2" y="5" width="20" height="14" rx="3" />
+                <path d="M2 10h20" />
+                <path d="M6 15h2" />
+                <path d="M10 15h4" />
+              </svg>
+            ),
+          },
+          {
+            title: "Always up to date",
+            desc: "Any changes sync automatically.",
+            icon: (
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2563eb" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M21 12a9 9 0 0 1-9 9" />
+                <path d="M3 12a9 9 0 0 1 9-9" />
+                <path d="m21 3-3 3 3 3" />
+                <path d="m3 21 3-3-3-3" />
+              </svg>
+            ),
+          },
+          {
+            title: "Private & secure",
+            desc: "You're in control of what you share.",
+            icon: (
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2563eb" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+              </svg>
+            ),
+          },
+        ].map(({ title, desc, icon }) => (
+          <div key={title} className="flex items-start gap-4">
+            <div className="w-11 h-11 rounded-full bg-blue-50 flex items-center justify-center shrink-0">
+              {icon}
+            </div>
+
+            <div>
+              <p className="text-[14px] font-bold tracking-tight mb-0.5">
+                {title}
+              </p>
+              <p className="text-[12px] text-gray-500 leading-snug">
+                {desc}
+              </p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+
+    <div className="relative -mb-1">
+      <img
+        src="/apple-wallet-section.jpg"
+        alt="Taply Apple Wallet preview"
+        className="w-full h-auto block object-contain"
+      />
+    </div>
   </div>
 </div>
       {/* ── SECTION 2: ONE CARD EVERY ROOM (dark bg) ── */}
@@ -318,184 +385,7 @@ useEffect(() => {
         <p className="text-[12px] text-white/25 text-center mt-8 tracking-wide">Switch anytime · your taply link never changes</p>
       </div>
 
-      {/* ── SECTION 3: APPLE WALLET (light bg) ── */}
-      <div className="bg-[#f4f4f2] px-6 pt-14 pb-14">
-        <p className="text-sm font-semibold text-blue-600 tracking-wide mb-6">Apple Wallet</p>
-        <h2 className="text-[2.4rem] font-black tracking-tighter leading-[1.05] mb-4">
-          Your card,<br />always on you.
-        </h2>
-        <p className="text-[16px] text-gray-500 leading-relaxed mb-8">
-            Generate a native Apple Wallet pass with your QR code automatically connected to your Taply profile.
 
-        </p>
-
-      <motion.div
-  key={themeIdx}
-  initial={{ opacity: 0, scale: 0.98 }}
-  animate={{ opacity: 1, scale: 1 }}
-  transition={{ duration: 0.5 }}
-  className="rounded-3xl p-5 mb-5 relative overflow-hidden"
-  style={{
-    background: t.bg,
-    maxWidth: 360,
-    minHeight: 540,
-    margin: "0 auto 20px auto",
-    boxShadow:
-      "0 25px 60px rgba(0,0,0,0.3), 0 0 0 1px rgba(255,255,255,0.08)"
-  }}
->
-  {/* NAME + PHOTO ROW */}
-  <div className="flex justify-between items-start mb-8 pt-10">
-    <div>
-      <p
-        className="text-[9px] uppercase tracking-widest mb-1"
-        style={{ color: t.sub }}
-      >
-        NAME
-      </p>
-
-      <p
-        className="text-[22px] font-semibold"
-        style={{ color: t.text }}
-      >
-        Andres Rodriguez
-      </p>
-    </div>
-
-    <div className="w-12 h-12 rounded-2xl bg-white/10 flex items-center justify-center flex-shrink-0">
-      <svg
-        width="22"
-        height="22"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="rgba(255,255,255,0.7)"
-        strokeWidth="1.8"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        <circle cx="12" cy="8" r="4" />
-        <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" />
-      </svg>
-    </div>
-  </div>
-
-  {/* FIELDS */}
-  <div className="mb-3">
-    <p
-      className="text-[9px] uppercase tracking-widest mb-1"
-      style={{ color: t.sub }}
-    >
-      TITLE
-    </p>
-
-    <p className="text-[20px] leading-tight" style={{ color: t.text }}>
-      Founder of Taply
-    </p>
-  </div>
-
-  <div className="flex gap-8 mb-28">
-    <div>
-      <p
-        className="text-[9px] uppercase tracking-widest mb-1 mt-2"
-        style={{ color: t.sub }}
-      >
-        PHONE
-      </p>
-
-      <p className="text-sm" style={{ color: t.text }}>
-        (561) 419-4363
-      </p>
-    </div>
-
-    <div>
-      <p
-        className="text-[9px] uppercase tracking-widest mb-1 mt-2"
-        style={{ color: t.sub }}
-      >
-        EMAIL
-      </p>
-
-      <p className="text-sm" style={{ color: t.text }}>
-        andres@taply.now
-      </p>
-    </div>
-  </div>
-
-  {/* QR */}
-  <div className="flex justify-center mb-4">
-    <div className="bg-white rounded-[28px] p-5 w-40 h-40 flex items-center justify-center shadow-lg">
-      <svg width="120" height="120" viewBox="0 0 50 50" fill="none">
-
-        <rect x="2" y="2" width="14" height="14" rx="2" fill="#0a0a0a"/>
-        <rect x="4" y="4" width="10" height="10" rx="1" fill="white"/>
-        <rect x="6" y="6" width="6" height="6" rx="0.5" fill="#0a0a0a"/>
-
-        <rect x="34" y="2" width="14" height="14" rx="2" fill="#0a0a0a"/>
-        <rect x="36" y="4" width="10" height="10" rx="1" fill="white"/>
-        <rect x="38" y="6" width="6" height="6" rx="0.5" fill="#0a0a0a"/>
-
-        <rect x="2" y="34" width="14" height="14" rx="2" fill="#0a0a0a"/>
-        <rect x="4" y="36" width="10" height="10" rx="1" fill="white"/>
-        <rect x="6" y="38" width="6" height="6" rx="0.5" fill="#0a0a0a"/>
-
-        <rect x="22" y="22" width="6" height="6" rx="1" style={{ fill: t.accent }}/>
-
-        <rect x="22" y="2" width="4" height="4" rx="0.5" fill="#0a0a0a"/>
-        <rect x="28" y="2" width="4" height="4" rx="0.5" fill="#0a0a0a"/>
-
-        <rect x="2" y="22" width="4" height="4" rx="0.5" fill="#0a0a0a"/>
-        <rect x="8" y="22" width="4" height="4" rx="0.5" fill="#0a0a0a"/>
-
-        <rect x="34" y="22" width="4" height="4" rx="0.5" fill="#0a0a0a"/>
-        <rect x="40" y="28" width="4" height="4" rx="0.5" fill="#0a0a0a"/>
-
-        <rect x="22" y="34" width="4" height="4" rx="0.5" fill="#0a0a0a"/>
-        <rect x="28" y="40" width="4" height="4" rx="0.5" fill="#0a0a0a"/>
-
-      </svg>
-    </div>
-  </div>
-
-  {/* DOTS */}
-  <div className="flex justify-center gap-1.5 mt-2">
-    {themes.map((_, i) => (
-      <div
-        key={i}
-        className="rounded-full transition-all duration-300"
-        style={{
-          width: i === themeIdx ? 16 : 6,
-          height: 6,
-          background:
-            i === themeIdx
-              ? t.accent
-              : "rgba(128,128,128,0.3)"
-        }}
-      />
-    ))}
-  </div>
-</motion.div>
-{/* Wallet features */}
-<div className="grid grid-cols-2 gap-4 mt-8">
-  {[
-    { bg: "#eff6ff", iconBg: "#2563eb", title: "Active profile sync", desc: "Always pulls from whichever profile you have set as active.", svg: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M21 12a9 9 0 0 1-9 9m9-9a9 9 0 0 0-9-9m9 9H3m9 9a9 9 0 0 1-9-9m9 9c1.66 0 3-4.03 3-9s-1.34-9-3-9m0 18c-1.66 0-3-4.03-3-9s1.34-9 3-9"/></svg> },
-    { bg: "#f5f3ff", iconBg: "#7c3aed", title: "Custom colors", desc: "Pick your card background and accent to match your brand.", svg: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v2M12 20v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M2 12h2M20 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg> },
-    { bg: "#ecfdf5", iconBg: "#059669", title: "Company logo", desc: "Add a transparent PNG logo to the top of your pass.", svg: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg> },
-    { bg: "#fdf2f8", iconBg: "#db2777", title: "Profile photo", desc: "Your photo shows as a circle thumbnail on the pass.", svg: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg> },
-    { bg: "#fff7ed", iconBg: "#ea580c", title: "Lock screen access", desc: "Pull it up instantly — no app needed, ever.", svg: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg> },
-    { bg: "#fafaf9", iconBg: "#374151", title: "Unlimited passes", desc: "Regenerate your pass anytime your profile changes.", svg: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M21 12a9 9 0 0 1-9 9"/><path d="M3 12a9 9 0 0 1 9-9"/><path d="M21 3l-3 3 3 3"/><path d="M3 21l3-3-3-3"/></svg> },
-  ].map(({ bg, iconBg, title, desc, svg }) => (
-    <div key={title} className="bg-white rounded-[24px] p-4 border border-black/[0.04] shadow-[0_10px_30px_rgba(0,0,0,0.06)] flex flex-col gap-3">
-      <div className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: iconBg }}>
-        {svg}
-      </div>
-      <div>
-        <p className="text-[15px] font-bold tracking-tight mb-1">{title}</p>
-        <p className="text-[13px] text-gray-400 leading-relaxed">{desc}</p>
-      </div>
-    </div>
-  ))}
-</div>
-      </div>
 {/* ── SECTION 5: PLATFORMS (light blue bg) ── */}
       <div className="bg-[#f0f4ff] py-14 overflow-hidden">
         <div className="px-6 mb-8">
@@ -674,7 +564,8 @@ useEffect(() => {
             <div className="flex flex-col">
               {[
 { label: "How it works", href: "/how-it-works", newTab: true },
-{ label: "Pricing", href: "/pricing" },
+{ label: "Pricing", href: "/pricing", newTab: true },
+{ label: "Cards", href: "/cards", newTab: true },
 { label: "Login", href: "/signup", newTab: true },
               ].map(({ label, href, newTab }, i) => (
                 <motion.button key={label}

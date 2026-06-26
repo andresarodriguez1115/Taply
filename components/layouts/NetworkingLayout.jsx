@@ -237,7 +237,7 @@ onTouchEnd={()=> isEditing && setDragging(false)}
 </div>
 {isEditing && (
   <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 whitespace-nowrap">
-    <label className="bg-white border border-gray-200 shadow-sm text-xs font-medium text-gray-600 px-4 py-2 rounded-full cursor-pointer hover:bg-gray-50 transition">
+    <label data-tutorial="profile-photo-btn" className="bg-white border border-gray-200 shadow-sm text-xs font-medium text-gray-600 px-4 py-2 rounded-full cursor-pointer hover:bg-gray-50 transition">
       Change Photo
       <input type="file" accept="image/*" className="hidden"
         onChange={(e) => {

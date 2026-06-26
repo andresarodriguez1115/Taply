@@ -4,10 +4,12 @@ import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { motion, AnimatePresence } from "framer-motion"
 import Link from "next/link"
+import { Menu } from "lucide-react"
 
 export default function HowItWorksPage() {
   const router = useRouter()
   const [activeMode, setActiveMode] = useState("Business")
+  const [menuOpen, setMenuOpen] = useState(false)
 
   const modes = {
     Business: {
@@ -90,13 +92,13 @@ export default function HowItWorksPage() {
       num: "02",
       tag: "Build profiles",
       headline: "Create a profile for each mode.",
-      body: "Choose from Business, University, Networking, or Social. Each has its own unique layout and fields. Create up to 3 profiles and switch between them anytime.",
+      body: "Choose from Business, University, Networking, or Social. Each has its own unique layout and fields. Create up to 4 profiles and switch between them anytime.",
       visual: (
         <div>
           <div className="flex gap-2 flex-wrap mb-6">
             {Object.keys(modes).map((mode) => (
               <button key={mode} onClick={() => setActiveMode(mode)}
-                className="px-3 py-1.5 rounded-full text-[12px] font-semibold border transition-all"
+                className="px-3 py-1.5 rounded-full text-[13px] font-semibold border transition-all"
                 style={{
                   background: activeMode === mode ? modes[mode].color : "white",
                   color: activeMode === mode ? "white" : "#6b7280",
@@ -110,7 +112,14 @@ export default function HowItWorksPage() {
             <motion.div key={activeMode}
               initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }}
               transition={{ duration: 0.2 }}>
-              <div className="relative mx-auto" style={{ width: "100%" }}>
+              <div
+  className="relative mx-auto origin-top"
+  style={{
+    width: "100%",
+    transform: "scale(0.88)",
+    marginBottom: "-70px",
+  }}
+>
                 <div className="relative rounded-[52px] bg-[#141414] p-[10px] shadow-[0_50px_100px_rgba(0,0,0,0.4),inset_0_0_0_1px_rgba(255,255,255,0.08)]">
                   <div className="absolute top-[20px] left-1/2 -translate-x-1/2 w-[90px] h-[26px] bg-[#141414] rounded-full z-20" />
                   <div className="absolute right-[-3px] top-[110px] w-[3px] h-[68px] bg-[#2a2a2a] rounded-r-sm" />
@@ -589,9 +598,7 @@ export default function HowItWorksPage() {
                     <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#2563eb" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
                   </div>
                 </div>
-              ) : (
-                <span className="text-[12px] font-semibold px-3 py-1 rounded-full bg-gray-100 text-gray-400">Saved</span>
-              )}
+            ) : null}
             </div>
           ))}
           <div className="px-5 py-3.5 bg-gray-50 border-t border-gray-100 flex items-center justify-between">
@@ -607,25 +614,41 @@ export default function HowItWorksPage() {
     {
       num: "04",
       tag: "Share it",
-      headline: "Tap. Scan. Done.",
-      body: "Hold your NFC card to anyone's phone — they see your active profile instantly. No app, no friction, no fumbling with contacts. Or show your QR. Either way, every person you meet has your link forever.",
+      headline: "Three ways to share.",
+      body: "Add your card to Apple Wallet, tap your physical NFC card, or show your QR code. Every person you meet gets your link — and it never changes.",
       visual: (
         <div className="flex flex-col gap-3">
-          {[
-            { icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><circle cx="12" cy="20" r="1" fill="currentColor"/></svg>, label: "NFC tap", desc: "Hold your card to their phone. They see your active profile. No app, no download, nothing to install.", color: "#059669", bg: "#ecfdf5" },
-            { icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="5" height="5"/><rect x="16" y="3" width="5" height="5"/><rect x="3" y="16" width="5" height="5"/><path d="M21 16h-3v3m0-3v3m-3-6h3m3 0v3m-6 3h3"/></svg>, label: "QR code", desc: "Show your screen. They scan. Done. Works on every phone camera.", color: "#7c3aed", bg: "#f5f3ff" },
-            { icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>, label: "Your link, forever", desc: "Every person you've ever shared with can always come back — your link never changes.", color: "#2563eb", bg: "#eff6ff" },
-          ].map(({ icon, label, desc, color, bg }) => (
-            <div key={label} className="flex items-start gap-4 bg-white border border-gray-100 rounded-2xl px-5 py-4 shadow-sm">
-              <div className="w-10 h-10 rounded-2xl flex items-center justify-center shrink-0 mt-0.5" style={{ background: bg, color }}>
-                {icon}
-              </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-[15px] font-black mb-1">{label}</p>
-                <p className="text-[13px] text-gray-400 leading-relaxed">{desc}</p>
-              </div>
+          <div className="bg-black rounded-[24px] p-5 flex items-center gap-4">
+            <img src="/apple-wallet.png" alt="" className="w-12 h-12 object-contain rounded-2xl shrink-0" />
+            <div className="flex-1 min-w-0">
+              <p className="text-[15px] font-black text-white mb-0.5">Apple Wallet</p>
+              <p className="text-[13px] text-white/50 leading-relaxed">Your pass lives on your lock screen — no phone unlock needed.</p>
             </div>
-          ))}
+          </div>
+          <div className="bg-white border border-gray-100 rounded-[24px] p-5 flex items-start gap-4 shadow-sm">
+            <div className="w-12 h-12 rounded-2xl bg-[#ecfdf5] flex items-center justify-center shrink-0">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#059669" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><circle cx="12" cy="20" r="1" fill="#059669"/>
+              </svg>
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-[15px] font-black mb-0.5">Physical NFC card</p>
+              <p className="text-[13px] text-gray-400 leading-relaxed">Tap your metal or PVC card to anyone's phone. Instant. No app needed on either end.</p>
+              <span className="inline-block mt-2 text-[11px] font-bold text-[#059669] bg-[#ecfdf5] px-2.5 py-1 rounded-full">Order at taply.now/andres/cards</span>
+            </div>
+          </div>
+          <div className="bg-white border border-gray-100 rounded-[24px] p-5 flex items-start gap-4 shadow-sm">
+            <div className="w-12 h-12 rounded-2xl bg-[#f5f3ff] flex items-center justify-center shrink-0">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#7c3aed" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="3" y="3" width="5" height="5"/><rect x="16" y="3" width="5" height="5"/><rect x="3" y="16" width="5" height="5"/><path d="M21 16h-3v3m0-3v3m-3-6h3m3 0v3m-6 3h3"/>
+              </svg>
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-[15px] font-black mb-0.5">Generated QR code</p>
+              <p className="text-[13px] text-gray-400 leading-relaxed">A unique QR auto-generated for your active profile. Show your screen — they scan, done.</p>
+              <span className="inline-block mt-2 text-[11px] font-bold text-[#7c3aed] bg-[#f5f3ff] px-2.5 py-1 rounded-full">Always synced to your active profile</span>
+            </div>
+          </div>
         </div>
       )
     },
@@ -699,139 +722,363 @@ export default function HowItWorksPage() {
     <div className="min-h-screen bg-white text-black">
 
       {/* NAV */}
-      <div className="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-6 h-[70px] bg-white/90 backdrop-blur border-b border-gray-100">
-        <Link href="/">
-          <img src="/taply-logo.svg" className="h-12 object-contain" />
-        </Link>
-        <button onClick={() => router.push("/signup")}
-          className="bg-black text-white text-[13px] font-semibold px-5 py-2.5 rounded-xl">
-          Get started
+      <div className={`fixed top-0 left-0 w-full z-50 flex justify-between items-center pl-2 pr-6 h-[75px] bg-white ${menuOpen ? "" : "border-b border-gray-200"}`}>
+        <button onClick={() => router.push("/")} className="flex items-center h-full">
+          <img src="/taply-logo.svg" className="h-14 object-contain" />
+        </button>
+        <button onClick={() => setMenuOpen(prev => !prev)} className="p rounded-lg hover:bg-gray-100 transition">
+          <motion.div animate={{ rotate: menuOpen ? 90 : 0 }} transition={{ duration: 0.2 }}>
+            <Menu size={28} strokeWidth={2} />
+          </motion.div>
         </button>
       </div>
 
-{/* HERO */}1
-<section className="pt-[92px] px-4 pb-10 overflow-hidden border-b border-gray-100">
-  <div className="relative w-full max-w-[390px] mx-auto rounded-[30px] bg-gradient-to-br from-[#f8fbff] via-[#f4f1ff] to-[#eef7ff] border border-gray-100 shadow-[0_20px_60px_rgba(79,70,229,0.08)] px-4 pt-6 pb-5 overflow-hidden">
-    
-    <div className="absolute -top-12 -right-12 w-36 h-36 rounded-full bg-blue-200/40 blur-3xl" />
-    <div className="absolute top-36 -right-20 w-48 h-48 rounded-full bg-purple-200/35 blur-3xl" />
-    <div className="absolute -bottom-16 -left-16 w-44 h-44 rounded-full bg-emerald-100/60 blur-3xl" />
-
-
-    <div className="relative z-10">
-<h1 className="text-[3.2rem] min-[390px]:text-[3.6rem] font-black tracking-[-0.06em] leading-[0.95] mb-5">        How
-        <br />
-        Taply
-        <br />
-        <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-violet-600">
-          works.
-        </span>
-      </h1>
-
-      <p className="text-[16px] text-gray-600 leading-[1.65] mb-6">        Create your card, build your profiles, and share one link that works everywhere.
-        <span className="font-bold text-blue-600"> One identity for every occasion.</span>
-      </p>
-    </div>
-
-   {/* compact visual */}
-<div className="relative h-[235px] mb-5">
-  {/* profile card */}
-  <div className="absolute right-1 top-0 w-[190px] rounded-[24px] bg-white/80 backdrop-blur-xl border border-white shadow-[0_16px_40px_rgba(79,70,229,0.16)] p-4 rotate-[4deg]">
-    <div className="flex items-center gap-3 mb-4">
-      <div className="w-11 h-11 rounded-full bg-gradient-to-br from-blue-500 to-violet-500 flex items-center justify-center text-white font-black text-[14px]">
-        AR
-      </div>
-      <div className="min-w-0">
-        <p className="text-[13px] font-black leading-tight">Andres</p>
-        <p className="text-[13px] font-black leading-tight">Rodriguez</p>
-        <p className="text-[11px] text-gray-500 mt-1">Founder of Taply</p>
-      </div>
-    </div>
-
-    <div className="grid grid-cols-3 gap-2">
-      {["◎", "↗", "✉"].map((icon, i) => (
-        <div
-          key={i}
-          className="h-10 rounded-2xl bg-white flex items-center justify-center text-blue-600 font-bold shadow-sm text-[13px]"
-        >
-          {icon}
-        </div>
-      ))}
-    </div>
-  </div>
-
-  {/* active profile card */}
-  <div className="absolute left-0 top-[74px] w-[220px] bg-emerald-50/95 border border-white rounded-[20px] shadow-[0_12px_32px_rgba(16,185,129,0.14)] px-4 py-3 flex items-center gap-3 -rotate-[3deg] z-10">
-    <div className="w-9 h-9 rounded-2xl bg-emerald-100 flex items-center justify-center text-emerald-600 font-black text-[13px]">
-      ▣
-    </div>
-    <div className="min-w-0">
-      <p className="text-[13px] font-black truncate">Business Profile</p>
-      <p className="text-[11px] text-gray-500">Active now</p>
-    </div>
-    <span className="ml-auto text-emerald-600 font-black">›</span>
-  </div>
-
-{/* Apple Wallet badge */}
-<div className="absolute right-16 top-[130px] rotate-[2deg] z-20">
-  <img src="/apple-wallet-badge.png" alt="Add to Apple Wallet" className="h-[55px] w-auto object-contain" />
-</div>
-</div>
-
-    {/* steps */}
-    <div className="relative bg-white/90 backdrop-blur border border-white rounded-[24px] shadow-[0_16px_45px_rgba(15,23,42,0.08)] p-3">
-      <div className="grid grid-cols-2 gap-3">
-        {[
-          { n: "1", title: "Create", sub: "your card", bg: "#f1efff", color: "#7c3aed", icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> },
-          { n: "2", title: "Build", sub: "profiles", bg: "#ecfdf5", color: "#059669", icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg> },
-          { n: "3", title: "Set one", sub: "active", bg: "#fffbeb", color: "#d97706", icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg> },
-          { n: "4", title: "Network", sub: "everywhere", bg: "#eff6ff", color: "#2563eb", icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg> },
-        ].map((step) => (
-          <div key={step.n} className="rounded-[20px] bg-[#fafafa] border border-gray-100 p-3 min-w-0">
-            <div className="flex items-center gap-2 mb-3">
-              <div
-                className="w-9 h-9 rounded-2xl flex items-center justify-center"
-                style={{ background: step.bg, color: step.color }}
-              >
-                {step.icon}
-              </div>
-              <span className="w-6 h-6 rounded-full bg-white border border-gray-100 shadow-sm flex items-center justify-center text-[11px] font-black">
-                {step.n}
-              </span>
+      {/* FULL SCREEN MENU */}
+      <AnimatePresence>
+        {menuOpen && (
+          <motion.div className="fixed top-[75px] left-0 w-full h-[calc(100vh-75px)] bg-white z-40 overflow-y-auto"
+            style={{ transformOrigin: "top" }}
+            initial={{ clipPath: "inset(0 0 100% 0)", opacity: 0 }}
+            animate={{ clipPath: "inset(0 0 0% 0)", opacity: 1 }}
+            exit={{ clipPath: "inset(0 0 100% 0)", opacity: 0 }}
+            transition={{ duration: 0.4, ease: [0.4, 0, 0.2, 1] }}>
+            <div className="flex flex-col">
+              {[
+                { label: "How it works", href: "/how-it-works", newTab: true },
+                { label: "Pricing", href: "/pricing", newTab: true },
+                { label: "Cards", href: "/cards", newTab: true },
+                { label: "Login", href: "/signup", newTab: true },
+              ].map(({ label, href, newTab }, i) => (
+                <motion.button key={label}
+                  initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: i * 0.06 + 0.15 }}
+                  onClick={() => { setMenuOpen(false); newTab ? window.open(href, "_blank") : router.push(href) }}
+                  className="w-full flex items-center justify-between border-b border-gray-100 text-gray-900 active:bg-gray-50 transition"
+                  style={{ fontSize: "1.25rem", fontWeight: 500, letterSpacing: "-0.02em", padding: "18px 24px" }}>
+                  <span>{label}</span>
+                  <span style={{ color: "#d1d5db" }}>›</span>
+                </motion.button>
+              ))}
+              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.45 }} className="px-6 pt-6">
+                <button onClick={() => { setMenuOpen(false); window.open("/signup", "_blank") }}
+                  className="w-full bg-black text-white py-4 rounded-2xl flex items-center justify-between px-6 text-[1rem] font-bold">
+                  Create your Taply card <span>→</span>
+                </button>
+              </motion.div>
             </div>
-            <p className="text-[14px] font-black leading-tight">{step.title}</p>
-            <p className="text-[12px] text-gray-500 leading-tight">{step.sub}</p>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+{/* HERO */}
+<section
+  className="pt-[75px] pb-0 overflow-hidden"
+  style={{
+    background:
+      "linear-gradient(180deg, #ffffff 0%, #f7faff 22%, #eef5ff 58%, #f8fbff 86%, #ffffff 100%)",
+  }}
+>
+  <div className="max-w-[430px] mx-auto text-center px-6 pt-7 pb-0">
+
+    <div className="inline-flex items-center px-5 py-2 rounded-full border border-blue-200 bg-white/65 text-blue-600 text-[13px] font-bold tracking-[0.12em] mb-4 shadow-sm backdrop-blur">
+      HOW IT WORKS
+    </div>
+
+    <h1 className="text-[2.4rem] min-[389px]:text-[2.6rem] font-black tracking-[-0.055em] leading-[1.08] mb-5">
+      Everything Taply
+      <br />
+      can do,{" "}
+      <span className="text-blue-600">
+        in one page.
+      </span>
+    </h1>
+
+    <p className="text-[16px] text-gray-500 leading-[1.6] mb-2 mx-auto max-w-[350px]">
+      Choose a mode, share with a tap, manage multiple profiles, and generate unlimited QR codes — all from one Taply link.
+    </p>
+  </div>
+
+{/* Hero image */}
+<div className="relative max-w-[430px] mx-auto mt-[-10px] overflow-hidden">
+  {/* top fade so the image melts into the text area */}
+<div
+  className="absolute top-0 left-0 right-0 h-[95px] z-20 pointer-events-none"
+  style={{
+    background:
+      "linear-gradient(180deg, #f3f7ff 0%, rgba(243,247,255,0.55) 35%, rgba(243,247,255,0) 100%)",
+  }}
+/>
+
+  <img
+    src="/hero-taply-render2.png"
+    alt="Taply Apple Wallet pass and metal NFC card"
+    className="relative z-10 w-full object-contain block"
+  />
+
+  {/* bottom fade into Core Features */}
+<div
+  className="absolute bottom-0 left-0 right-0 h-[75px] z-20 pointer-events-none"
+  style={{
+    background:
+      "linear-gradient(0deg, #ffffff 0%, rgba(255,255,255,0.55) 45%, rgba(255,255,255,0) 100%)",
+  }}
+/>
+</div>
+</section>
+
+    {/* FEATURES */}
+<div id="taply-features">
+
+  {/* 4 MODES — KEEPING YOUR PREVIEW */}
+  <section className="px-6 py-14 border-b border-gray-100 bg-white">
+    <div className="max-w-[430px] mx-auto">
+      <p className="text-[13px] font-black text-blue-600 uppercase tracking-[0.22em] mb-3">
+        Core features
+      </p>
+
+      <h2 className="text-[2.55rem] font-black tracking-[-0.055em] leading-[0.98] mb-3">
+        4 modes tailored
+        <br />
+        for every moment.
+      </h2>
+
+      <p className="text-[16px] text-gray-500 leading-relaxed mb-8">
+        Pick the profile style that fits the room — business meetings, networking events, career fairs, or social growth.
+      </p>
+
+      {steps[1].visual}
+    </div>
+  </section>
+
+ {/* CARD / APPLE WALLET */}
+<section className="px-6 py-14 border-b border-gray-100 bg-[#f8fbff] overflow-hidden">
+  <div className="max-w-[430px] mx-auto">
+    <p className="text-[13px] font-black text-blue-600 uppercase tracking-[0.22em] mb-3">
+      Share your profile
+    </p>
+
+    <h2 className="text-[2.25rem] min-[390px]:text-[2.45rem] font-black tracking-[-0.055em] leading-[1.02] mb-4">
+ Tap with a
+<br />
+custom card or
+<br />
+add it to
+<span className="text-blue-600"> Apple Wallet.</span>
+    </h2>
+
+    <p className="text-[16px] text-gray-500 leading-relaxed mb-7">
+      Share instantly in person with a physical card, or keep your Taply profile ready in your iPhone’s Wallet.
+    </p>
+
+    <div className="flex flex-col gap-5">
+      {/* NFC CARD */}
+      <div className="relative rounded-[34px] bg-white border border-blue-100/80 shadow-[0_22px_55px_rgba(37,99,235,0.10)] p-5 overflow-hidden">
+        <div className="absolute -top-20 -right-20 w-44 h-44 rounded-full bg-blue-100/70 blur-3xl" />
+
+        <div className="relative z-10 flex items-start gap-4 mb-5">
+          <div className="w-14 h-14 rounded-[22px] bg-blue-50 text-blue-600 flex items-center justify-center shrink-0">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.1" strokeLinecap="round">
+              <path d="M6.5 8.5a5 5 0 0 1 0 7" />
+              <path d="M10 6a9 9 0 0 1 0 12" />
+              <path d="M13.5 3.5a14 14 0 0 1 0 17" />
+            </svg>
           </div>
-        ))}
+
+          <div>
+            <h3 className="text-[25px] font-black tracking-[-0.04em] leading-tight">
+              Custom Metal or Plastic Card
+            </h3>
+            <p className="text-[15px] text-gray-500 leading-relaxed mt-2">
+              A premium fully customizable card that opens your active profile with one tap.
+            </p>
+          </div>
+        </div>
+
+        <div className="relative mb-6 rounded-[26px] overflow-hidden bg-[#f7f9ff] border border-blue-50">
+          <img
+            src="/taply-cards.png"
+            alt="Taply custom metal and plastic NFC cards"
+            className="w-full h-auto object-contain block"
+          />
+        </div>
+
+        <div className="grid grid-cols-1 gap-3">
+          {["Tap to share instantly", "Scan QR anytime", "No app needed", "Works on iPhone & Android"].map((item) => (
+            <div key={item} className="flex items-center gap-3 text-[15px] text-gray-700 font-semibold">
+              <span className="w-7 h-7 rounded-full border-2 border-blue-500 text-blue-600 flex items-center justify-center text-[13px] font-black shrink-0">
+                ✓
+              </span>
+              {item}
+            </div>
+          ))}
+        </div>
       </div>
 
-      <div className="mt-3 rounded-[18px] bg-gradient-to-r from-violet-50 to-blue-50 border border-blue-100 px-4 py-3 flex items-center gap-3">
-        <div className="w-9 h-9 rounded-2xl bg-white flex items-center justify-center shadow-sm text-blue-500">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/></svg>
+      {/* APPLE WALLET */}
+      <div className="relative rounded-[34px] bg-white border border-blue-100/80 shadow-[0_22px_55px_rgba(37,99,235,0.10)] p-5 overflow-hidden">
+        <div className="absolute -top-24 -left-20 w-48 h-48 rounded-full bg-blue-100/80 blur-3xl" />
+
+        <div className="relative z-10 flex items-start gap-4 mb-5">
+          <div className="w-14 h-14 rounded-[22px] bg-blue-50 flex items-center justify-center shrink-0">
+            <img
+              src="/apple-wallet.png"
+              alt=""
+              className="w-9 h-9 object-contain"
+            />
+          </div>
+
+          <div>
+            <h3 className="text-[25px] font-black tracking-[-0.04em] leading-tight">
+              Apple Wallet
+            </h3>
+            <p className="text-[15px] text-gray-500 leading-relaxed mt-2">
+              Keep your Taply profile ready on your iPhone for quick sharing anywhere.
+            </p>
+          </div>
         </div>
-        <div>
-          <p className="text-[13px] font-black leading-tight">5. Track everything</p>
-          <p className="text-[11px] text-gray-500">See views, taps, and saves.</p>
+
+        <div className="relative mb-9 rounded-[26px] overflow-hidden bg-[#f7f9ff] border border-blue-50">
+       <img
+  src="/taply-wallet-cut.png"
+  alt="Taply Apple Wallet preview on iPhone"
+  className="w-[120%] max-w-none h-auto object-contain block -ml-[10%] -mt-[60px]"
+/>
+        </div>
+
+        <div className="flex items-center gap-3 text-[15px] text-gray-700 font-semibold">
+          <span className="w-7 h-7 rounded-full border-2 border-blue-500 text-blue-600 flex items-center justify-center text-[13px] font-black shrink-0">
+            ✓
+          </span>
+          Always ready on your phone
         </div>
       </div>
     </div>
   </div>
 </section>
+  <section className="px-6 py-14 border-b border-gray-100 bg-white">
+    <div className="max-w-[430px] mx-auto">
+      <p className="text-[13px] font-black text-blue-600 uppercase tracking-[0.22em] mb-3">
+        Smart profile management
+      </p>
 
-      {/* STEPS */}
-      <div className="divide-y divide-gray-100">
-        {steps.map(({ num, tag, headline, body, visual }) => (
-          <div key={num} className="px-6 py-12">
-            <div className="flex items-center gap-3 mb-5">
-              <div className="w-7 h-7 rounded-full bg-black flex items-center justify-center text-white text-[11px] font-black shrink-0">{num}</div>
-              <p className="text-[13px] font-semibold text-gray-500">{tag}</p>
+      <h2 className="text-[2.55rem] font-black tracking-[-0.055em] leading-[1] mb-4">
+        One username.
+        <br />
+        Multiple
+        <span className="text-blue-600"> saved profiles.</span>
+      </h2>
+
+      <p className="text-[16px] text-gray-500 leading-relaxed mb-7">
+        Your public link stays the same. Whichever profile you set as active is what people see at your Taply link.
+      </p>
+
+      <div className="rounded-[26px] bg-[#f8fbff] border border-blue-100 p-4 mb-5 flex items-center gap-3">
+        <span className="text-blue-600">🔗</span>
+        <p className="text-[17px] font-black flex-1">
+          taply.now/<span className="text-blue-600">andres</span>
+        </p>
+        <span className="text-gray-400">⧉</span>
+      </div>
+
+      <div className="rounded-[28px] bg-white border border-gray-100 shadow-[0_18px_45px_rgba(15,23,42,0.06)] overflow-hidden">
+        {[
+          { title: "Business", sub: "Professional contact-first layout", active: true, color: "#2563eb", icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg> },
+          { title: "Networking", sub: "Built for fairs, meetups, and events", active: false, color: "#7c3aed", icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg> },
+          { title: "University", sub: "Perfect for students and recruiters", active: false, color: "#059669", icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg> },
+          { title: "Social", sub: "Creator-friendly links and products", active: false, color: "#ea580c", icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg> },
+        ].map((profile, i) => (
+          <div
+            key={profile.title}
+            className={`flex items-center gap-4 px-5 py-4 ${i < 3 ? "border-b border-gray-100" : ""} ${profile.active ? "bg-blue-50/60" : "bg-white"}`}
+          >
+            <div
+              className="w-12 h-12 rounded-2xl flex items-center justify-center font-black"
+              style={{
+                background: profile.active ? profile.color : "#f3f4f6",
+                color: profile.active ? "white" : profile.color,
+              }}
+            >
+              {profile.icon}
             </div>
-            <h2 className="text-[1.9rem] font-extrabold tracking-tight leading-[1.1] mb-3">{headline}</h2>
-            <p className="text-[15px] text-gray-500 leading-relaxed mb-8">{body}</p>
-            {visual}
+
+            <div className="flex-1 min-w-0">
+              <p className="text-[16px] font-black">{profile.title}</p>
+              <p className="text-[13px] text-gray-500 leading-snug">{profile.sub}</p>
+            </div>
+
+            {profile.active ? (
+              <span className="px-3 py-1 rounded-full bg-blue-600 text-white text-[12px] font-black">
+                Active
+              </span>
+            ) : (
+              <span className="px-3 py-1 rounded-full bg-gray-100 text-gray-500 text-[12px] font-bold">
+                Saved
+              </span>
+            )}
           </div>
         ))}
       </div>
+    </div>
+  </section>
+
+  {/* UNLIMITED TAPS / QR */}
+  <section className="px-6 py-14 border-b border-gray-100 bg-[#fbfcff]">
+    <div className="max-w-[430px] mx-auto">
+      <p className="text-[13px] font-black text-blue-600 uppercase tracking-[0.22em] mb-3">
+        Share without limits
+      </p>
+
+      <h2 className="text-[2.55rem] font-black tracking-[-0.055em] leading-[1] mb-4">
+        Unlimited taps.
+        <br />
+        Unlimited
+        <span className="text-blue-600"> QR codes.</span>
+      </h2>
+
+      <p className="text-[16px] text-gray-500 leading-relaxed mb-7">
+        Share your Taply page as often as you want — in person, through NFC, or with QR codes generated for your profile.
+      </p>
+
+      <div className="grid grid-cols-2 gap-3 mb-5">
+        {[
+          { title: "Unlimited taps", icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2563eb" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><circle cx="12" cy="20" r="1.5" fill="#2563eb" stroke="none"/></svg> },
+          { title: "Unlimited QR generations", icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2563eb" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="5" height="5"/><rect x="16" y="3" width="5" height="5"/><rect x="3" y="16" width="5" height="5"/><path d="M21 16h-3v3m0-3v3m-3-6h3m3 0v3m-6 3h3"/></svg> },
+          { title: "Share anywhere", icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2563eb" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg> },
+          { title: "Always ready", icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2563eb" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg> },
+        ].map((item) => (
+          <div key={item.title} className="rounded-[24px] bg-white border border-gray-100 shadow-sm p-4">
+            <div className="w-11 h-11 rounded-2xl bg-blue-50 flex items-center justify-center mb-3">
+              {item.icon}
+            </div>
+            <p className="text-[15px] font-black leading-tight">{item.title}</p>
+          </div>
+        ))}
+      </div>
+
+      <div className="rounded-[30px] bg-white border border-gray-100 shadow-[0_18px_45px_rgba(15,23,42,0.06)] p-5">
+        <div className="flex gap-4 items-center">
+          <div className="w-[120px] h-[120px] rounded-[24px] bg-white border border-gray-100 shadow-inner flex items-center justify-center shrink-0">
+            <div className="grid grid-cols-5 gap-1">
+              {Array.from({ length: 25 }).map((_, i) => (
+                <div key={i} className={`w-3 h-3 rounded-[2px] ${i % 2 === 0 || i % 7 === 0 ? "bg-black" : "bg-gray-200"}`} />
+              ))}
+            </div>
+          </div>
+
+          <div className="flex-1">
+            <p className="text-[19px] font-black leading-tight mb-2">
+              Your QR stays synced.
+            </p>
+            <p className="text-[14px] text-gray-500 leading-relaxed">
+              When your active profile changes, your QR still points to your current public Taply page.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div>
 
       {/* FAQ */}
       <div className="bg-[#fafaf9] px-6 py-12 border-t border-gray-100">

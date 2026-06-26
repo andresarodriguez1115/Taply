@@ -452,7 +452,7 @@ const avatarMenuRef = useRef(null)
   const [showTemplatePicker, setShowTemplatePicker] = useState(false);
 const [layout, setLayout] = useState(urlMode === "social" ? "circle" : "executive");const [runTutorial, setRunTutorial] = useState(false);
 const [showBuilderTutorial, setShowBuilderTutorial] = useState(false)
-const tutorialMode = urlMode || "business"
+const tutorialMode = mode
   // -----------------------------
   // SIDEBAR VISIBILITY
   // -----------------------------
@@ -499,12 +499,18 @@ const [bizBgType, setBizBgType] = useState("solid");
 const toggleBD = (k) => setBizDesignOpen(p => ({ ...p, [k]: !p[k] }));
 
 const [socDesignOpen, setSocDesignOpen] = useState({ bg: false, colors: false, font: false, size: false });
+const [socBgType, setSocBgType] = useState("solid");
 const toggleSD = (k) => setSocDesignOpen(p => ({ ...p, [k]: !p[k] }));
 
 const [netDesignOpen, setNetDesignOpen] = useState({ bg: false, colors: false, font: false, size: false });
 const [netBgType, setNetBgType] = useState("solid");
 const toggleND = (k) => setNetDesignOpen(p => ({ ...p, [k]: !p[k] }));
 const toggleSection = (key) => setOpenSections(prev => ({ ...prev, [key]: !prev[key] }))
+const openSection = (key) => setOpenSections(prev => ({ ...prev, [key]: true }))
+const openBD = (k) => setBizDesignOpen(p => ({ ...p, [k]: true }))
+const openND = (k) => setNetDesignOpen(p => ({ ...p, [k]: true }))
+const openUD = (k) => setUniDesignOpen(p => ({ ...p, [k]: true }))
+const openSD = (k) => setSocDesignOpen(p => ({ ...p, [k]: true }))
   // -----------------------------
   // FIELD HANDLERS
   // -----------------------------
@@ -1078,7 +1084,7 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
   <div className="space-y-3 pb-20">
 
     {/* BACKGROUND */}
-    <div className="border border-gray-200 rounded-2xl overflow-hidden">
+    <div className="border border-gray-200 rounded-2xl overflow-hidden" data-tutorial="design-background">
       <button onClick={() => toggleBD("bg")} className="w-full flex items-center justify-between px-4 py-3.5 bg-white">
         <div className="flex items-center gap-3">
           <div className="w-8 h-8 rounded-xl bg-gray-100 flex items-center justify-center flex-shrink-0">
@@ -1153,7 +1159,7 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
     </div>
 
     {/* TEXT COLORS */}
-    <div className="border border-gray-200 rounded-2xl overflow-hidden">
+    <div className="border border-gray-200 rounded-2xl overflow-hidden" data-tutorial="design-text-colors">
       <button onClick={() => toggleBD("colors")} className="w-full flex items-center justify-between px-4 py-3.5 bg-white">
         <div className="flex items-center gap-3">
           <div className="w-8 h-8 rounded-xl bg-gray-100 flex items-center justify-center flex-shrink-0"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#6b7280" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg></div>
@@ -1186,7 +1192,7 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
     </div>
 
     {/* FONT */}
-    <div className="border border-gray-200 rounded-2xl overflow-hidden">
+    <div className="border border-gray-200 rounded-2xl overflow-hidden" data-tutorial="design-font">
       <button onClick={() => toggleBD("font")} className="w-full flex items-center justify-between px-4 py-3.5 bg-white">
         <div className="flex items-center gap-3">
           <div className="w-8 h-8 rounded-xl bg-gray-100 flex items-center justify-center flex-shrink-0"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#6b7280" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><text x="4" y="18" fontSize="16" fontWeight="bold" fill="#6b7280">Aa</text></svg></div>
@@ -1217,7 +1223,7 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
     </div>
 
     {/* CONTENT SIZE */}
-    <div className="border border-gray-200 rounded-2xl overflow-hidden">
+    <div className="border border-gray-200 rounded-2xl overflow-hidden" data-tutorial="design-content-size">
       <button onClick={() => toggleBD("size")} className="w-full flex items-center justify-between px-4 py-3.5 bg-white">
         <div className="flex items-center gap-3">
           <div className="w-8 h-8 rounded-xl bg-gray-100 flex items-center justify-center flex-shrink-0"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#6b7280" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg></div>
@@ -1257,7 +1263,7 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
     <div className="space-y-3 pb-20">
 
       {/* BACKGROUND */}
-      <div className="border border-gray-200 rounded-2xl overflow-hidden">
+      <div className="border border-gray-200 rounded-2xl overflow-hidden" data-tutorial="uni-design-background">
         <button onClick={() => toggleUD("bg")} className="w-full flex items-center justify-between px-4 py-3.5 bg-white">
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 rounded-xl bg-gray-100 flex items-center justify-center flex-shrink-0"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#6b7280" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></div>
@@ -1328,7 +1334,7 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
       </div>
 
       {/* TEXT COLORS */}
-      <div className="border border-gray-200 rounded-2xl overflow-hidden">
+      <div className="border border-gray-200 rounded-2xl overflow-hidden" data-tutorial="uni-design-text-colors">
         <button onClick={() => toggleUD("colors")} className="w-full flex items-center justify-between px-4 py-3.5 bg-white">
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 rounded-xl bg-gray-100 flex items-center justify-center flex-shrink-0"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#6b7280" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg></div>
@@ -1359,7 +1365,7 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
       </div>
 
       {/* FONT */}
-      <div className="border border-gray-200 rounded-2xl overflow-hidden">
+      <div className="border border-gray-200 rounded-2xl overflow-hidden" data-tutorial="uni-design-font">
         <button onClick={() => toggleUD("font")} className="w-full flex items-center justify-between px-4 py-3.5 bg-white">
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 rounded-xl bg-gray-100 flex items-center justify-center flex-shrink-0"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#6b7280" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><text x="4" y="18" fontSize="16" fontWeight="bold" fill="#6b7280">Aa</text></svg></div>
@@ -1390,7 +1396,7 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
       </div>
 
       {/* CONTENT SIZE */}
-      <div className="border border-gray-200 rounded-2xl overflow-hidden">
+      <div className="border border-gray-200 rounded-2xl overflow-hidden" data-tutorial="uni-design-content-size">
         <button onClick={() => toggleUD("size")} className="w-full flex items-center justify-between px-4 py-3.5 bg-white">
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 rounded-xl bg-gray-100 flex items-center justify-center flex-shrink-0"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#6b7280" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg></div>
@@ -1427,7 +1433,7 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
   <div className="space-y-3 pb-20">
 
     {/* BACKGROUND */}
-    <div className="border border-gray-200 rounded-2xl overflow-hidden">
+    <div className="border border-gray-200 rounded-2xl overflow-hidden" data-tutorial="soc-design-background">
       <button onClick={() => toggleSD("bg")} className="w-full flex items-center justify-between px-4 py-3.5 bg-white">
         <div className="flex items-center gap-3">
           <div className="w-8 h-8 rounded-xl bg-gray-100 flex items-center justify-center flex-shrink-0">
@@ -1437,38 +1443,107 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
         </div>
         <ChevronDown size={16} className={`text-gray-400 transition-transform duration-300 ${socDesignOpen.bg ? "rotate-180" : ""}`} />
       </button>
-      {socDesignOpen.bg && (
-        <div className="px-4 pb-4 border-t border-gray-100">
-          <div className="grid grid-cols-8 gap-1 mt-3">
-            {[
-              { label: "Snow", value: "#f3f4f6" },
-              { label: "Sky", value: "#dbeafe" },
-              { label: "Lavender", value: "#ede9fe" },
-              { label: "Blush", value: "#fce7f3" },
-              { label: "Mint", value: "#d1fae5" },
-              { label: "Cream", value: "#fef9c3" },
-              { label: "Slate", value: "#1e293b" },
-            ].map(({ label, value }) => (
-              <button key={label} onClick={() => setBackgroundColor(value)} className="flex flex-col items-center gap-1">
-                <div className={`w-12 h-12 rounded-xl border-2 transition ${backgroundColor === value ? "border-black scale-90" : "border-transparent"}`} style={{ background: value, boxShadow: "0 2px 6px rgba(0,0,0,0.08)" }} />
-                <span className="text-[9px] text-gray-400">{label}</span>
-              </button>
-            ))}
-            <label className="flex flex-col items-center gap-1 cursor-pointer">
-              <div className="w-12 h-12 rounded-xl border-2 border-dashed border-gray-200 flex items-center justify-center overflow-hidden relative"
-                style={{ background: !["#f3f4f6","#dbeafe","#ede9fe","#fce7f3","#d1fae5","#fef9c3","#1e293b"].includes(backgroundColor) && !backgroundColor.startsWith("radial-gradient") ? backgroundColor : "white" }}>
-                <span className="text-gray-400 text-base">+</span>
-                <input type="color" value={backgroundColor} onChange={(e) => setBackgroundColor(e.target.value)} className="absolute inset-0 opacity-0 w-full h-full cursor-pointer" />
-              </div>
-              <span className="text-[9px] text-gray-400">Custom</span>
-            </label>
+   {socDesignOpen.bg && (
+  <div className="px-4 pb-4 border-t border-gray-100">
+
+    {layout === "circle" && (
+      <div className="flex gap-2 mt-3 mb-4">
+        {["solid", "diffused"].map(t => (
+          <button
+            key={t}
+            onClick={() => setSocBgType(t)}
+            className={`flex-1 py-2 rounded-xl text-sm font-medium border transition ${
+              socBgType === t
+                ? "bg-white border-gray-900 text-gray-900 border-2"
+                : "bg-gray-50 border-gray-200 text-gray-500"
+            }`}
+          >
+            {t.charAt(0).toUpperCase() + t.slice(1)}
+          </button>
+        ))}
+      </div>
+    )}
+
+    {(socBgType === "solid" || layout === "banner") && (
+      <div className="grid grid-cols-8 gap-1 mt-3">
+        {[
+          { label: "Snow", value: "#f3f4f6" },
+          { label: "Sky", value: "#dbeafe" },
+          { label: "Lavender", value: "#ede9fe" },
+          { label: "Blush", value: "#fce7f3" },
+          { label: "Mint", value: "#d1fae5" },
+          { label: "Cream", value: "#fef9c3" },
+          { label: "Slate", value: "#1e293b" },
+        ].map(({ label, value }) => (
+          <button key={label} onClick={() => setBackgroundColor(value)} className="flex flex-col items-center gap-1">
+            <div
+              className={`w-12 h-12 rounded-xl border-2 transition ${
+                backgroundColor === value ? "border-black scale-90" : "border-transparent"
+              }`}
+              style={{ background: value, boxShadow: "0 2px 6px rgba(0,0,0,0.08)" }}
+            />
+            <span className="text-[9px] text-gray-400">{label}</span>
+          </button>
+        ))}
+
+        <label className="flex flex-col items-center gap-1 cursor-pointer">
+          <div
+            className="w-12 h-12 rounded-xl border-2 border-dashed border-gray-200 flex items-center justify-center overflow-hidden relative"
+            style={{
+              background:
+                !["#f3f4f6","#dbeafe","#ede9fe","#fce7f3","#d1fae5","#fef9c3","#1e293b"].includes(backgroundColor) &&
+                !backgroundColor.startsWith("radial-gradient")
+                  ? backgroundColor
+                  : "white"
+            }}
+          >
+            <span className="text-gray-400 text-base">+</span>
+            <input
+              type="color"
+              value={backgroundColor.startsWith("radial-gradient") ? "#f3f4f6" : backgroundColor}
+              onChange={(e) => setBackgroundColor(e.target.value)}
+              className="absolute inset-0 opacity-0 w-full h-full cursor-pointer"
+            />
           </div>
-        </div>
-      )}
+          <span className="text-[9px] text-gray-400">Custom</span>
+        </label>
+      </div>
+    )}
+
+    {layout === "circle" && socBgType === "diffused" && (
+      <div className="grid grid-cols-8 gap-1">
+        {[
+          { label: "Aurora", value: "radial-gradient(ellipse at 30% 40%, #c4b5fd 0%, #93c5fd 40%, #f0fdf4 100%)" },
+          { label: "Ocean", value: "radial-gradient(ellipse at 20% 60%, #22d3ee 0%, #67e8f9 50%, #e0f2fe 100%)" },
+          { label: "Lilac", value: "radial-gradient(ellipse at 60% 30%, #e0d7ff 0%, #c4b5fd 40%, #f5f3ff 100%)" },
+          { label: "Sky", value: "radial-gradient(ellipse at 60% 30%, #bae6fd 0%, #7dd3fc 50%, #e0f2fe 100%)" },
+          { label: "Rose", value: "radial-gradient(ellipse at 60% 40%, #fbcfe8 0%, #f9a8d4 50%, #fdf2f8 100%)" },
+          { label: "Sage", value: "radial-gradient(ellipse at 30% 50%, #bbf7d0 0%, #86efac 50%, #f0fdf4 100%)" },
+          { label: "Honey", value: "radial-gradient(ellipse at 50% 30%, #fde68a 0%, #fcd34d 50%, #fffbeb 100%)" },
+          { label: "Peach", value: "radial-gradient(ellipse at 40% 40%, #fed7aa 0%, #fdba74 50%, #fff7ed 100%)" },
+          { label: "Indigo", value: "radial-gradient(ellipse at 30% 30%, #a5b4fc 0%, #818cf8 40%, #e0e7ff 100%)" },
+          { label: "Teal", value: "radial-gradient(ellipse at 60% 30%, #99f6e4 0%, #5eead4 50%, #f0fdfa 100%)" },
+          { label: "Blush", value: "radial-gradient(ellipse at 40% 30%, #fca5a5 0%, #f87171 45%, #fff1f2 100%)" },
+        ].map(({ label, value }) => (
+          <button key={label} onClick={() => setBackgroundColor(value)} className="flex flex-col items-center gap-1">
+            <div
+              className={`w-12 h-12 rounded-xl border-2 transition ${
+                backgroundColor === value ? "border-black scale-90" : "border-transparent"
+              }`}
+              style={{ background: value, boxShadow: "0 2px 6px rgba(0,0,0,0.08)" }}
+            />
+            <span className="text-[9px] text-gray-400">{label}</span>
+          </button>
+        ))}
+      </div>
+    )}
+
+  </div>
+)}
     </div>
 
     {/* TEXT COLORS */}
-    <div className="border border-gray-200 rounded-2xl overflow-hidden">
+    <div className="border border-gray-200 rounded-2xl overflow-hidden" data-tutorial="soc-design-text-colors">
       <button onClick={() => toggleSD("colors")} className="w-full flex items-center justify-between px-4 py-3.5 bg-white">
         <div className="flex items-center gap-3">
           <div className="w-8 h-8 rounded-xl bg-gray-100 flex items-center justify-center flex-shrink-0"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#6b7280" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg></div>
@@ -1500,8 +1575,8 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
       )}
     </div>
 
-    {/* FONT */}
-    <div className="border border-gray-200 rounded-2xl overflow-hidden">
+   {/* FONT */}
+<div className="border border-gray-200 rounded-2xl overflow-hidden" data-tutorial="soc-design-font">
       <button onClick={() => toggleSD("font")} className="w-full flex items-center justify-between px-4 py-3.5 bg-white">
         <div className="flex items-center gap-3">
           <div className="w-8 h-8 rounded-xl bg-gray-100 flex items-center justify-center flex-shrink-0"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#6b7280" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><text x="4" y="18" fontSize="16" fontWeight="bold" fill="#6b7280">Aa</text></svg></div>
@@ -1532,7 +1607,7 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
     </div>
 
     {/* CONTENT SIZE */}
-    <div className="border border-gray-200 rounded-2xl overflow-hidden">
+    <div className="border border-gray-200 rounded-2xl overflow-hidden" data-tutorial="soc-design-content-size">
       <button onClick={() => toggleSD("size")} className="w-full flex items-center justify-between px-4 py-3.5 bg-white">
         <div className="flex items-center gap-3">
           <div className="w-8 h-8 rounded-xl bg-gray-100 flex items-center justify-center flex-shrink-0"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#6b7280" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg></div>
@@ -1567,7 +1642,7 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
 {mode === "networking" && (
   <div className="space-y-3 pb-20">
 
-    <div className="border border-gray-200 rounded-2xl overflow-hidden">
+    <div className="border border-gray-200 rounded-2xl overflow-hidden" data-tutorial="net-design-background">
       <button onClick={() => toggleND("bg")} className="w-full flex items-center justify-between px-4 py-3.5 bg-white">
         <div className="flex items-center gap-3">
           <div className="w-8 h-8 rounded-xl bg-gray-100 flex items-center justify-center flex-shrink-0">
@@ -1639,7 +1714,7 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
       )}
     </div>
 
-    <div className="border border-gray-200 rounded-2xl overflow-hidden">
+    <div className="border border-gray-200 rounded-2xl overflow-hidden" data-tutorial="net-design-text-colors">
       <button onClick={() => toggleND("colors")} className="w-full flex items-center justify-between px-4 py-3.5 bg-white">
         <div className="flex items-center gap-3">
           <div className="w-8 h-8 rounded-xl bg-gray-100 flex items-center justify-center flex-shrink-0"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#6b7280" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg></div>
@@ -1671,7 +1746,7 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
       )}
     </div>
 
-    <div className="border border-gray-200 rounded-2xl overflow-hidden">
+    <div className="border border-gray-200 rounded-2xl overflow-hidden" data-tutorial="net-design-font">
       <button onClick={() => toggleND("font")} className="w-full flex items-center justify-between px-4 py-3.5 bg-white">
         <div className="flex items-center gap-3">
           <div className="w-8 h-8 rounded-xl bg-gray-100 flex items-center justify-center flex-shrink-0"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#6b7280" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><text x="4" y="18" fontSize="16" fontWeight="bold" fill="#6b7280">Aa</text></svg></div>
@@ -1701,7 +1776,7 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
       )}
     </div>
 
-    <div className="border border-gray-200 rounded-2xl overflow-hidden">
+    <div className="border border-gray-200 rounded-2xl overflow-hidden" data-tutorial="net-design-content-size">
       <button onClick={() => toggleND("size")} className="w-full flex items-center justify-between px-4 py-3.5 bg-white">
         <div className="flex items-center gap-3">
           <div className="w-8 h-8 rounded-xl bg-gray-100 flex items-center justify-center flex-shrink-0"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#6b7280" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg></div>
@@ -1810,7 +1885,7 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
     </div>
 
     {/* BIO */}
-    <div className="mb-0">
+    <div className="mb-0" data-tutorial="uni-bio">
 <button onClick={() => toggleSection("bio")} className={`w-full flex justify-between items-center px-4 py-3.5 rounded-2xl border transition mb-3 ${openSections.bio ? "bg-gray-50 border-gray-200" : "bg-white border-gray-200 shadow-sm"}`}>
   <div className="flex items-center gap-3">
     <div className="w-8 h-8 rounded-xl bg-gray-100 flex items-center justify-center flex-shrink-0">
@@ -1853,7 +1928,7 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
     </div>
 
 {/* CONTACT */}
-    <div className="mb-0">
+    <div className="mb-0" data-tutorial="uni-contact">
 <button onClick={() => toggleSection("contact")} className={`w-full flex justify-between items-center px-4 py-3.5 rounded-2xl border transition mb-3 ${openSections.contact ? "bg-gray-50 border-gray-200" : "bg-white border-gray-200 shadow-sm"}`}>
   <div className="flex items-center gap-3">
     <div className="w-8 h-8 rounded-xl bg-gray-100 flex items-center justify-center flex-shrink-0">
@@ -2752,6 +2827,34 @@ const isActive = button !== null && button !== undefined;
     onGoToContent={() => setActiveTab("content")}
     onGoToDesign={() => setActiveTab("design")}
     onCloseStudio={() => setStudioOpen(false)}
+    onOpenSection={(id) => {
+      if (id === "uni-academic") openSection("academic")
+      if (id === "uni-bio") openSection("bio")
+      if (id === "uni-resume") openSection("resume")
+      if (id === "uni-contact") openSection("contact")
+      if (id === "uni-projects") openSection("projects")
+      if (id === "identity-section") openSection("identity")
+      if (id === "contact-fields") openSection("contact")
+      if (id === "net-identity") openSection("identity")
+      if (id === "net-contact") openSection("contact")
+      if (id === "net-buttons") openSection("buttons")
+      if (id === "design-background") openBD("bg")
+      if (id === "design-text-colors") openBD("colors")
+      if (id === "design-font") openBD("font")
+      if (id === "design-content-size") openBD("size")
+      if (id === "net-design-background") openND("bg")
+      if (id === "net-design-text-colors") openND("colors")
+      if (id === "net-design-font") openND("font")
+      if (id === "net-design-content-size") openND("size")
+      if (id === "uni-design-background") openUD("bg")
+      if (id === "uni-design-text-colors") openUD("colors")
+      if (id === "uni-design-font") openUD("font")
+      if (id === "uni-design-content-size") openUD("size")
+      if (id === "soc-design-background") openSD("bg")
+      if (id === "soc-design-text-colors") openSD("colors")
+      if (id === "soc-design-font") openSD("font")
+      if (id === "soc-design-content-size") openSD("size")
+    }}
   />}
 {isEditing && (
   <button

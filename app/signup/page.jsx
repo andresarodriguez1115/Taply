@@ -92,8 +92,9 @@ if (!userId) {
 
 
 
+localStorage.setItem("has_chosen", "true");
 router.replace("/dashboard");
-    setLoading(false)
+setLoading(false);
   }
 
 

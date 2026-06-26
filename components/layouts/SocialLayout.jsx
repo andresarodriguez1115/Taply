@@ -146,7 +146,7 @@ useEffect(() => {
             </div>
           )}
           {isEditing && (
-            <label className="absolute bottom-3 right-3 bg-white border border-gray-200 shadow-md px-4 py-1.5 rounded-full text-xs font-medium text-gray-700 cursor-pointer z-10">
+            <label data-tutorial="profile-photo-btn" className="absolute bottom-3 right-3 bg-white border border-gray-200 shadow-md px-4 py-1.5 rounded-full text-xs font-medium text-gray-700 cursor-pointer z-10">
               Change Photo
               <input type="file" accept="image/*" className="hidden" onChange={handleProfileUpload} />
             </label>
@@ -180,7 +180,7 @@ useEffect(() => {
               )}
             </div>
      {isEditing && (
-              <label className="absolute bottom-1 right-1 w-9 h-9 bg-black rounded-full flex items-center justify-center cursor-pointer shadow z-10">
+              <label data-tutorial="profile-photo-btn" className="absolute bottom-1 right-1 w-9 h-9 bg-black rounded-full flex items-center justify-center cursor-pointer shadow z-10">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
                 <input type="file" accept="image/*" className="hidden" onChange={handleProfileUpload} />
               </label>
