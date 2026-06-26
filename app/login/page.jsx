@@ -14,10 +14,10 @@ export default function LandingPage() {
   const [error, setError] = useState(null)
   const [menuOpen, setMenuOpen] = useState(false)
 const heroPhoneImages = [
-  "/social-mode-render.png",
-  "/business-mode-render.png",
-  "/networking-mode-render.png",
-  "/university-mode-render.png",
+  "/Social-Mode-Render.png",
+  "/Business-Mode-Render.png",
+  "/Networking-Mode-Render.png",
+  "/University-Mode-Render.png",
 ]
 
 const [phoneScreen, setPhoneScreen] = useState(0)
