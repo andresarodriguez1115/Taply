@@ -116,16 +116,23 @@ useEffect(() => {
 {/* ── PHONE IMAGE SWITCH ── */}
 <div className="relative z-10 flex justify-center mt-8 px-0">
 <div className="relative w-[140%] -mx-[20%]">
-    <AnimatePresence mode="wait">
+    {/* Ghost image holds the space so it never collapses */}
+    <img
+      src={heroPhoneImages[phoneScreen]}
+      alt=""
+      aria-hidden="true"
+      className="w-full h-auto block invisible"
+    />
+    <AnimatePresence initial={false}>
       <motion.img
         key={phoneScreen}
         src={heroPhoneImages[phoneScreen]}
         alt="Taply profile mode preview"
-        initial={{ opacity: 0, x: 30, scale: 0.97 }}
-        animate={{ opacity: 1, x: 0, scale: 1 }}
-        exit={{ opacity: 0, x: -30, scale: 0.97 }}
-        transition={{ duration: 0.4, ease: "easeInOut" }}
-        className="w-full h-auto block drop-shadow-[0_35px_70px_rgba(0,0,0,0.18)]"
+        initial={{ opacity: 0, rotatey: 12, scale: 0.95, transformperspective: 1000 }}
+        animate={{ opacity: 1, rotatey: 0, scale: 1, transformperspective: 1000 }}
+        exit={{ opacity: 0, rotatey: -12, scale: 0.95, transformperspective: 1000 }}
+        transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+        className="w-full h-auto block drop-shadow-[0_35px_70px_rgba(0,0,0,0.18)] absolute inset-0"
       />
     </AnimatePresence>
 
