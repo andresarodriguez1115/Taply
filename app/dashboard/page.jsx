@@ -12,6 +12,7 @@ import Cropper from "react-easy-crop"
 export default function Dashboard() {
 const [userName, setUserName] = useState("");
 const [username, setUsername] = useState("");
+const [subscriptionTier, setSubscriptionTier] = useState("free");
 const [profiles, setProfiles] = useState([]);
 const [loading, setLoading] = useState(true);
 const [lastCount, setLastCount] = useState(3);
@@ -120,6 +121,14 @@ setUsername(user_username);
 
       if (!userData?.user) return;
 
+const { data: accountData } = await supabase
+  .from("accounts")
+  .select("subscription_tier")
+  .eq("user_id", userData.user.id)
+  .single();
+
+setSubscriptionTier(accountData?.subscription_tier || "free");
+
 const { data: profilesData } = await supabase
   .from("profiles")
   .select("*")
@@ -183,9 +192,12 @@ return (
       <div className="sticky top-4 z-40 flex justify-center relative">
 
 {mounted && (
- <div data-tutorial="navlink" className="flex items-center justify-between w-[96%] px-5 py-2.5 rounded-full 
-bg-white/60 backdrop-blur-xl border border-white/30 
-shadow-[0_8px_30px_rgba(0,0,0,0.08)] ring-2 ring-white/100">
+ <div data-tutorial="navlink" className={`flex items-center justify-between w-[96%] px-5 py-2.5 rounded-full 
+backdrop-blur-xl border shadow-[0_8px_30px_rgba(0,0,0,0.08)] ring-2 ${
+  subscriptionTier === "pro"
+    ? "bg-gradient-to-r from-amber-50 to-yellow-50 border-amber-200/60 ring-amber-100"
+    : "bg-white/60 border-white/30 ring-white/100"
+}`}>
 
     {/* LEFT */}
     <div className="flex items-center gap-1.5">
@@ -194,12 +206,21 @@ shadow-[0_8px_30px_rgba(0,0,0,0.08)] ring-2 ring-white/100">
       </span>
       <span className="text-[18px] text-gray-300 font-light">/</span>
 <div className="flex items-center gap-1.5">
-<span className="text-[18px] text-gray-500 font-medium">
+<span className="text-[18px] font-bold text-gray-900 tracking-tight">
   {ready ? username : "..."}
 </span>
 
 {ready && profiles.length > 0 && profiles.some(p => p.is_active) && (
-  <span className="w-2 h-2 bg-green-500 rounded-full"></span>
+  <span className={`w-2 h-2 rounded-full ${subscriptionTier === "pro" ? "bg-yellow-400" : "bg-green-500"}`}></span>
+)}
+
+{ready && subscriptionTier === "pro" && (
+  <span className="inline-flex items-center gap-1.5 text-[12px] font-bold bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-3 py-1.5 rounded-full tracking-wide ml-1">
+    <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M5 16L3 5l5.5 4L12 3l3.5 6L21 5l-2 11H5zm0 2h14v2H5v-2z"/>
+    </svg>
+    PRO
+  </span>
 )}
 </div>
 
@@ -219,6 +240,11 @@ shadow-[0_8px_30px_rgba(0,0,0,0.08)] ring-2 ring-white/100">
   {/* DROPDOWN */}
 <AnimatePresence>
   {menuOpen && (
+    <>
+    <div
+      onClick={() => setMenuOpen(false)}
+      className="fixed inset-0 z-40"
+    />
     <motion.div
       key="dropdown"
       initial={{ opacity: 0, y: -8 }}
@@ -277,6 +303,7 @@ shadow-[0_8px_30px_rgba(0,0,0,0.08)] ring-2 ring-white/100">
 
     </div>
     </motion.div>
+    </>
   )}
 </AnimatePresence>
 
@@ -289,7 +316,7 @@ shadow-[0_8px_30px_rgba(0,0,0,0.08)] ring-2 ring-white/100">
         {/* TOP ROW */}
         <div className="flex justify-between items-start mb-3">
           <div>
-<h1 className="text-3xl font-semibold text-gray-900">
+<h1 className="text-2xl font-semibold text-gray-900">
               {loading ? "..." : userName}
             </h1>
       <p data-tutorial="username" className="text-l text-gray-500 mt-1">
@@ -332,6 +359,29 @@ shadow-[0_8px_30px_rgba(0,0,0,0.08)] ring-2 ring-white/100">
           {profiles.length >= 4 ? "Max profiles reached" : "+ Create new profile"}
         </button>
       </div>
+
+      {/* UPGRADE TO PRO BANNER */}
+      {ready && subscriptionTier !== "pro" && (
+        <motion.div
+          whileTap={{ scale: 0.98 }}
+          whileHover={{ y: -2 }}
+          onClick={() => router.push("/pricing")}
+          className="mb-8 -mt-4 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-3xl px-5 py-4 flex items-center justify-between shadow-[0_8px_30px_rgba(99,102,241,0.25)] cursor-pointer"
+        >
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-2xl bg-white/15 flex items-center justify-center flex-shrink-0">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="white">
+                <path d="M5 16L3 5l5.5 4L12 3l3.5 6L21 5l-2 11H5zm0 2h14v2H5v-2z"/>
+              </svg>
+            </div>
+            <div>
+              <p className="text-[14px] font-bold text-white leading-tight">Upgrade to Pro</p>
+              <p className="text-[12px] text-white/70 leading-tight mt-0.5">All modes, 4 profiles, more</p>
+            </div>
+          </div>
+          <span className="text-white text-lg">→</span>
+        </motion.div>
+      )}
 
       {/* PROFILES */}
       <div data-tutorial="profiles" className="mb-8 relative z-20">

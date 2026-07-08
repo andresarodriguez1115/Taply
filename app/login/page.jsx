@@ -5,6 +5,10 @@ import supabase from "@/lib/supabase"
 import { useRouter } from "next/navigation"
 import { motion, AnimatePresence } from "framer-motion"
 import { Play, Menu } from "lucide-react"
+import { FaInstagram, FaLinkedinIn, FaWhatsapp, FaYoutube, FaSpotify, FaBehance, FaDribbble, FaGithub, FaDiscord } from "react-icons/fa6"
+import { FaTiktok } from "react-icons/fa6"
+import { FaXTwitter } from "react-icons/fa6"
+import { SiNotion, SiSubstack, SiVenmo, SiCashapp, SiCalendly } from "react-icons/si"
 
 export default function LandingPage() {
   const router = useRouter()
@@ -40,24 +44,24 @@ useEffect(() => {
   }
 
   const row1 = [
-    { name: "Instagram", bg: "#E1306C", icon: "IG" },
-    { name: "LinkedIn",  bg: "#0077B5", icon: "in" },
-    { name: "Twitter",   bg: "#1DA1F2", icon: "X"  },
-    { name: "WhatsApp",  bg: "#25D366", icon: "WA" },
-    { name: "YouTube",   bg: "#FF0000", icon: "YT"  },
-    { name: "TikTok",    bg: "#010101", icon: "TT" },
-    { name: "Spotify",   bg: "#1DB954", icon: "SP"  },
-    { name: "Behance",   bg: "#1769FF", icon: "Be" },
+    { name: "Instagram", bg: "#E1306C", icon: "instagram" },
+    { name: "LinkedIn",  bg: "#0077B5", icon: "linkedin" },
+    { name: "Twitter",   bg: "#000000", icon: "twitter" },
+    { name: "WhatsApp",  bg: "#25D366", icon: "whatsapp" },
+    { name: "YouTube",   bg: "#FF0000", icon: "youtube" },
+    { name: "TikTok",    bg: "#010101", icon: "tiktok" },
+    { name: "Spotify",   bg: "#1DB954", icon: "spotify" },
+    { name: "Behance",   bg: "#1769FF", icon: "behance" },
   ]
   const row2 = [
-    { name: "Dribbble",  bg: "#EA4C89", icon: "Dr" },
-    { name: "GitHub",    bg: "#181717", icon: "GH" },
-    { name: "Notion",    bg: "#000000", icon: "N"  },
-    { name: "Substack",  bg: "#FF6719", icon: "SS" },
-    { name: "Venmo",     bg: "#3D95CE", icon: "V"  },
-    { name: "Cash App",  bg: "#00C244", icon: "$"  },
-    { name: "Calendly",  bg: "#006BFF", icon: "Ca" },
-    { name: "Discord",   bg: "#5865F2", icon: "DC" },
+    { name: "Dribbble",  bg: "#EA4C89", icon: "dribbble" },
+    { name: "GitHub",    bg: "#181717", icon: "github" },
+    { name: "Notion",    bg: "#000000", icon: "notion" },
+    { name: "Substack",  bg: "#FF6719", icon: "substack" },
+    { name: "Venmo",     bg: "#3D95CE", icon: "venmo" },
+    { name: "Cash App",  bg: "#00C244", icon: "cashapp" },
+    { name: "Calendly",  bg: "#006BFF", icon: "calendly" },
+    { name: "Discord",   bg: "#5865F2", icon: "discord" },
   ]
 
   // Wallet theme cycling
@@ -259,7 +263,7 @@ useEffect(() => {
   {[
     { label: "Tap", image: "/tap-render.png" },
     { label: "Scan", image: "/scan-render.jpg" },
-    { label: "Wallet", image: "/wallet-render.jpg" },
+    { label: "Wallet", image: "/WALLET-SECTION-RENDER.png" },
     { label: "Share", image: "/share-render.jpg" },
   ].map(({ label, image }) => (
     <div key={label} className="text-center">
@@ -281,7 +285,7 @@ useEffect(() => {
         </div>
       </div>
 {/* ── SECTION 3: APPLE WALLET ── */}
-<div className="bg-[#f5f7ff] px-4 py-10">
+<div className="bg-white px-4 pt-10 pb-10">
   <div className="max-w-[420px] mx-auto rounded-[32px] bg-white border border-blue-100/70 shadow-[0_20px_60px_rgba(37,99,235,0.10)] overflow-hidden">
     <div className="px-6 pt-10">
       <p className="text-sm font-black text-blue-600 tracking-[0.08em] uppercase mb-4">
@@ -351,12 +355,11 @@ useEffect(() => {
         ))}
       </div>
     </div>
-
-    <div className="relative -mb-1">
+<div className="relative -mb-1">
       <img
-        src="/apple-wallet-section.jpg"
+        src="/WALLET-SECTION-RENDER.PNG"
         alt="Taply Apple Wallet preview"
-        className="w-full h-auto block object-contain"
+        className="w-full h-auto block"
       />
     </div>
   </div>
@@ -409,7 +412,26 @@ useEffect(() => {
             className="flex gap-3 whitespace-nowrap" style={{ width: "max-content" }}>
             {[...row1, ...row1].map(({ name, bg, icon }, i) => (
               <div key={i} className="flex items-center gap-2 bg-white border border-black/7 rounded-full px-4 py-2.5 shadow-sm flex-shrink-0">
-                <div className="w-7 h-7 rounded-lg flex items-center justify-center text-white text-[8px] font-black flex-shrink-0 tracking-tight uppercase" style={{ background: bg }}>{icon}</div>
+                <div className="w-7 h-7 rounded-lg flex items-center justify-center text-white flex-shrink-0" style={{ background: bg }}>
+                  {{
+                    instagram: <FaInstagram size={14} />,
+                    linkedin: <FaLinkedinIn size={14} />,
+                    twitter: <FaXTwitter size={14} />,
+                    whatsapp: <FaWhatsapp size={14} />,
+                    youtube: <FaYoutube size={14} />,
+                    tiktok: <FaTiktok size={14} />,
+                    spotify: <FaSpotify size={14} />,
+                    behance: <FaBehance size={14} />,
+                    dribbble: <FaDribbble size={14} />,
+                    github: <FaGithub size={14} />,
+                    notion: <SiNotion size={14} />,
+                    substack: <SiSubstack size={14} />,
+                    venmo: <SiVenmo size={14} />,
+                    cashapp: <SiCashapp size={14} />,
+                    calendly: <SiCalendly size={14} />,
+                    discord: <FaDiscord size={14} />,
+                  }[icon]}
+                </div>
                 <span className="text-[13px] font-semibold text-gray-700">{name}</span>
               </div>
             ))}
@@ -420,7 +442,26 @@ useEffect(() => {
             className="flex gap-3 whitespace-nowrap" style={{ width: "max-content" }}>
             {[...row2, ...row2].map(({ name, bg, icon }, i) => (
               <div key={i} className="flex items-center gap-2 bg-white border border-black/7 rounded-full px-4 py-2.5 shadow-sm flex-shrink-0">
-                <div className="w-7 h-7 rounded-lg flex items-center justify-center text-white text-[8px] font-black flex-shrink-0 tracking-tight uppercase" style={{ background: bg }}>{icon}</div>
+                <div className="w-7 h-7 rounded-lg flex items-center justify-center text-white flex-shrink-0" style={{ background: bg }}>
+                  {{
+                    instagram: <FaInstagram size={14} />,
+                    linkedin: <FaLinkedinIn size={14} />,
+                    twitter: <FaXTwitter size={14} />,
+                    whatsapp: <FaWhatsapp size={14} />,
+                    youtube: <FaYoutube size={14} />,
+                    tiktok: <FaTiktok size={14} />,
+                    spotify: <FaSpotify size={14} />,
+                    behance: <FaBehance size={14} />,
+                    dribbble: <FaDribbble size={14} />,
+                    github: <FaGithub size={14} />,
+                    notion: <SiNotion size={14} />,
+                    substack: <SiSubstack size={14} />,
+                    venmo: <SiVenmo size={14} />,
+                    cashapp: <SiCashapp size={14} />,
+                    calendly: <SiCalendly size={14} />,
+                    discord: <FaDiscord size={14} />,
+                  }[icon]}
+                </div>
                 <span className="text-[13px] font-semibold text-gray-700">{name}</span>
               </div>
             ))}
@@ -509,7 +550,6 @@ useEffect(() => {
   {[
     "Built for modern networking",
     "Designed for every occasion",
-    "Your identity, unified",
   ].map((t) => (
     <span
       key={t}

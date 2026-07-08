@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { motion, AnimatePresence } from "framer-motion"
 import { Menu } from "lucide-react"
+import supabase from "@/lib/supabase"
 
 const Check = () => (
   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -44,11 +45,9 @@ const proPlan = {
   cta: "Start Pro",
   badge: "Most popular",
   features: [
-    { label: "Access to Business mode", included: true },
-    { label: "1 saved profile", included: true },
-    { label: "Your personal taply.now/username link", included: true },
+    { label: "Access to all modes", included: true },
     { label: "Up to 4 saved profiles", included: true },
-    { label: "Social, Networking & University modes", included: true },
+    { label: "Your personal taply.now/username link", included: true },
     { label: "Unlimited QR code generation", included: true },
     { label: "Unlimited Apple Wallet passes", included: true },
   ],
@@ -154,6 +153,33 @@ export default function PricingPage() {
   const router = useRouter()
   const [menuOpen, setMenuOpen] = useState(false)
   const [billing, setBilling] = useState("monthly")
+
+  const handleUpgrade = async (plan) => {
+    const { data: { session } } = await supabase.auth.getSession()
+    console.log("SESSION CHECK:", session)
+
+    if (!session) {
+      router.push("/signup")
+      return
+    }
+
+    const res = await fetch("/api/create-checkout-session", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        plan,
+        userId: session.user.id,
+        userEmail: session.user.email,
+      }),
+    })
+
+    const data = await res.json()
+    if (data.url) {
+      window.location.href = data.url
+    } else {
+      console.error("Checkout error:", data.error)
+    }
+  }
 
   return (
     <div className="min-h-screen bg-white text-black">
@@ -299,7 +325,7 @@ export default function PricingPage() {
             ))}
           </div>
           <div className="px-6 pb-6 bg-[#0d0d0d]">
-            <button onClick={() => router.push("/signup")}
+            <button onClick={() => handleUpgrade("yearly")}
               className="w-full py-4 rounded-2xl text-[15px] font-bold bg-white text-black hover:bg-gray-100 transition">
               Start Pro →
             </button>
@@ -343,7 +369,7 @@ export default function PricingPage() {
             ))}
           </div>
           <div className="px-6 pb-6 bg-[#0d0d0d]">
-            <button onClick={() => router.push("/signup")}
+            <button onClick={() => handleUpgrade("monthly")}
               className="w-full py-4 rounded-2xl text-[15px] font-bold bg-white text-black hover:bg-gray-100 transition">
               Start Pro →
             </button>

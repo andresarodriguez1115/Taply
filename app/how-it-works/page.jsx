@@ -812,7 +812,7 @@ export default function HowItWorksPage() {
   <img
     src="/hero-taply-render2.png"
     alt="Taply Apple Wallet pass and metal NFC card"
-    className="relative z-10 w-full object-contain block"
+    className="relative z-1 w-full object-contain block"
   />
 
   {/* bottom fade into Core Features */}
