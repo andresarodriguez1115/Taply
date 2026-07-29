@@ -81,6 +81,10 @@ useEffect(() => {
   return (
     <div className="min-h-screen bg-[#fafaf9] relative overflow-hidden text-black">
 
+      {heroPhoneImages.map((src) => (
+        <link key={src} rel="preload" as="image" href={src} />
+      ))}
+
       {/* ── NAV ── */}
       <div className={`fixed top-0 left-0 w-full z-50 flex justify-between items-center pl-2 pr-6 h-[75px] bg-white ${menuOpen ? "" : "border-b border-gray-200"}`}>
         <div className="flex items-center h-full">
@@ -125,6 +129,8 @@ useEffect(() => {
       src={heroPhoneImages[phoneScreen]}
       alt=""
       aria-hidden="true"
+      fetchPriority="high"
+      loading="eager"
       className="w-full h-auto block invisible"
     />
     <AnimatePresence initial={false}>
@@ -132,6 +138,7 @@ useEffect(() => {
         key={phoneScreen}
         src={heroPhoneImages[phoneScreen]}
         alt="Taply profile mode preview"
+        fetchPriority="high"
         initial={{ opacity: 0, rotatey: 12, scale: 0.95, transformperspective: 1000 }}
         animate={{ opacity: 1, rotatey: 0, scale: 1, transformperspective: 1000 }}
         exit={{ opacity: 0, rotatey: -12, scale: 0.95, transformperspective: 1000 }}

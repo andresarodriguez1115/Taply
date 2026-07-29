@@ -23,7 +23,7 @@ export async function POST(request) {
       customer_email: userEmail,
       client_reference_id: userId,
       success_url: `${process.env.NEXT_PUBLIC_SITE_URL}/dashboard?upgraded=true`,
-      cancel_url: `${process.env.NEXT_PUBLIC_SITE_URL}/pricing`,
+      cancel_url: `${process.env.NEXT_PUBLIC_SITE_URL}/upgrade`,
     })
 
     return NextResponse.json({ url: session.url })

@@ -19,6 +19,7 @@ import ModernLayout from "@/components/layouts/ModernLayout.jsx";
 import MinimalLayout from "@/components/layouts/MinimalLayout.jsx";
 import { useSearchParams } from "next/navigation";
 import BuilderTutorial from "@/components/BuilderTutorial"
+import UpgradeModal from "@/components/UpgradeModal"
 
 function BuilderPageInner() {
   const [avatarUrl, setAvatarUrl] = useState(null);
@@ -67,6 +68,8 @@ const [socialNameColor, setSocialNameColor] = useState("#000000");
 const [socialTitleColor2, setSocialTitleColor2] = useState("#6b7280");
 const [username, setUsername] = useState(null)
 const [loadingProfile, setLoadingProfile] = useState(true);
+const [subscriptionTier, setSubscriptionTier] = useState("free");
+const [upgradeModalOpen, setUpgradeModalOpen] = useState(false);
 // ==============================
 // IMAGE POSITIONING STATE
 // ==============================
@@ -113,6 +116,15 @@ useEffect(() => {
       router.replace("/login")
       return
     }
+
+    const { data: accountData } = await supabase
+      .from("accounts")
+      .select("subscription_tier")
+      .eq("user_id", userData.user.id)
+      .single();
+
+    setSubscriptionTier(accountData?.subscription_tier || "free");
+
 let data = null;
 
 if (profileId) {
@@ -2615,6 +2627,10 @@ const isActive = button !== null && button !== undefined;
         <div key={m.id} className="space-y-2">
           <button
             onClick={() => {
+              if (m.id !== "business" && subscriptionTier !== "pro") {
+                setUpgradeModalOpen(true);
+                return;
+              }
               if (m.id === "business" || m.id === "social") {
                 setMode(m.id);
                 setLayout(m.id === "business" ? "executive" : "circle");
@@ -2636,7 +2652,12 @@ const isActive = button !== null && button !== undefined;
                 <div className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: m.iconBg }}>
   {m.icon}
 </div>                <div>
-                  <p className={`text-base font-medium ${isActive ? "text-black" : "text-gray-900"}`}>{m.label}</p>
+                  <p className={`text-base font-medium flex items-center gap-1.5 ${isActive ? "text-black" : "text-gray-900"}`}>
+                    {m.label}
+                    {m.id !== "business" && subscriptionTier !== "pro" && (
+                      <span className="text-[9px] font-bold bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-1.5 py-0.5 rounded-full tracking-wide">PRO</span>
+                    )}
+                  </p>
 
                   <p className={`text-sm ${isActive ? "text-gray-500" : "text-gray-400"}`}>{m.desc}</p>
                 </div>
@@ -2856,6 +2877,13 @@ const isActive = button !== null && button !== undefined;
       if (id === "soc-design-content-size") openSD("size")
     }}
   />}
+<UpgradeModal
+  open={upgradeModalOpen}
+  onClose={() => setUpgradeModalOpen(false)}
+  title="Unlock all modes"
+  description="Free plans include Business mode only. Upgrade to Pro to access Networking, University, and Social modes."
+/>
+
 {isEditing && (
   <button
     onClick={() => setShowBuilderTutorial(true)}

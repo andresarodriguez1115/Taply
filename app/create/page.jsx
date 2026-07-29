@@ -2,6 +2,9 @@
 
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
+import { useState, useEffect } from "react";
+import supabase from "@/lib/supabase";
+import UpgradeModal from "@/components/UpgradeModal";
 
 const MODES = [
   {
@@ -117,6 +120,24 @@ best: "Best for students, career fairs & campus recruiting",    color: "#059669"
 
 export default function CreatePage() {
   const router = useRouter();
+  const [subscriptionTier, setSubscriptionTier] = useState("free");
+  const [upgradeModalOpen, setUpgradeModalOpen] = useState(false);
+
+  useEffect(() => {
+    const getTier = async () => {
+      const { data: userData } = await supabase.auth.getUser();
+      if (!userData?.user) return;
+
+      const { data: accountData } = await supabase
+        .from("accounts")
+        .select("subscription_tier")
+        .eq("user_id", userData.user.id)
+        .single();
+
+      setSubscriptionTier(accountData?.subscription_tier || "free");
+    };
+    getTier();
+  }, []);
 
   return (
     <div className="min-h-screen bg-[#f7faff] px-4 pt-8 pb-16 max-w-md mx-auto">
@@ -141,7 +162,13 @@ export default function CreatePage() {
             transition={{ delay: i * 0.07 }}
             whileTap={{ scale: 0.97 }}
             whileHover={{ y: -4 }}
-            onClick={() => router.push(`/builder?mode=${m.id}`)}
+            onClick={() => {
+              if (m.id !== "business" && subscriptionTier !== "pro") {
+                setUpgradeModalOpen(true);
+                return;
+              }
+              router.push(`/builder?mode=${m.id}`);
+            }}
             className="bg-white rounded-3xl overflow-hidden shadow-sm border border-gray-100 text-left flex flex-col"
           >
             {/* MOCKUP PREVIEW */}
@@ -155,7 +182,12 @@ export default function CreatePage() {
                 <div className="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0" style={{ background: m.bg }}>
                   {m.icon}
                 </div>
-                <p className="font-semibold text-gray-900">{m.label}</p>
+                <p className="font-semibold text-gray-900 flex items-center gap-1.5">
+                  {m.label}
+                  {m.id !== "business" && subscriptionTier !== "pro" && (
+                    <span className="text-[9px] font-bold bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-1.5 py-0.5 rounded-full tracking-wide">PRO</span>
+                  )}
+                </p>
               </div>
               <p className="text-xs text-gray-400 leading-snug">{m.desc}</p>
               <p className="text-xs font-medium mt-0.5" style={{ color: m.color }}>{m.best}</p>
@@ -163,6 +195,13 @@ export default function CreatePage() {
           </motion.button>
         ))}
       </div>
+
+      <UpgradeModal
+        open={upgradeModalOpen}
+        onClose={() => setUpgradeModalOpen(false)}
+        title="Unlock all modes"
+        description="Free plans include Business mode only. Upgrade to Pro to access Networking, University, and Social modes."
+      />
     </div>
   );
 }

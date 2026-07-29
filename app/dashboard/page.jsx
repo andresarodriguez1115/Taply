@@ -8,7 +8,7 @@ import QRCode from "qrcode";
 import DashboardTutorial from "@/components/DashboardTutorial";
 import ProfileCardTutorial from "@/components/ProfileCardTutorial"
 import Cropper from "react-easy-crop"
-
+import UpgradeModal from "@/components/UpgradeModal"
 export default function Dashboard() {
 const [userName, setUserName] = useState("");
 const [username, setUsername] = useState("");
@@ -38,8 +38,14 @@ const [photoCrop, setPhotoCrop] = useState({ x: 0, y: 0 })
 const [photoZoom, setPhotoZoom] = useState(1)
 const [photoCroppedAreaPixels, setPhotoCroppedAreaPixels] = useState(null)
 const [walletPhotoUrl, setWalletPhotoUrl] = useState(null)
+const [upgradeModalOpen, setUpgradeModalOpen] = useState(false)
+const maxProfiles = subscriptionTier === "pro" ? 4 : 1
 
 const handleShowQR = async (profileUsername) => {
+  if (subscriptionTier !== "pro") {
+    setUpgradeModalOpen(true);
+    return;
+  }
   const url = `https://taply.now/${profileUsername}`;
   const dataUrl = await QRCode.toDataURL(url, { width: 300, margin: 2 });
   setQrModal(dataUrl);
@@ -348,15 +354,19 @@ backdrop-blur-xl border shadow-[0_8px_30px_rgba(0,0,0,0.08)] ring-2 ${
         <button
           data-tutorial="create"
           onClick={() => {
-            if (profiles.length >= 4) {
-              alert("You've reached the maximum of 4 profiles. Delete one to create a new one.");
+            if (profiles.length >= maxProfiles) {
+              if (subscriptionTier !== "pro") {
+                setUpgradeModalOpen(true);
+              } else {
+                alert("You've reached the maximum of 4 profiles. Delete one to create a new one.");
+              }
               return;
             }
             router.push("/create");
           }}
-          className={`w-full text-[14px] font-semibold py-3 rounded-2xl transition ${profiles.length >= 4 ? "bg-gray-100 text-gray-400 cursor-not-allowed" : "bg-black text-white"}`}
+          className={`w-full text-[14px] font-semibold py-3 rounded-2xl transition ${profiles.length >= maxProfiles ? "bg-gray-100 text-gray-400 cursor-not-allowed" : "bg-black text-white"}`}
         >
-          {profiles.length >= 4 ? "Max profiles reached" : "+ Create new profile"}
+          {profiles.length >= maxProfiles ? (subscriptionTier === "pro" ? "Max profiles reached" : "Upgrade to add more") : "+ Create new profile"}
         </button>
       </div>
 
@@ -365,7 +375,7 @@ backdrop-blur-xl border shadow-[0_8px_30px_rgba(0,0,0,0.08)] ring-2 ${
         <motion.div
           whileTap={{ scale: 0.98 }}
           whileHover={{ y: -2 }}
-          onClick={() => router.push("/pricing")}
+          onClick={() => router.push("/upgrade")}
           className="mb-8 -mt-4 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-3xl px-5 py-4 flex items-center justify-between shadow-[0_8px_30px_rgba(99,102,241,0.25)] cursor-pointer"
         >
           <div className="flex items-center gap-3">
@@ -394,7 +404,7 @@ backdrop-blur-xl border shadow-[0_8px_30px_rgba(0,0,0,0.08)] ring-2 ${
   ) : profiles.length === 0 ? (
     "No profiles yet"
   ) : (
-    ready ? `${profiles.length}/4 saved profiles` : "..."
+    ready ? `${profiles.length}/${maxProfiles} saved profiles` : "..."
   )}
 </p>
 
@@ -404,7 +414,7 @@ backdrop-blur-xl border shadow-[0_8px_30px_rgba(0,0,0,0.08)] ring-2 ${
     initial={{ width: 0 }}
     animate={{
       width: ready
-  ? `${Math.min((profiles.length / 4) * 100, 100)}%`
+  ? `${Math.min((profiles.length / maxProfiles) * 100, 100)}%`
   : "0%"
     }}
     transition={{ duration: 0.6, ease: "easeOut" }}
@@ -523,11 +533,12 @@ backdrop-blur-xl border shadow-[0_8px_30px_rgba(0,0,0,0.08)] ring-2 ${
 </div>
 {mounted && (
   <>
-{/* 🍎 APPLE WALLET */}
+{/*  APPLE WALLET */}
 <motion.div
   whileTap={{ scale: 0.985 }}
   whileHover={{ y: -3 }}
   className="
+    relative
     bg-white/85
     backdrop-blur-md
     rounded-[32px]
@@ -536,6 +547,9 @@ backdrop-blur-xl border shadow-[0_8px_30px_rgba(0,0,0,0.08)] ring-2 ${
     overflow-hidden
   "
 >
+  {subscriptionTier !== "pro" && (
+<span className="absolute top-4 right-4 z-10 text-[12px] font-bold bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-3.5 py-1.5 rounded-full tracking-wide">PRO</span>
+  )}
 
   {/* TOP */}
   <div className="p-6 flex justify-between items-center">
@@ -596,6 +610,11 @@ backdrop-blur-xl border shadow-[0_8px_30px_rgba(0,0,0,0.08)] ring-2 ${
     {/* ADD BUTTON */}
     <button
       onClick={async () => {
+        if (subscriptionTier !== "pro") {
+          setUpgradeModalOpen(true);
+          return;
+        }
+
         const activeProfile = profiles.find(p => p.is_active);
 
         if (!activeProfile) {
@@ -826,7 +845,8 @@ backdrop-blur-xl border shadow-[0_8px_30px_rgba(0,0,0,0.08)] ring-2 ${
     {[
       {
         icon: <div className="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center"><QrCode size={27} className="text-blue-600" /></div>,
-        label: "QR Code",
+label: "QR Code",
+        isPro: true,
         arrowColor: "text-blue-600",
         onClick: () => {
           const active = profiles.find(p => p.is_active);
@@ -868,14 +888,17 @@ backdrop-blur-xl border shadow-[0_8px_30px_rgba(0,0,0,0.08)] ring-2 ${
         arrowColor: "text-purple-500",
         onClick: () => { if (!mounted) return; window.open(`/${username}`, "_blank"); },
       },
-    ].map(({ icon, label, arrowColor, onClick }) => (
+    ].map(({ icon, label, arrowColor, onClick, isPro }) => (
       <motion.div
         key={label}
         whileTap={{ scale: 0.96 }}
         whileHover={{ y: -3 }}
         onClick={onClick}
-        className="bg-white/70 backdrop-blur-md p-4 rounded-2xl border border-white/40 shadow-[0_8px_30px_rgba(0,0,0,0.08)] flex flex-col gap-3 h-[150px] cursor-pointer"
+        className="bg-white/70 backdrop-blur-md p-4 rounded-2xl border border-white/40 shadow-[0_8px_30px_rgba(0,0,0,0.08)] flex flex-col gap-3 h-[150px] cursor-pointer relative"
       >
+        {isPro && subscriptionTier !== "pro" && (
+          <span className="absolute top-3 right-3 text-[11px] font-bold bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-3 py-1 rounded-full tracking-wide">PRO</span>
+        )}
         <div className="flex-1 flex flex-col justify-between">
           {icon}
           <div className="flex items-center justify-between">
@@ -1063,6 +1086,13 @@ backdrop-blur-xl border shadow-[0_8px_30px_rgba(0,0,0,0.08)] ring-2 ${
     </div>
   </div>
 )}
+
+    <UpgradeModal
+      open={upgradeModalOpen}
+      onClose={() => setUpgradeModalOpen(false)}
+      title="Upgrade to add more profiles"
+      description="Free plans include 1 profile. Upgrade to Pro for up to 4 profiles across all modes."
+    />
 
   </div>
   );
