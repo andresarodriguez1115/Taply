@@ -1,6 +1,8 @@
 "use client";
 
 import { Phone, Mail, Instagram, Linkedin, Globe } from "lucide-react";
+import { FaWhatsapp } from "react-icons/fa6";
+import { SiCashapp } from "react-icons/si";
 import { useState, useRef, useEffect } from "react";
 import { logEvent } from "@/lib/logEvent";
 
@@ -256,7 +258,34 @@ onChange={(e) => setProfileScale && setProfileScale(Number(e.target.value))}
     </a>
   </>
 )}
-  {!fields?.phone && !fields?.email && !fields?.linkedin && !fields?.instagram && !fields?.website && isEditing && (
+
+{fields?.whatsapp && fieldValues?.whatsapp && (
+  <a href={`https://wa.me/${fieldValues.whatsapp.replace(/[^0-9]/g, "")}`} target="_blank" onClick={() => logEvent(profileId, "tap")} className="flex items-center gap-4 py-4">
+    <div className="w-[44px] h-[44px] rounded-full flex items-center justify-center flex-shrink-0" style={{ background: "#22c55e" }}>
+      <FaWhatsapp size={18} className="text-white" />
+    </div>
+    <div className="flex-1">
+      <p className="font-semibold" style={{ fontSize: `${1 * minContactSize / 100}rem` }}>WhatsApp</p>
+      <p className="text-gray-400" style={{ fontSize: `${0.875 * minContactSize / 100}rem` }}>{fieldValues.whatsapp}</p>
+    </div>
+    <span className="text-gray-300 text-lg">›</span>
+  </a>
+)}
+
+{fields?.cashapp && fieldValues?.cashapp && (
+  <a href={`https://cash.app/$${fieldValues.cashapp.replace("$", "")}`} target="_blank" onClick={() => logEvent(profileId, "tap")} className="flex items-center gap-4 py-4">
+    <div className="w-[44px] h-[44px] rounded-full flex items-center justify-center flex-shrink-0" style={{ background: "#00d632" }}>
+      <SiCashapp size={16} className="text-white" />
+    </div>
+    <div className="flex-1">
+      <p className="font-semibold" style={{ fontSize: `${1 * minContactSize / 100}rem` }}>Cash App</p>
+      <p className="text-gray-400" style={{ fontSize: `${0.875 * minContactSize / 100}rem` }}>${fieldValues.cashapp.replace("$", "")}</p>
+    </div>
+    <span className="text-gray-300 text-lg">›</span>
+  </a>
+)}
+
+  {!fields?.phone && !fields?.email && !fields?.linkedin && !fields?.instagram && !fields?.website && !fields?.whatsapp && !fields?.cashapp && isEditing && (
     <div className="opacity-30 divide-y divide-gray-100">
       {[
         { color: "#22c55e" },
@@ -264,6 +293,8 @@ onChange={(e) => setProfileScale && setProfileScale(Number(e.target.value))}
         { color: "#6366f1" },
         { color: "#ec4899" },
         { color: "#06b6d4" },
+        { color: "#22c55e" },
+        { color: "#00d632" },
       ].map((item, i) => (
         <div key={i} className="flex items-center gap-4 py-4">
           <div className="w-[44px] h-[44px] rounded-full flex items-center justify-center flex-shrink-0" style={{ background: item.color }}>

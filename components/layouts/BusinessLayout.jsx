@@ -3,6 +3,8 @@
 import { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { Phone, Mail, ChevronRight } from "lucide-react";
+import { FaWhatsapp } from "react-icons/fa6";
+import { SiCashapp } from "react-icons/si";
 import ModernLayout from "./ModernLayout";
 import MinimalLayout from "./MinimalLayout";
 import ExecutiveLayout from "./ExecutiveLayout";
@@ -338,7 +340,9 @@ titleSize={titleSize}
    fields?.email ||
    fields?.linkedin ||
   fields?.instagram ||
-fields?.website) && (
+fields?.website ||
+fields?.whatsapp ||
+fields?.cashapp) && (
   <div className="space-y-4 sm:space-y-6">
 
     {/* Primary CTA */}
@@ -490,6 +494,46 @@ className="group flex items-center justify-between px-6 py-4 border-b border-gra
     </div>
 
     <span className="text-gray-400">›</span>
+  </a>
+)}
+
+{/* WHATSAPP */}
+{fields?.whatsapp && fieldValues?.whatsapp && (
+  <a
+    href={`https://wa.me/${fieldValues.whatsapp.replace(/[^0-9]/g, "")}`}
+    target="_blank"
+    className="group flex items-center justify-between px-6 py-4 border-b border-gray-200 last:border-b-0 hover:bg-gray-50 transition"
+  >
+    <div className="flex items-center gap-4">
+      <div className="w-11 h-11 rounded-full bg-green-50 border border-green-100 flex items-center justify-center group-hover:scale-105 transition">
+        <FaWhatsapp size={18} className="text-green-600" />
+      </div>
+      <div>
+        <p className="text-sm font-semibold text-gray-900">WhatsApp</p>
+        <p className="text-sm text-gray-500">{fieldValues.whatsapp}</p>
+      </div>
+    </div>
+    <ChevronRight size={18} className="text-gray-300 group-hover:text-gray-500 transition" />
+  </a>
+)}
+
+{/* CASH APP */}
+{fields?.cashapp && fieldValues?.cashapp && (
+  <a
+    href={`https://cash.app/$${fieldValues.cashapp.replace("$", "")}`}
+    target="_blank"
+    className="group flex items-center justify-between px-6 py-4 border-b border-gray-200 last:border-b-0 hover:bg-gray-50 transition"
+  >
+    <div className="flex items-center gap-4">
+      <div className="w-11 h-11 rounded-full bg-green-50 border border-green-100 flex items-center justify-center group-hover:scale-105 transition">
+        <SiCashapp size={16} className="text-green-600" />
+      </div>
+      <div>
+        <p className="text-sm font-semibold text-gray-900">Cash App</p>
+        <p className="text-sm text-gray-500">${fieldValues.cashapp.replace("$", "")}</p>
+      </div>
+    </div>
+    <ChevronRight size={18} className="text-gray-300 group-hover:text-gray-500 transition" />
   </a>
 )}
 

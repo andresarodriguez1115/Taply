@@ -2,6 +2,8 @@
 
 import supabase from "@/lib/supabase";
 import { Phone, Mail, MapPin, MessageSquare, Share2, Download } from "lucide-react";
+import { FaWhatsapp } from "react-icons/fa6";
+import { SiCashapp } from "react-icons/si";
 import { useRef, useState, useEffect } from "react";
 import { logEvent } from "@/lib/logEvent";
 import { motion } from "framer-motion";
@@ -270,8 +272,8 @@ onTouchEnd={()=> isEditing && setDragging(false)}
  
 
 {/* ===== CONTACT CIRCLES ===== */}
-{mounted && (fieldValues?.phone || fieldValues?.location || fieldValues?.email) ? (
-<div className="flex justify-center gap-2 mt-4">
+{mounted && (fieldValues?.phone || fieldValues?.location || fieldValues?.email || fieldValues?.whatsapp || fieldValues?.cashapp) ? (
+<div className="flex justify-center gap-2 mt-4 flex-wrap">
 
 {fieldValues?.phone && (
   <a
@@ -316,10 +318,34 @@ style={{ width: `${56 * netContactSize / 100}px`, height: `${56 * netContactSize
 </a>
 )}
 
+{fieldValues?.whatsapp && (
+  <a
+    href={`https://wa.me/${fieldValues.whatsapp.replace(/[^0-9]/g, "")}`}
+    target="_blank"
+onClick={() => logEvent(profileId, "tap")}
+className="rounded-full bg-white border border-gray-200 shadow-[0_10px_25px_rgba(0,0,0,0.08)] flex items-center justify-center hover:shadow-[0_15px_35px_rgba(0,0,0,0.12)] hover:scale-105 transition-all duration-300"
+style={{ width: `${56 * netContactSize / 100}px`, height: `${56 * netContactSize / 100}px` }}
+>
+<FaWhatsapp size={22 * netContactSize / 100} className="text-gray-700" />
+</a>
+)}
+
+{fieldValues?.cashapp && (
+  <a
+    href={`https://cash.app/$${fieldValues.cashapp.replace("$", "")}`}
+    target="_blank"
+onClick={() => logEvent(profileId, "tap")}
+className="rounded-full bg-white border border-gray-200 shadow-[0_10px_25px_rgba(0,0,0,0.08)] flex items-center justify-center hover:shadow-[0_15px_35px_rgba(0,0,0,0.12)] hover:scale-105 transition-all duration-300"
+style={{ width: `${56 * netContactSize / 100}px`, height: `${56 * netContactSize / 100}px` }}
+>
+<SiCashapp size={20 * netContactSize / 100} className="text-gray-700" />
+</a>
+)}
+
 </div>
 ) : isEditing ? (
-<div className="flex justify-center gap-2 mt-4 opacity-30">
-  {[0,1,2,3].map(i => (
+<div className="flex justify-center gap-2 mt-4 opacity-30 flex-wrap">
+  {[0,1,2,3,4,5].map(i => (
     <div key={i} className="rounded-full bg-white border border-gray-200 shadow-sm flex items-center justify-center" style={{ width: `${56 * netContactSize / 100}px`, height: `${56 * netContactSize / 100}px` }}>
       <div className="w-5 h-5 rounded-full bg-gray-200" />
     </div>

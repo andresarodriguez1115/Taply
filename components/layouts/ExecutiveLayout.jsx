@@ -3,6 +3,8 @@ import { useState } from "react";
 import { logEvent } from "@/lib/logEvent";
 import { motion, useMotionValue, useTransform } from "framer-motion";
 import { Phone, Mail, ChevronRight, Linkedin, Instagram } from "lucide-react";
+import { FaWhatsapp } from "react-icons/fa6";
+import { SiCashapp } from "react-icons/si";
 export default function ExecutiveLayout({  name,
   
   title,
@@ -224,7 +226,9 @@ onTouchEnd={profileMouseUp}
  fields?.email ||
  fields?.linkedin ||
  fields?.instagram ||
- fields?.website)
+ fields?.website ||
+ fields?.whatsapp ||
+ fields?.cashapp)
    ? (<div className="mt-6 space-y-4 flex flex-col items-center">  
   
   
@@ -350,6 +354,48 @@ className="w-[400px] sm:w-[650px] flex items-center justify-between pl-3 pr-4 py
     />
   </a>
 )}
+
+{/* WHATSAPP */}
+{fields?.whatsapp && fieldValues?.whatsapp && (
+  <a
+    href={`https://wa.me/${fieldValues.whatsapp.replace(/[^0-9]/g, "")}`}
+    target="_blank"
+    onClick={() => logEvent(profileId, "tap")}
+    className="w-[400px] sm:w-[650px] flex items-center justify-between pl-3 pr-4 py-2 sm:py-4 bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition"
+  >
+    <div className="flex items-center gap-4">
+      <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-green-600 flex items-center justify-center">
+        <FaWhatsapp size={14} className="text-white sm:w-[18px] sm:h-[18px]" />
+      </div>
+      <div>
+        <p className="font-semibold text-gray-900" style={{ fontSize: `${16 * execContactSize / 100}px` }}>WhatsApp</p>
+        <p className="text-gray-500" style={{ fontSize: `${14 * execContactSize / 100}px` }}>{fieldValues.whatsapp}</p>
+      </div>
+    </div>
+    <ChevronRight size={14} className="text-gray-300 sm:w-[18px] sm:h-[18px]" />
+  </a>
+)}
+
+{/* CASH APP */}
+{fields?.cashapp && fieldValues?.cashapp && (
+  <a
+    href={`https://cash.app/$${fieldValues.cashapp.replace("$", "")}`}
+    target="_blank"
+    onClick={() => logEvent(profileId, "tap")}
+    className="w-[400px] sm:w-[650px] flex items-center justify-between pl-3 pr-4 py-2 sm:py-4 bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition"
+  >
+    <div className="flex items-center gap-4">
+      <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-green-600 flex items-center justify-center">
+        <SiCashapp size={13} className="text-white sm:w-[16px] sm:h-[16px]" />
+      </div>
+      <div>
+        <p className="font-semibold text-gray-900" style={{ fontSize: `${16 * execContactSize / 100}px` }}>Cash App</p>
+        <p className="text-gray-500" style={{ fontSize: `${14 * execContactSize / 100}px` }}>${fieldValues.cashapp.replace("$", "")}</p>
+      </div>
+    </div>
+    <ChevronRight size={14} className="text-gray-300 sm:w-[18px] sm:h-[18px]" />
+  </a>
+)}
 </div>
 
 ) : isEditing ? (
@@ -360,6 +406,8 @@ className="w-[400px] sm:w-[650px] flex items-center justify-between pl-3 pr-4 py
       { color: "bg-indigo-600", label: "linkedin" },
       { color: "bg-pink-600", label: "instagram" },
       { color: "bg-cyan-600", label: "website" },
+      { color: "bg-green-600", label: "whatsapp" },
+      { color: "bg-green-600", label: "cashapp" },
     ].map((item, i) => (
       <div key={i} className="w-full sm:w-[650px] flex items-center justify-between pl-3 pr-4 py-4 bg-white rounded-xl border border-gray-200 shadow-sm">
         <div className="flex items-center gap-4">

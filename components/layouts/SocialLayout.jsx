@@ -5,6 +5,8 @@ import { logEvent } from "@/lib/logEvent";
 import { motion } from "framer-motion";
 import React from "react";
 import { Instagram, Twitter, Youtube, Music2 } from "lucide-react";
+import { FaWhatsapp } from "react-icons/fa6";
+import { SiCashapp } from "react-icons/si";
 
 export default function SocialLayout({
   name = "Your Name",
@@ -103,6 +105,8 @@ useEffect(() => {
     tiktok: { icon: <Music2 size={18} />, color: "#010101", base: "https://tiktok.com/@" },
     twitter: { icon: <Twitter size={18} />, color: "#1DA1F2", base: "https://twitter.com/" },
     youtube: { icon: <Youtube size={18} />, color: "#FF0000", base: "https://youtube.com/@" },
+    whatsapp: { icon: <FaWhatsapp size={18} />, color: "#25D366", base: "https://wa.me/" },
+    cashapp: { icon: <SiCashapp size={16} />, color: "#00D632", base: "https://cash.app/$" },
   };
 
   return (

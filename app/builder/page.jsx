@@ -843,6 +843,8 @@ case "networking":
     instagram: "Instagram username",
     website: "Website URL",
     bio: "Short bio",
+    whatsapp: "WhatsApp number (with country code)",
+    cashapp: "Cash App $cashtag",
   };
 if (showTemplatePicker) {
   return (
@@ -1955,6 +1957,8 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
           { key: "phone", label: "Phone", placeholder: "Your phone number" },
           { key: "email", label: "Email", placeholder: "Your email" },
           { key: "linkedin", label: "LinkedIn", placeholder: "LinkedIn URL" },
+          { key: "whatsapp", label: "WhatsApp", placeholder: "WhatsApp number (with country code)" },
+          { key: "cashapp", label: "Cash App", placeholder: "Cash App $cashtag" },
         ].map(({ key, label, placeholder }) => {
           const isActive = !!(fieldValues?.[key]);
           return (
@@ -2105,7 +2109,7 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
   <ChevronDown size={16} className={`text-gray-400 transition-transform duration-300 ${openSections.socialIcons ? "rotate-180" : ""}`} />
 </button>
 {openSections.socialIcons && <div className="space-y-3">
-        {["instagram", "tiktok", "twitter", "youtube"].map((platform) => {
+        {["instagram", "tiktok", "twitter", "youtube", "whatsapp", "cashapp"].map((platform) => {
           const isActive = !!(fieldValues?.social_icons?.[platform]);
           return (
             <div key={platform} className={`p-3 rounded-xl border transition ${isActive ? "bg-blue-50 border-blue-400" : "bg-gray-50"}`}>
@@ -2362,6 +2366,8 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
           { key: "phone", label: "Phone", placeholder: "Your phone number" },
           { key: "email", label: "Email", placeholder: "Your email" },
           { key: "location", label: "Location", placeholder: "City, State" },
+          { key: "whatsapp", label: "WhatsApp", placeholder: "WhatsApp number (with country code)" },
+          { key: "cashapp", label: "Cash App", placeholder: "Cash App $cashtag" },
         ].map(({ key, label, placeholder }) => {
           const isActive = !!(fieldValues?.[key]);
           return (
@@ -2552,7 +2558,7 @@ const isActive = button !== null && button !== undefined;
   <ChevronDown size={16} className={`text-gray-400 transition-transform duration-300 ${openSections.contact ? "rotate-180" : ""}`} />
 </button>
 {openSections.contact && <div className="space-y-3">
-    {["phone", "email", "linkedin", "instagram", "website"].map((field) => {
+    {["phone", "email", "linkedin", "instagram", "website", "whatsapp", "cashapp"].map((field) => {
       const isActive = fields[field];
 
       return (

@@ -25,6 +25,7 @@ const heroPhoneImages = [
 ]
 
 const [phoneScreen, setPhoneScreen] = useState(0)
+const [heroImageLoaded, setHeroImageLoaded] = useState(false)
 
 useEffect(() => {
   const interval = setInterval(() => {

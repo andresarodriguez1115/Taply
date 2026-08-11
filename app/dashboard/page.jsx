@@ -898,6 +898,8 @@ label: "QR Code",
       >
         {isPro && subscriptionTier !== "pro" && (
           <span className="absolute top-3 right-3 text-[11px] font-bold bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-3 py-1 rounded-full tracking-wide">PRO</span>
+        )}{isPro && subscriptionTier !== "pro" && (
+          <span className="absolute top-3 right-3 text-[11px] font-bold bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-3 py-1 rounded-full tracking-wide">PRO</span>
         )}
         <div className="flex-1 flex flex-col justify-between">
           {icon}

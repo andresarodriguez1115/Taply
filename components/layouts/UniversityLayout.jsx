@@ -4,6 +4,8 @@ import { useState, useEffect, useRef } from "react";
 
 import { motion } from "framer-motion";
 import { Phone, Mail, Linkedin, FileText, ExternalLink } from "lucide-react";
+import { FaWhatsapp } from "react-icons/fa6";
+import { SiCashapp } from "react-icons/si";
 
 export default function UniversityLayout({
   name = "Your Name",
@@ -51,6 +53,8 @@ useEffect(() => {
   const phone = fieldValues?.phone || "";
   const email = fieldValues?.email || "";
   const linkedin = fieldValues?.linkedin || "";
+  const whatsapp = fieldValues?.whatsapp || "";
+  const cashapp = fieldValues?.cashapp || "";
 
   return (
     <div className="w-full min-h-screen pt-[75px]" style={{ background: backgroundColor, fontFamily: fontFamily }}>
@@ -213,7 +217,7 @@ useEffect(() => {
           </div>
 
           {/* Tappable contact rows */}
-          {(phone || email || linkedin) ? (
+          {(phone || email || linkedin || whatsapp || cashapp) ? (
             <div className="space-y-2">
               <p className="text-[15px] font-semibold text-gray-400 uppercase tracking-widest px-1">Contact</p>
             <div className="space-y-3">
@@ -264,13 +268,45 @@ useEffect(() => {
                     <span className="text-gray-300 text-xl">›</span>
                   </a>
                 )}
+                {whatsapp && (
+                  <a href={`https://wa.me/${whatsapp.replace(/[^0-9]/g, "")}`} target="_blank"
+                                      onClick={() => logEvent(profileId, "tap")}
+
+                    className="flex items-center gap-4 px-5 py-4 bg-white rounded-2xl border border-gray-100 shadow-sm active:bg-gray-50 transition">
+                    <div className="w-11 h-11 rounded-full bg-green-50 flex items-center justify-center flex-shrink-0">
+                      <FaWhatsapp size={17} className="text-green-600" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-[13px] text-gray-400 font-medium mb-0.5">WhatsApp</p>
+                      <p className="text-[15px] font-semibold text-gray-900" style={uniContentSize !== 100 ? { fontSize: `${uniContentSize}%` } : undefined}
+>{whatsapp}</p>
+                    </div>
+                    <span className="text-gray-300 text-xl">›</span>
+                  </a>
+                )}
+                {cashapp && (
+                  <a href={`https://cash.app/$${cashapp.replace("$", "")}`} target="_blank"
+                                      onClick={() => logEvent(profileId, "tap")}
+
+                    className="flex items-center gap-4 px-5 py-4 bg-white rounded-2xl border border-gray-100 shadow-sm active:bg-gray-50 transition">
+                    <div className="w-11 h-11 rounded-full bg-green-50 flex items-center justify-center flex-shrink-0">
+                      <SiCashapp size={15} className="text-green-600" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-[13px] text-gray-400 font-medium mb-0.5">Cash App</p>
+                      <p className="text-[15px] font-semibold text-gray-900" style={uniContentSize !== 100 ? { fontSize: `${uniContentSize}%` } : undefined}
+>${cashapp.replace("$", "")}</p>
+                    </div>
+                    <span className="text-gray-300 text-xl">›</span>
+                  </a>
+                )}
               </div>
             </div>
           ) : isEditing ? (
             <div className="space-y-2">
               <p className="text-[15px] font-semibold text-gray-400 uppercase tracking-widest px-1">Contact</p>
               <div className="space-y-3 opacity-30">
-                {[{ color: "bg-green-50", icon: "bg-green-200" }, { color: "bg-blue-50", icon: "bg-blue-200" }, { color: "bg-indigo-50", icon: "bg-indigo-200" }].map((item, i) => (
+                {[{ color: "bg-green-50", icon: "bg-green-200" }, { color: "bg-blue-50", icon: "bg-blue-200" }, { color: "bg-indigo-50", icon: "bg-indigo-200" }, { color: "bg-green-50", icon: "bg-green-200" }, { color: "bg-green-50", icon: "bg-green-200" }].map((item, i) => (
                   <div key={i} className={`flex items-center gap-4 px-5 py-4 bg-white rounded-2xl border border-gray-100 shadow-sm`}>
                     <div className={`w-11 h-11 rounded-full ${item.color} flex items-center justify-center flex-shrink-0`}>
                       <div className={`w-5 h-5 rounded-full ${item.icon}`} />
