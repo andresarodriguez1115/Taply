@@ -365,7 +365,7 @@ useEffect(() => {
     </div>
 <div className="relative -mb-1">
       <img
-        src="/WALLET-SECTION-RENDER.PNG"
+        src="/WALLET-SECTION-RENDER.png"
         alt="Taply Apple Wallet preview"
         className="w-full h-auto block"
       />
@@ -385,7 +385,7 @@ useEffect(() => {
         <div className="flex flex-col gap-3">
           {[
             { title: "Business", tag: "Meetings & sales", desc: "Name, title, company, phone, email. Everything a client needs in one tap.", accent: "#2563eb", tagBg: "rgba(37,99,235,0.15)", tagColor: "#60a5fa" },
-            { title: "Networking", tag: "Events & meetups", desc: "Social links front and center. Built for rooms full of people you want to know.", accent: "#7c3aed", tagBg: "rgba(124,58,237,0.15)", tagColor: "#a78bfa" },
+            { title: "Company", tag: "Events & meetups", desc: "Social links front and center. Built for rooms full of people you want to know.", accent: "#7c3aed", tagBg: "rgba(124,58,237,0.15)", tagColor: "#a78bfa" },
             { title: "University", tag: "Campus & career", desc: "Major, grad year, LinkedIn, clubs. Built for career fairs and campus life.", accent: "#059669", tagBg: "rgba(5,150,105,0.15)", tagColor: "#34d399" },
             { title: "Social", tag: "Creators & influencers", desc: "TikTok, Instagram, YouTube — laid out like a feed. Grow your audience in person.", accent: "#ea580c", tagBg: "rgba(234,88,12,0.15)", tagColor: "#fb923c" },
           ].map(({ title, tag, desc, accent, tagBg, tagColor }) => (

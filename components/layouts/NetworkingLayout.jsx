@@ -288,12 +288,13 @@ style={{ width: `${56 * netContactSize / 100}px`, height: `${56 * netContactSize
 
 {fieldValues?.phone && (
   <a
-    href={`sms:${fieldValues.phone}`}
+    href={`https://wa.me/${fieldValues.phone.replace(/[^0-9]/g, "")}`}
+    target="_blank"
 onClick={() => logEvent(profileId, "tap")}
 className="rounded-full bg-white border border-gray-200 shadow-[0_10px_25px_rgba(0,0,0,0.08)] flex items-center justify-center hover:shadow-[0_15px_35px_rgba(0,0,0,0.12)] hover:scale-105 transition-all duration-300"
 style={{ width: `${56 * netContactSize / 100}px`, height: `${56 * netContactSize / 100}px` }}
 >
-<MessageSquare size={22 * netContactSize / 100} className="text-gray-700" />
+<FaWhatsapp size={22 * netContactSize / 100} className="text-gray-700" />
 </a>
 )}
 

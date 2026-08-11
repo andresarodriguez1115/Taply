@@ -1251,7 +1251,7 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
             { label: "Profile Photo", value: execAvatarSize, set: setExecAvatarSize, min: 70, max: 150 },
             { label: "Name", value: fontSize, set: setFontSize, min: 70, max: 150 },
             { label: "Title", value: titleSize, set: setTitleSize, min: 70, max: 150 },
-            { label: "Save Btn", value: execSaveSize, set: setExecSaveSize, min: 70, max: 150 },
+            { label: "Save Button`", value: execSaveSize, set: setExecSaveSize, min: 70, max: 150 },
             { label: "Contact", value: execContactSize, set: setExecContactSize, min: 70, max: 150 },
           ] : [
             { label: "Name", value: minNameSize, set: setMinNameSize, min: 70, max: 150 },
@@ -2621,7 +2621,7 @@ const isActive = button !== null && button !== undefined;
 >Select a mode</p>{[
 { id: "business", label: "Business", color: "#2563eb", iconBg: "#eff6ff", desc: "Professional card with contact fields",
   icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2563eb" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg> },
-{ id: "networking", label: "Networking", color: "#7c3aed", iconBg: "#f5f3ff", desc: "Clean profile with social links",
+{ id: "networking", label: "Company", color: "#7c3aed", iconBg: "#f5f3ff", desc: "Clean profile with social links",
   icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#7c3aed" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg> },
 { id: "university", label: "University", color: "#059669", iconBg: "#ecfdf5", desc: "Student & campus identity",
   icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#059669" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg> },
@@ -2892,8 +2892,17 @@ const isActive = button !== null && button !== undefined;
 
 {isEditing && (
   <button
-    onClick={() => setShowBuilderTutorial(true)}
-    className="fixed bottom-6 right-5 z-40 w-9 h-9 bg-white border border-gray-200 shadow-md rounded-full text-sm font-semibold text-gray-500 flex items-center justify-center hover:bg-gray-50 transition"
+    onClick={() => {
+      const wasOpen = studioOpen
+      setStudioOpen(true)
+      setActiveTab("layout")
+      if (wasOpen) {
+        setShowBuilderTutorial(true)
+      } else {
+        setTimeout(() => setShowBuilderTutorial(true), 350)
+      }
+    }}
+    className="fixed top-16 left-5 z-50 w-10 h-10 bg-gradient-to-r from-indigo-600 to-purple-600 shadow-lg rounded-full text-base font-bold text-white flex items-center justify-center hover:scale-95 active:scale-95 transition"
   >
     ?
   </button>

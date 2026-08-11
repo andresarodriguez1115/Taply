@@ -42,6 +42,7 @@ const [upgradeModalOpen, setUpgradeModalOpen] = useState(false)
 const maxProfiles = subscriptionTier === "pro" ? 4 : 1
 
 const handleShowQR = async (profileUsername) => {
+  if (!ready) return;
   if (subscriptionTier !== "pro") {
     setUpgradeModalOpen(true);
     return;
@@ -221,9 +222,9 @@ backdrop-blur-xl border shadow-[0_8px_30px_rgba(0,0,0,0.08)] ring-2 ${
 )}
 
 {ready && subscriptionTier === "pro" && (
-  <span className="inline-flex items-center gap-1.5 text-[12px] font-bold bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-3 py-1.5 rounded-full tracking-wide ml-1">
+  <span className="inline-flex items-center gap-1.5 text-[12px] font-bold bg-gradient-to-r from-amber-400 to-yellow-500 text-white px-3 py-1.5 rounded-full tracking-wide ml-1 shadow-sm">
     <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor">
-      <path d="M5 16L3 5l5.5 4L12 3l3.5 6L21 5l-2 11H5zm0 2h14v2H5v-2z"/>
+      <path d="M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4z"/>
     </svg>
     PRO
   </span>
@@ -456,7 +457,9 @@ backdrop-blur-xl border shadow-[0_8px_30px_rgba(0,0,0,0.08)] ring-2 ${
       className={`p-4 rounded-2xl flex justify-between items-center backdrop-blur-md transition-all duration-300 ease-out
   ${
     profile.is_active
-      ? "bg-white border-2 border-blue-500 shadow-[0_0_0_2px_rgba(59,130,246,0.15)]"
+      ? subscriptionTier === "pro"
+        ? "bg-white border-2 border-amber-400 shadow-[0_0_0_2px_rgba(251,191,36,0.2)]"
+        : "bg-white border-2 border-blue-500 shadow-[0_0_0_2px_rgba(59,130,246,0.15)]"
       : "bg-white/70 border border-white/40 shadow-[0_8px_30px_rgba(0,0,0,0.08)] hover:border-blue-300 cursor-pointer"
   }
 `}
@@ -483,7 +486,7 @@ backdrop-blur-xl border shadow-[0_8px_30px_rgba(0,0,0,0.08)] ring-2 ${
             )}
           </p>
           <p className="text-sm text-gray-500">
-            {profile.mode ? profile.mode.charAt(0).toUpperCase() + profile.mode.slice(1) + " mode" : profile.title || "No title"}
+            {profile.mode === "networking" ? "Company mode" : profile.mode ? profile.mode.charAt(0).toUpperCase() + profile.mode.slice(1) + " mode" : profile.title || "No title"}
           </p>
           <div className="flex gap-4 mt-2 text-sm">
      <button data-tutorial={profiles.indexOf(profile) === 0 ? "profile-edit" : undefined} onClick={(e) => { e.stopPropagation(); router.push(`/builder?id=${profile.id}`); }} className="text-blue-600 font-medium">Edit</button>
@@ -547,7 +550,7 @@ backdrop-blur-xl border shadow-[0_8px_30px_rgba(0,0,0,0.08)] ring-2 ${
     overflow-hidden
   "
 >
-  {subscriptionTier !== "pro" && (
+  {ready && subscriptionTier !== "pro" && (
 <span className="absolute top-4 right-4 z-10 text-[12px] font-bold bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-3.5 py-1.5 rounded-full tracking-wide">PRO</span>
   )}
 
@@ -610,6 +613,7 @@ backdrop-blur-xl border shadow-[0_8px_30px_rgba(0,0,0,0.08)] ring-2 ${
     {/* ADD BUTTON */}
     <button
       onClick={async () => {
+        if (!ready) return;
         if (subscriptionTier !== "pro") {
           setUpgradeModalOpen(true);
           return;
@@ -896,9 +900,7 @@ label: "QR Code",
         onClick={onClick}
         className="bg-white/70 backdrop-blur-md p-4 rounded-2xl border border-white/40 shadow-[0_8px_30px_rgba(0,0,0,0.08)] flex flex-col gap-3 h-[150px] cursor-pointer relative"
       >
-        {isPro && subscriptionTier !== "pro" && (
-          <span className="absolute top-3 right-3 text-[11px] font-bold bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-3 py-1 rounded-full tracking-wide">PRO</span>
-        )}{isPro && subscriptionTier !== "pro" && (
+        {isPro && ready && subscriptionTier !== "pro" && (
           <span className="absolute top-3 right-3 text-[11px] font-bold bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-3 py-1 rounded-full tracking-wide">PRO</span>
         )}
         <div className="flex-1 flex flex-col justify-between">

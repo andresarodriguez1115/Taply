@@ -37,9 +37,9 @@ desc: "Professional card with contact fields",
   },
   {
     id: "networking",
-    label: "Networking",
-    desc: "Clean profile with action buttons",
-best: "Best for business fairs, recruiting & events",
+    label: "Company",
+desc: "Represent your company or brand in person",
+best: "Best for reps & teams networking on behalf of a company",
     color: "#7c3aed",
     bg: "#f5f3ff",
     icon: (
@@ -121,12 +121,13 @@ best: "Best for students, career fairs & campus recruiting",    color: "#059669"
 export default function CreatePage() {
   const router = useRouter();
   const [subscriptionTier, setSubscriptionTier] = useState("free");
+  const [tierLoaded, setTierLoaded] = useState(false);
   const [upgradeModalOpen, setUpgradeModalOpen] = useState(false);
 
   useEffect(() => {
     const getTier = async () => {
       const { data: userData } = await supabase.auth.getUser();
-      if (!userData?.user) return;
+      if (!userData?.user) { setTierLoaded(true); return; }
 
       const { data: accountData } = await supabase
         .from("accounts")
@@ -135,6 +136,7 @@ export default function CreatePage() {
         .single();
 
       setSubscriptionTier(accountData?.subscription_tier || "free");
+      setTierLoaded(true);
     };
     getTier();
   }, []);
@@ -163,6 +165,7 @@ export default function CreatePage() {
             whileTap={{ scale: 0.97 }}
             whileHover={{ y: -4 }}
             onClick={() => {
+              if (!tierLoaded) return;
               if (m.id !== "business" && subscriptionTier !== "pro") {
                 setUpgradeModalOpen(true);
                 return;
@@ -184,7 +187,7 @@ export default function CreatePage() {
                 </div>
                 <p className="font-semibold text-gray-900 flex items-center gap-1.5">
                   {m.label}
-                  {m.id !== "business" && subscriptionTier !== "pro" && (
+                  {m.id !== "business" && tierLoaded && subscriptionTier !== "pro" && (
                     <span className="text-[9px] font-bold bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-1.5 py-0.5 rounded-full tracking-wide">PRO</span>
                   )}
                 </p>
