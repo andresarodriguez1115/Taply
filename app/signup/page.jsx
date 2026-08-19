@@ -23,6 +23,12 @@ const [firstName, setFirstName] = useState("")
 const [lastName, setLastName] = useState("")
 const [username, setUsername] = useState("")
 
+const getRedirectTarget = () => {
+  if (typeof window === "undefined") return "/dashboard"
+  const params = new URLSearchParams(window.location.search)
+  return params.get("redirect") || "/dashboard"
+}
+
 
   const handleLogin = async (e) => {
     e.preventDefault()
@@ -43,7 +49,7 @@ const [username, setUsername] = useState("")
     }
 
     setLoading(false)
-    router.replace("/dashboard")
+    router.replace(getRedirectTarget())
   }
 
 
@@ -93,7 +99,7 @@ if (!userId) {
 
 
 localStorage.setItem("has_chosen", "true");
-router.replace("/dashboard");
+router.replace(getRedirectTarget());
 setLoading(false);
   }
 
@@ -245,7 +251,7 @@ return (
     await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
-redirectTo: `${window.location.origin}/dashboard`,
+redirectTo: `${window.location.origin}${getRedirectTarget()}`,
       },
     })
   }}
@@ -263,7 +269,7 @@ redirectTo: `${window.location.origin}/dashboard`,
     await supabase.auth.signInWithOAuth({
       provider: "apple",
       options: {
-redirectTo: `${window.location.origin}/dashboard`,
+redirectTo: `${window.location.origin}${getRedirectTarget()}`,
       },
     })
   }}
