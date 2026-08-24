@@ -15,7 +15,7 @@ export default function ActivateClaim({ deviceId, productType }) {
     const checkAuth = async () => {
       const { data: userData } = await supabase.auth.getUser()
       if (!userData?.user) {
-        router.replace(`/login?redirect=/activate?id=${deviceId}`)
+        router.replace(`/signup?redirect=/activate?id=${deviceId}`)
         return
       }
       setUser(userData.user)
@@ -26,7 +26,7 @@ export default function ActivateClaim({ deviceId, productType }) {
 
   const handleClaim = async () => {
     if (!user) {
-      router.push(`/login?redirect=/activate?id=${deviceId}`)
+      router.push(`/signup?redirect=/activate?id=${deviceId}`)
       return
     }
 
