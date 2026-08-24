@@ -48,7 +48,18 @@ export default function ActivateClaim({ deviceId, productType }) {
       return
     }
 
-    router.push(`/${activeProfile.username}`)
+    const { data: activeProfile } = await supabase
+      .from("profiles")
+      .select("username")
+      .eq("user_id", user.id)
+      .eq("is_active", true)
+      .maybeSingle()
+
+    if (activeProfile?.username) {
+      router.push(`/${activeProfile.username}`)
+    } else {
+      router.push("/dashboard")
+    }
   }
 
   if (checking) {
