@@ -14,7 +14,11 @@ export default function ActivateClaim({ deviceId, productType }) {
   useEffect(() => {
     const checkAuth = async () => {
       const { data: userData } = await supabase.auth.getUser()
-      setUser(userData?.user || null)
+      if (!userData?.user) {
+        router.replace(`/login?redirect=/activate?id=${deviceId}`)
+        return
+      }
+      setUser(userData.user)
       setChecking(false)
     }
     checkAuth()
@@ -29,24 +33,10 @@ export default function ActivateClaim({ deviceId, productType }) {
     setClaiming(true)
     setError(null)
 
-    const { data: activeProfile } = await supabase
-      .from("profiles")
-      .select("id, username")
-      .eq("user_id", user.id)
-      .eq("is_active", true)
-      .maybeSingle()
-
-    if (!activeProfile) {
-      setError("You don't have an active profile yet. Create one first, then come back and tap your card again.")
-      setClaiming(false)
-      return
-    }
-
     const { error: claimError } = await supabase
       .from("devices")
       .update({
         user_id: user.id,
-        profile_id: activeProfile.id,
         claimed_at: new Date().toISOString(),
       })
       .eq("id", deviceId)
