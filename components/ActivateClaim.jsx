@@ -78,7 +78,7 @@ export default function ActivateClaim({ deviceId, productType }) {
       {/* HEADER */}
       <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
         <div className="flex items-center gap-2">
-          <img src="/taply-logo.svg" className="h-8 w-8" />
+          <img src="/taply-logo.svg" className="h-14 object-contain" />
         </div>
         <button className="w-9 h-9 rounded-full border border-gray-200 flex items-center justify-center text-gray-500">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
