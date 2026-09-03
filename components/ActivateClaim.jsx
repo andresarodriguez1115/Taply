@@ -71,33 +71,34 @@ export default function ActivateClaim({ deviceId, productType }) {
   }
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen px-6 text-center">
-      <div className="w-14 h-14 rounded-2xl bg-black flex items-center justify-center mb-5">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
+    <div className="flex flex-col items-center justify-center min-h-screen px-6 text-center bg-[#fafaf9]">
+      <div className="w-16 h-16 rounded-2xl bg-black flex items-center justify-center mb-6 shadow-sm">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="white">
           <circle cx="12" cy="12" r="10" fillOpacity="0.2" />
           <circle cx="12" cy="12" r="6" />
         </svg>
       </div>
 
-      <h1 className="text-xl font-bold text-gray-900 mb-2">
+      <h1 className="text-2xl font-bold text-gray-900 mb-2 tracking-tight">
         Activate your Taply {productType === "metal" ? "Metal" : ""} card
       </h1>
-      <p className="text-gray-500 text-sm mb-8 max-w-xs">
-        {user
-          ? "Link this card to your active profile so it works with a tap."
-          : "Log in or create an account to link this card."}
+      <p className="text-gray-500 text-sm mb-1 max-w-xs leading-relaxed">
+        Link this card to your active profile so it works with a tap.
+      </p>
+      <p className="text-gray-400 text-xs mb-8 max-w-xs leading-relaxed">
+        You'll need an existing Taply account with a profile already set up before activating.
       </p>
 
       {error && (
-        <p className="text-red-500 text-sm mb-4 max-w-xs">{error}</p>
+        <p className="text-red-500 text-sm mb-4 max-w-xs bg-red-50 px-4 py-2 rounded-xl">{error}</p>
       )}
 
       <button
         onClick={handleClaim}
         disabled={claiming}
-        className="bg-black text-white font-semibold px-8 py-3.5 rounded-2xl text-sm disabled:opacity-60"
+        className="w-full max-w-xs bg-black text-white font-semibold px-8 py-3.5 rounded-2xl text-sm disabled:opacity-60 shadow-sm active:scale-[0.98] transition-transform"
       >
-        {claiming ? "Activating..." : user ? "Activate Card" : "Log in to Activate"}
+        {claiming ? "Activating..." : "Activate Card"}
       </button>
     </div>
   )
