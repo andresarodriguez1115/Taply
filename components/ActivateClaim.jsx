@@ -78,8 +78,7 @@ export default function ActivateClaim({ deviceId, productType }) {
       {/* HEADER */}
       <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
         <div className="flex items-center gap-2">
-          <img src="/taply-logo.svg" className="h-7 w-7" />
-          <span className="text-lg font-bold text-gray-900">Taply</span>
+          <img src="/taply-logo.svg" className="h-8 w-8" />
         </div>
         <button className="w-9 h-9 rounded-full border border-gray-200 flex items-center justify-center text-gray-500">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -103,7 +102,8 @@ export default function ActivateClaim({ deviceId, productType }) {
         <div className="relative z-10 w-52 h-32 rounded-2xl bg-gradient-to-br from-gray-900 to-black shadow-xl flex items-center justify-center gap-2 mb-6">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeOpacity="0.5" strokeWidth="1.5">
             <circle cx="12" cy="12" r="9" />
-            <circle cx="12" cy="12" r="5" />
+            <circle cx="12" cy="12" r="5.5" />
+            <circle cx="12" cy="12" r="2" fill="white" fillOpacity="0.5" stroke="none" />
           </svg>
           <span className="text-white font-bold text-lg opacity-70">taply</span>
         </div>
