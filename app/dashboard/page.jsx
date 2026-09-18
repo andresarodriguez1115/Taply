@@ -39,7 +39,13 @@ const [photoZoom, setPhotoZoom] = useState(1)
 const [photoCroppedAreaPixels, setPhotoCroppedAreaPixels] = useState(null)
 const [walletPhotoUrl, setWalletPhotoUrl] = useState(null)
 const [upgradeModalOpen, setUpgradeModalOpen] = useState(false)
+const [pendingCardId, setPendingCardId] = useState(null)
 const maxProfiles = subscriptionTier === "pro" ? 4 : 1
+
+useEffect(() => {
+  const cardId = localStorage.getItem("pending_card_id")
+  if (cardId) setPendingCardId(cardId)
+}, [])
 
 const handleShowQR = async (profileUsername) => {
   if (!ready) return;
@@ -370,6 +376,30 @@ backdrop-blur-xl border shadow-[0_8px_30px_rgba(0,0,0,0.08)] ring-2 ${
           {profiles.length >= maxProfiles ? (subscriptionTier === "pro" ? "Max profiles reached" : "Upgrade to add more") : "+ Create new profile"}
         </button>
       </div>
+
+      {/* FINISH CARD ACTIVATION BANNER */}
+      {ready && pendingCardId && profiles.some(p => p.is_active) && (
+        <motion.div
+          whileTap={{ scale: 0.98 }}
+          whileHover={{ y: -2 }}
+          onClick={() => router.push(`/activate?id=${pendingCardId}`)}
+          className="mb-8 -mt-4 bg-gradient-to-r from-blue-600 to-purple-600 rounded-3xl px-5 py-4 flex items-center justify-between shadow-[0_8px_30px_rgba(37,99,235,0.25)] cursor-pointer"
+        >
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-2xl bg-white/15 flex items-center justify-center flex-shrink-0">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2">
+                <circle cx="12" cy="12" r="9" />
+                <circle cx="12" cy="12" r="4" />
+              </svg>
+            </div>
+            <div>
+              <p className="text-[14px] font-bold text-white leading-tight">Finish activating your card</p>
+              <p className="text-[12px] text-white/70 leading-tight mt-0.5">Your profile is ready — link your card now</p>
+            </div>
+          </div>
+          <span className="text-white text-lg">→</span>
+        </motion.div>
+      )}
 
       {/* UPGRADE TO PRO BANNER */}
       {ready && subscriptionTier !== "pro" && (

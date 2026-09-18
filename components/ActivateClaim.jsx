@@ -11,6 +11,20 @@ export default function ActivateClaim({ deviceId, productType }) {
   const [activeProfile, setActiveProfile] = useState(null)
   const [claiming, setClaiming] = useState(false)
   const [error, setError] = useState(null)
+  const [rechecking, setRechecking] = useState(false)
+
+  const recheckProfile = async () => {
+    if (!user) return
+    setRechecking(true)
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("username")
+      .eq("user_id", user.id)
+      .eq("is_active", true)
+      .maybeSingle()
+    setActiveProfile(profile)
+    setRechecking(false)
+  }
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -152,17 +166,26 @@ export default function ActivateClaim({ deviceId, productType }) {
           <div className="w-full max-w-sm bg-amber-50 border border-amber-100 rounded-2xl p-4 mb-6 text-left">
             <p className="text-amber-700 text-sm font-medium">No active profile found</p>
             <p className="text-amber-600 text-xs mt-1 mb-3">
-              Create a profile first, then come back and activate this card.
+              Build your first profile in a new tab, then come back here and check again.
             </p>
-            <button
-              onClick={() => {
-                localStorage.setItem("pending_card_id", deviceId)
-                router.push("/dashboard")
-              }}
-              className="text-amber-700 text-xs font-semibold underline underline-offset-2"
-            >
-              Go to dashboard →
-            </button>
+            <div className="flex gap-4">
+              <button
+                onClick={() => {
+                  localStorage.setItem("pending_card_id", deviceId)
+                  window.open("/builder?mode=business&from=activation", "_blank")
+                }}
+                className="text-amber-700 text-xs font-semibold underline underline-offset-2"
+              >
+                Build your profile →
+              </button>
+              <button
+                onClick={recheckProfile}
+                disabled={rechecking}
+                className="text-amber-700 text-xs font-semibold underline underline-offset-2 disabled:opacity-50"
+              >
+                {rechecking ? "Checking..." : "Check again ↻"}
+              </button>
+            </div>
           </div>
         )}
 
