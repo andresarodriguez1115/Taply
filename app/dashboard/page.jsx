@@ -340,23 +340,6 @@ backdrop-blur-xl border shadow-[0_8px_30px_rgba(0,0,0,0.08)] ring-2 ${
 </div>
         </div>
 
-        {/* STAT PILLS */}
-        <div data-tutorial="stats" className="flex gap-2 mb-3">
-          {[
-            { num: stats.views, label: "Views" },
-            { num: stats.taps, label: "Taps" },
-            { num: `${stats.saveRate}%`, label: "Save rate" },
-          ].map(({ num, label }) => (
-            <div key={label} className="flex-1 bg-[#f0f4ff] rounded-xl px-2 py-3 text-center">          {statsLoading ? (
-  <div className="text-[26px] font-bold text-blue-300">···</div>
-) : (
-  <div className="text-[26px] font-bold text-blue-600">{num}</div>
-)}
-              <div className="text-[11px] text-gray-400 uppercase tracking-[0.06em] mt-0.5">{label}</div>
-            </div>
-          ))}
-        </div>
-
         {/* CTA */}
         <button
           data-tutorial="create"

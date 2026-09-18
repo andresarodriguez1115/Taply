@@ -93,7 +93,7 @@ useEffect(() => {
         </div>
         <button onClick={() => setMenuOpen((prev) => !prev)} className="p rounded-lg hover:bg-gray-100 transition">
           <motion.div animate={{ rotate: menuOpen ? 90 : 0 }} transition={{ duration: 0.2 }}>
-            <Menu size={28} strokeWidth={2} />
+            <Menu gitsize={28} strokeWidth={2} />
           </motion.div>
         </button>
       </div>
@@ -104,9 +104,9 @@ useEffect(() => {
           All your info. One tap.
         </div>
         <h1 className="text-[2.2rem] min-[390px]:text-[2.6rem] font-extrabold leading-[1.05] tracking-tighter max-w-md">
-          Your{" "}
-          <span className="bg-gradient-to-r from-blue-500 to-purple-500 bg-clip-text text-transparent">digital</span>
-          <br />identity,<br />for every occasion.
+          The business card
+          <br />
+          you'll <span className="bg-gradient-to-r from-blue-500 to-purple-500 bg-clip-text text-transparent">never</span> run out of.
         </h1>
         <p className="mt-5 text-gray-500 text-[1.1rem] max-w-md leading-relaxed">
           Create your Taply card, share instantly, and make every connection memorable.
