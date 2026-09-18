@@ -101,7 +101,7 @@ useEffect(() => {
       {/* ── HERO ── */}
       <div className="relative z-10 flex flex-col items-start text-left px-6 mt-[100px]">
         <div className="px-5 py-2 rounded-full bg-white/90 backdrop-blur border border-blue-200 text-blue-600 text-sm font-semibold mb-6 shadow-sm tracking-wide">
-          Digital Business Card
+          Digital Business Card, All Your Info.
         </div>
         <h1 className="text-[2.2rem] min-[390px]:text-[2.6rem] font-extrabold leading-[1.05] tracking-tighter max-w-md">
           The business card
