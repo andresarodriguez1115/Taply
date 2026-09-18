@@ -151,9 +151,18 @@ export default function ActivateClaim({ deviceId, productType }) {
         {!activeProfile?.username && (
           <div className="w-full max-w-sm bg-amber-50 border border-amber-100 rounded-2xl p-4 mb-6 text-left">
             <p className="text-amber-700 text-sm font-medium">No active profile found</p>
-            <p className="text-amber-600 text-xs mt-1">
+            <p className="text-amber-600 text-xs mt-1 mb-3">
               Create a profile first, then come back and activate this card.
             </p>
+            <button
+              onClick={() => {
+                localStorage.setItem("pending_card_id", deviceId)
+                router.push("/dashboard")
+              }}
+              className="text-amber-700 text-xs font-semibold underline underline-offset-2"
+            >
+              Go to dashboard →
+            </button>
           </div>
         )}
 
