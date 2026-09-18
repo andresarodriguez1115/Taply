@@ -91,25 +91,32 @@ useEffect(() => {
       ? 80
       : window.innerHeight / 2 - r.height / 2
 
+  const targetScroll = Math.max(0, absoluteTop - offset)
+
   window.scrollTo({
-    top: Math.max(0, absoluteTop - offset),
+    top: targetScroll,
     behavior: "smooth",
   })
 
-  const t1 = setTimeout(() => {
-    updateRect(id)
-    setVisible(true)
-  }, 0)
+  setVisible(true)
+  updateRect(id)
 
-  const t2 = setTimeout(() => updateRect(id), 120)
-  const t3 = setTimeout(() => updateRect(id), 300)
-  const t4 = setTimeout(() => updateRect(id), 500)
+  let frame
+  let settledFrames = 0
+  const track = () => {
+    updateRect(id)
+    if (Math.abs(window.scrollY - targetScroll) < 1) {
+      settledFrames++
+      if (settledFrames > 3) return
+    } else {
+      settledFrames = 0
+    }
+    frame = requestAnimationFrame(track)
+  }
+  frame = requestAnimationFrame(track)
 
   return () => {
-    clearTimeout(t1)
-    clearTimeout(t2)
-    clearTimeout(t3)
-    clearTimeout(t4)
+    if (frame) cancelAnimationFrame(frame)
   }
 }, [step])
 
@@ -159,7 +166,7 @@ useEffect(() => {
               <rect width="100%" height="100%" fill="white" />
               <motion.rect
                 animate={{ x: rect.left - PAD, y: rect.top - PAD, width: rect.width + PAD * 2, height: rect.height + PAD * 2 }}
-                transition={{ duration: step === 0 ? 0 : 0.3, ease: "easeInOut" }}
+                transition={{ duration: 0 }}
                 rx="14" fill="black"
               />
             </mask>
@@ -174,9 +181,9 @@ useEffect(() => {
           transition={{ 
             opacity: { duration: 0.25 },
             scale: { duration: 0.25 },
-            top: { duration: step === 0 ? 0 : 0.3, ease: "easeInOut" },
-            left: { duration: step === 0 ? 0 : 0.3, ease: "easeInOut" },
-            width: { duration: step === 0 ? 0 : 0.3, ease: "easeInOut" },
+            top: { duration: 0 },
+            left: { duration: 0 },
+            width: { duration: 0 },
           }}
           style={{ position: "fixed", zIndex: 10000, pointerEvents: "auto" }}
         >

@@ -104,12 +104,12 @@ useEffect(() => {
           All your info. One tap.
         </div>
         <h1 className="text-[2.2rem] min-[390px]:text-[2.6rem] font-extrabold leading-[1.05] tracking-tighter max-w-md">
-          Your{" "}
-          <span className="bg-gradient-to-r from-blue-500 to-purple-500 bg-clip-text text-transparent">digital</span>
-          <br />identity,<br />for every occasion.
+          Your business card.
+          <br />
+          <span className="bg-gradient-to-r from-blue-500 to-purple-500 bg-clip-text text-transparent">Now digital.</span>
         </h1>
         <p className="mt-5 text-gray-500 text-[1.1rem] max-w-md leading-relaxed">
-          Create your Taply card, share instantly, and make every connection memorable.
+          Build your Taply profile, get your card, and share it with a tap.
         </p>
         <div className="mt-10 flex flex-col gap-4 w-full max-w-sm">
           <button onClick={() => window.open("/signup", "_blank")}
