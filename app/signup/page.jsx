@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import supabase from "@/lib/supabase"
 import { useRouter } from "next/navigation"
 import { motion, AnimatePresence } from "framer-motion"
@@ -23,11 +23,12 @@ const [firstName, setFirstName] = useState("")
 const [lastName, setLastName] = useState("")
 const [username, setUsername] = useState("")
 
-const getRedirectTarget = () => {
-  if (typeof window === "undefined") return "/dashboard"
+const [isFromActivation, setIsFromActivation] = useState(false)
+
+useEffect(() => {
   const params = new URLSearchParams(window.location.search)
-  return params.get("redirect") || "/dashboard"
-}
+  setIsFromActivation(params.get("redirect")?.includes("/activate") || false)
+}, [])
 
 
   const handleLogin = async (e) => {
@@ -116,6 +117,14 @@ return (
   src="/taply-logo.svg"
   className="h-14 mb-4 object-contain contrast-125 saturate-125"
 />
+        {isFromActivation && (
+          <div className="text-center mb-5">
+            <p className="text-lg font-bold text-gray-900 mb-1">Welcome to Taply 👋</p>
+            <p className="text-sm text-gray-500 max-w-xs leading-relaxed">
+              Your digital business card. Create an account or log in to link it to your new card.
+            </p>
+          </div>
+        )}
         <h1 className="text-xl font-semibold">
           {mode === "login" ? "Log in to Taply" : "Create your account"}
         </h1>
