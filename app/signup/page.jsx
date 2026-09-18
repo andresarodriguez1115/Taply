@@ -118,10 +118,19 @@ return (
   className="h-14 mb-4 object-contain contrast-125 saturate-125"
 />
         {isFromActivation && (
-          <div className="text-center mb-5">
-            <p className="text-lg font-bold text-gray-900 mb-1">Welcome to Taply 👋</p>
-            <p className="text-sm text-gray-500 max-w-xs leading-relaxed">
-              Your digital business card. Create an account or log in to link it to your new card.
+          <div className="w-full mb-6 rounded-2xl bg-gradient-to-br from-blue-50 to-purple-50 border border-blue-100 px-5 py-4 text-center">
+            <span className="inline-flex items-center gap-1.5 text-[11px] font-bold text-blue-600 bg-white px-3 py-1 rounded-full mb-3 shadow-sm tracking-wide uppercase">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                <circle cx="12" cy="12" r="9" />
+                <circle cx="12" cy="12" r="4" />
+              </svg>
+              New Card Detected
+            </span>
+            <p className="text-[19px] font-bold text-gray-900 leading-tight mb-1.5">
+              Activate your digital business card
+            </p>
+            <p className="text-[13px] text-gray-500 leading-relaxed max-w-[280px] mx-auto">
+              Create an account or log in below to link this card to your Taply profile.
             </p>
           </div>
         )}
