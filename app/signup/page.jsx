@@ -23,6 +23,12 @@ const [firstName, setFirstName] = useState("")
 const [lastName, setLastName] = useState("")
 const [username, setUsername] = useState("")
 
+const getRedirectTarget = () => {
+  if (typeof window === "undefined") return "/dashboard"
+  const params = new URLSearchParams(window.location.search)
+  return params.get("redirect") || "/dashboard"
+}
+
 const [isFromActivation, setIsFromActivation] = useState(false)
 
 useEffect(() => {
