@@ -111,6 +111,9 @@ useEffect(() => {
         <p className="mt-5 text-gray-500 text-[1.1rem] max-w-md leading-relaxed">
           Build your Taply profile, get your card, and share it with a tap.
         </p>
+        <p className="mt-3 text-gray-400 text-[0.95rem] max-w-md">
+          All with one tap. No more paper business cards.
+        </p>
         <div className="mt-10 flex flex-col gap-4 w-full max-w-sm">
           <button onClick={() => window.open("/signup", "_blank")}
             className="bg-black text-white py-4 rounded-2xl text-[1.05rem] font-semibold shadow-lg hover:scale-[1.02] active:scale-[0.97] transition">
