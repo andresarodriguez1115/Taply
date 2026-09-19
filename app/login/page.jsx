@@ -18,10 +18,11 @@ export default function LandingPage() {
   const [error, setError] = useState(null)
   const [menuOpen, setMenuOpen] = useState(false)
 const heroPhoneImages = [
-  "/Social-Mode-Render.png",
   "/Business-Mode-Render.png",
-  "/Networking-Mode-Render.png",
+  "/Social-Mode-Render.png",
   "/University-Mode-Render.png",
+    "/Networking-Mode-Render.png",
+ 
 ]
 
 const [phoneScreen, setPhoneScreen] = useState(0)
@@ -82,9 +83,9 @@ useEffect(() => {
   return (
     <div className="min-h-screen bg-[#fafaf9] relative overflow-hidden text-black">
 
-      {heroPhoneImages.map((src) => (
-        <link key={src} rel="preload" as="image" href={src} />
-      ))}
+ {heroPhoneImages.map((src, index) => (
+  <link key={`${src}-${index}`} rel="preload" as="image" href={src} />
+))}
 
       {/* ── NAV ── */}
       <div className={`fixed top-0 left-0 w-full z-50 flex justify-between items-center pl-2 pr-6 h-[75px] bg-white ${menuOpen ? "" : "border-b border-gray-200"}`}>
@@ -101,15 +102,15 @@ useEffect(() => {
       {/* ── HERO ── */}
       <div className="relative z-10 flex flex-col items-start text-left px-6 mt-[100px]">
         <div className="px-5 py-2 rounded-full bg-white/90 backdrop-blur border border-blue-200 text-blue-600 text-sm font-semibold mb-6 shadow-sm tracking-wide">
-          Digital Business Card, All Your Info.
+          Digital Business Card
         </div>
         <h1 className="text-[2.2rem] min-[390px]:text-[2.6rem] font-extrabold leading-[1.05] tracking-tighter max-w-md">
           The business card
           <br />
           you'll <span className="bg-gradient-to-r from-blue-500 to-purple-500 bg-clip-text text-transparent">never</span> run out of.
         </h1>
-        <p className="mt-5 text-gray-500 text-[1.1rem] max-w-md leading-relaxed">
-          Create your Taply card, share instantly, and make every connection memorable.
+        <p className="mt-5 text-gray-500 text-[1.3rem] max-w-md leading-relaxed">
+          Ditch paper cards. Share instantly, and stay on their phone.
         </p>
         <div className="mt-10 flex flex-col gap-4 w-full max-w-sm">
           <button onClick={() => window.open("/signup", "_blank")}
@@ -181,81 +182,96 @@ useEffect(() => {
           REDESIGNED SECTIONS START HERE
       ════════════════════════════════════════ */}
 
- {/* ── SECTION 1: CUSTOMIZE YOUR CARD ── */}
-<div className="px-4 pt-10 pb-3 bg-[#f5f5f7]">  <div className="max-w-[420px] mx-auto bg-white rounded-[32px] border border-black/5 shadow-[0_20px_60px_rgba(0,0,0,0.08)] overflow-hidden">
-    <div className="px-6 pt-10 pb-8">
+{/* ── SHOP TAPLY CARDS ── */}
+<section className="px-4 pt-10 pb-3 bg-[#f5f5f7]">
+  <div className="max-w-[420px] mx-auto rounded-[32px] bg-white border border-black/5 shadow-[0_20px_60px_rgba(0,0,0,0.08)] p-4">
+    <div className="px-2 pt-5 pb-7">
       <p className="text-sm font-black text-blue-600 tracking-[0.08em] uppercase mb-4">
-        Customize your card
+        Physical Taply Cards
       </p>
 
-      <h2 className="text-[2.35rem] font-black tracking-[-0.055em] leading-[1.02] mb-4">
-        Designed by you.
-        <br />
-        <span className="text-blue-600">Made to stand out.</span>
+      <h2 className="text-[2.35rem] font-black tracking-[-0.055em] leading-[1.02] mb-3">
+        Built for every<br />introduction.
       </h2>
 
-      <p className="text-[16px] text-gray-500 leading-relaxed mb-8">
-        Create a card that represents you. Choose your material, color, finish, and what’s on it.
+      <p className="text-[16px] text-gray-500 leading-relaxed">
+        One card. Unlimited shares. Choose the one that fits you.
       </p>
+    </div>
 
-  {/* Card render image */}
-<div className="relative mb-1 -mx-2">
-  <img
-    src="/taply-card-render.png"
-    alt="Taply custom card render"
-    className="w-full h-auto object-contain block"
-  />
-</div>
-      <div className="flex flex-col gap-5 mb-8">
-        {[
-          {
-            title: "Premium materials",
-            desc: "Metal or PVC. Built to last.",
-            icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2563eb" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="5" width="20" height="14" rx="3"/><path d="M2 10h20"/></svg>,
-          },
-          {
-            title: "Colors & finishes",
-            desc: "Pick your color and finish.",
-            icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2563eb" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/><path d="M2 12h20"/></svg>,
-          },
-          {
-            title: "Your way",
-            desc: "Add your logo, name, and Taply QR code.",
-            icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2563eb" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/></svg>,
-          },
-          {
-            title: "Tap or scan",
-            desc: "NFC enabled and QR ready.",
-            icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2563eb" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><circle cx="12" cy="20" r="1.5" fill="#2563eb" stroke="none"/></svg>,
-          },
-          {
-            title: "Works on iPhone & Android",
-            desc: "Compatible with any NFC phone or QR scanner.",
-            icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2563eb" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M12 18h.01"/></svg>,
-          },
-        ].map(({ title, desc, icon }) => (
-          <div key={title} className="flex items-start gap-4">
-            <div className="w-11 h-11 rounded-full bg-blue-50 flex items-center justify-center shrink-0">
-              {icon}
-            </div>
+    {/* Metal Card */}
+    <div className="overflow-hidden rounded-[26px] border border-blue-100 bg-[#eef3ff] mb-4">
+      <div className="relative">
+        <span className="absolute top-4 left-4 z-10 rounded-full bg-blue-600 px-3 py-1.5 text-[11px] font-black tracking-[0.12em] text-white">
+          NEW
+        </span>
 
-            <div>
-              <p className="text-[15px] font-black tracking-tight mb-0.5">
-                {title}
-              </p>
-              <p className="text-[13px] text-gray-500 leading-relaxed">
-                {desc}
-              </p>
-            </div>
-          </div>
-        ))}
+        <img
+          src="/METAL-CARD.jpg"
+          alt="Taply Metal Card front and back"
+          className="w-full h-auto block"
+        />
       </div>
 
-   
+      <div className="px-5 pb-5">
+        <h3 className="text-[1.65rem] font-black tracking-[-0.04em]">
+          Metal Card
+        </h3>
 
+        <p className="mt-4 text-[18px] leading-relaxed text-gray-600">
+          Premium metal. Personal to you. Made to be remembered.
+        </p>
+
+        <p className="mt-4 text-[15px] text-gray-500">
+          From{" "}
+          <span className="text-[2rem] leading-none font-black tracking-[-0.05em] text-blue-600">
+            $40
+          </span>
+        </p>
+
+        <button
+          onClick={() => window.open("/shop?card=metal", "_blank")}
+          className="mt-4 w-full rounded-2xl bg-black py-4 text-[16px] font-black text-white transition hover:scale-[1.01] active:scale-[0.98]"
+        >
+          Shop Metal Cards →
+        </button>
+      </div>
+    </div>
+
+    {/* PVC Card */}
+    <div className="overflow-hidden rounded-[26px] border border-[#f1e3bc] bg-[#fff9ed]">
+      <img
+        src="/PLASTIC%20CARD.jpg"
+        alt="Taply PVC Card"
+        className="w-full h-auto block"
+      />
+
+      <div className="px-5 pb-5">
+        <h3 className="text-[1.65rem] font-black tracking-[-0.04em]">
+          Plastic Card
+        </h3>
+
+        <p className="mt-4 text-[18px] leading-relaxed text-gray-600">
+          Lightweight, durable, and ready to share anywhere.
+        </p>
+
+        <p className="mt-4 text-[15px] text-gray-500">
+          From{" "}
+          <span className="text-[2rem] leading-none font-black tracking-[-0.05em] text-blue-600">
+            $20
+          </span>
+        </p>
+
+        <button
+          onClick={() => window.open("/shop?card=pvc", "_blank")}
+          className="mt-4 w-full rounded-2xl bg-white border border-black/10 py-4 text-[16px] font-black text-black transition hover:bg-black hover:text-white active:scale-[0.98]"
+        >
+          Shop PVC Cards →
+        </button>
+      </div>
+    </div>
   </div>
-  </div>
-</div>
+</section>
 
       {/* ── WORKS EVERYWHERE ── */}
       <div className="px-4 pt-3 pb-10 bg-[#f5f5f7]">
@@ -265,7 +281,8 @@ useEffect(() => {
             <h2 className="text-[2.35rem] font-black tracking-[-0.055em] leading-[1.02] mb-4">
               Works everywhere<br />you do.
             </h2>
-            <p className="text-[16px] text-gray-500 leading-relaxed mb-8">
+            <p className="text-[17px] text-gray-500 leading-relaxed mb-8">
+              Taply works on any device, anywhere you go.
             </p>
   <div className="grid grid-cols-2 gap-5">
   {[
@@ -292,87 +309,48 @@ useEffect(() => {
           </div>
         </div>
       </div>
-{/* ── SECTION 3: APPLE WALLET ── */}
-<div className="bg-white px-4 pt-10 pb-10">
-  <div className="max-w-[420px] mx-auto rounded-[32px] bg-white border border-blue-100/70 shadow-[0_20px_60px_rgba(37,99,235,0.10)] overflow-hidden">
-    <div className="px-6 pt-10">
-      <p className="text-sm font-black text-blue-600 tracking-[0.08em] uppercase mb-4">
-        Apple Wallet
-      </p>
+{/* ── TAPLY PRO: APPLE WALLET ── */}
+<section className="bg-[#fffaf0] px-4 py-10">
+  <div className="max-w-[420px] mx-auto overflow-hidden rounded-[32px] border border-[#e7cb7b] bg-white shadow-[0_20px_60px_rgba(184,134,11,0.18)]">
+    <div className="px-6 pt-8">
+      <div className="inline-flex items-center gap-2 rounded-full bg-[#e6b93e] px-3 py-1.5 text-[11px] font-black uppercase tracking-[0.12em] text-black shadow-sm">
+        <span className="text-[13px]">✓</span>
+        Taply Pro
+      </div>
 
-      <h2 className="text-[2.35rem] font-black tracking-[-0.055em] leading-[1.02] mb-4">
-        Your card,
-        <br />
-        <span className="text-blue-600">always on you.</span>
+      <h2 className="mt-5 text-[2.35rem] font-black tracking-[-0.055em] leading-[1.02]">
+        Your phone is<br />
+        <span className="bg-gradient-to-r from-[#a97810] via-[#d5a72e] to-[#8d650d] bg-clip-text text-transparent">
+          your business card.
+        </span>
       </h2>
 
-      <p className="text-[16px] text-gray-500 leading-relaxed mb-8">
-        Add your Taply profile to Apple Wallet and share instantly with a tap.
+      <p className="mt-5 text-[17px] leading-relaxed text-gray-600">
+        No card needed. Your phone is your  card.
       </p>
-
-      <div className="flex flex-col gap-5 mb-8">
-        {[
-          {
-            title: "Add in one tap",
-            desc: "Generate a native Apple Wallet pass.",
-            icon: (
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2563eb" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                <rect x="2" y="5" width="20" height="14" rx="3" />
-                <path d="M2 10h20" />
-                <path d="M6 15h2" />
-                <path d="M10 15h4" />
-              </svg>
-            ),
-          },
-          {
-            title: "Always up to date",
-            desc: "Any changes sync automatically.",
-            icon: (
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2563eb" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M21 12a9 9 0 0 1-9 9" />
-                <path d="M3 12a9 9 0 0 1 9-9" />
-                <path d="m21 3-3 3 3 3" />
-                <path d="m3 21 3-3-3-3" />
-              </svg>
-            ),
-          },
-          {
-            title: "Private & secure",
-            desc: "You're in control of what you share.",
-            icon: (
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2563eb" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-              </svg>
-            ),
-          },
-        ].map(({ title, desc, icon }) => (
-          <div key={title} className="flex items-start gap-4">
-            <div className="w-11 h-11 rounded-full bg-blue-50 flex items-center justify-center shrink-0">
-              {icon}
-            </div>
-
-            <div>
-              <p className="text-[14px] font-bold tracking-tight mb-0.5">
-                {title}
-              </p>
-              <p className="text-[12px] text-gray-500 leading-snug">
-                {desc}
-              </p>
-            </div>
-          </div>
-        ))}
-      </div>
     </div>
-<div className="relative -mb-1">
+
+    <div className="relative mx-auto mt-5 w-[82%]">
       <img
-        src="/WALLET-SECTION-RENDER.png"
-        alt="Taply Apple Wallet preview"
-        className="w-full h-auto block"
+        src="/APPLE-WALLET-RENDER.png"
+        alt="Taply Pro Apple Wallet pass"
+        className="block h-auto w-full"
       />
     </div>
+
+    <div className="px-6 pt-5 pb-7">
+      <p className="mb-1 text-[11px] font-black uppercase tracking-[0.14em] text-[#a97810]">
+      </p>
+
+      <button
+        onClick={() => window.open("/pricing", "_blank")}
+        className="w-full rounded-2xl bg-black py-4 text-[16px] font-black text-white transition hover:scale-[1.01] active:scale-[0.98]"
+      >
+        Get Taply Pro →
+      </button>
+    </div>
   </div>
-</div>
-      {/* ── SECTION 2: ONE CARD EVERY ROOM (dark bg) ── */}
+</section>
       <div className="bg-[#0a0a0a] px-6 pt-14 pb-14">
         <p className="text-sm font-semibold text-blue-400 tracking-wide mb-6">For every occasion</p>
         <h2 className="text-[2.4rem] font-black tracking-tighter leading-[1.05] text-white mb-4">
@@ -404,164 +382,27 @@ useEffect(() => {
       </div>
 
 
-{/* ── SECTION 5: PLATFORMS (light blue bg) ── */}
-      <div className="bg-[#f0f4ff] py-14 overflow-hidden">
-        <div className="px-6 mb-8">
-          <p className="text-sm font-semibold text-blue-600 tracking-wide mb-6">Integrations</p>
-          <h2 className="text-[2.4rem] font-black tracking-tighter leading-[1.05] mb-4">
-            Every platform<br />you're on.
-          </h2>
-          <p className="text-[16px] text-gray-500 leading-relaxed">
-            16+ platforms. One link. Connect everything — social, professional, creative.
-          </p>
-        </div>
-        <div className="overflow-hidden mb-3">
-          <motion.div animate={{ x: ["0%", "-50%"] }} transition={{ duration: 18, repeat: Infinity, ease: "linear" }}
-            className="flex gap-3 whitespace-nowrap" style={{ width: "max-content" }}>
-            {[...row1, ...row1].map(({ name, bg, icon }, i) => (
-              <div key={i} className="flex items-center gap-2 bg-white border border-black/7 rounded-full px-4 py-2.5 shadow-sm flex-shrink-0">
-                <div className="w-7 h-7 rounded-lg flex items-center justify-center text-white flex-shrink-0" style={{ background: bg }}>
-                  {{
-                    instagram: <FaInstagram size={14} />,
-                    linkedin: <FaLinkedinIn size={14} />,
-                    twitter: <FaXTwitter size={14} />,
-                    whatsapp: <FaWhatsapp size={14} />,
-                    youtube: <FaYoutube size={14} />,
-                    tiktok: <FaTiktok size={14} />,
-                    spotify: <FaSpotify size={14} />,
-                    behance: <FaBehance size={14} />,
-                    dribbble: <FaDribbble size={14} />,
-                    github: <FaGithub size={14} />,
-                    notion: <SiNotion size={14} />,
-                    substack: <SiSubstack size={14} />,
-                    venmo: <SiVenmo size={14} />,
-                    cashapp: <SiCashapp size={14} />,
-                    calendly: <SiCalendly size={14} />,
-                    discord: <FaDiscord size={14} />,
-                  }[icon]}
-                </div>
-                <span className="text-[13px] font-semibold text-gray-700">{name}</span>
-              </div>
-            ))}
-          </motion.div>
-        </div>
-        <div className="overflow-hidden">
-          <motion.div animate={{ x: ["-50%", "0%"] }} transition={{ duration: 22, repeat: Infinity, ease: "linear" }}
-            className="flex gap-3 whitespace-nowrap" style={{ width: "max-content" }}>
-            {[...row2, ...row2].map(({ name, bg, icon }, i) => (
-              <div key={i} className="flex items-center gap-2 bg-white border border-black/7 rounded-full px-4 py-2.5 shadow-sm flex-shrink-0">
-                <div className="w-7 h-7 rounded-lg flex items-center justify-center text-white flex-shrink-0" style={{ background: bg }}>
-                  {{
-                    instagram: <FaInstagram size={14} />,
-                    linkedin: <FaLinkedinIn size={14} />,
-                    twitter: <FaXTwitter size={14} />,
-                    whatsapp: <FaWhatsapp size={14} />,
-                    youtube: <FaYoutube size={14} />,
-                    tiktok: <FaTiktok size={14} />,
-                    spotify: <FaSpotify size={14} />,
-                    behance: <FaBehance size={14} />,
-                    dribbble: <FaDribbble size={14} />,
-                    github: <FaGithub size={14} />,
-                    notion: <SiNotion size={14} />,
-                    substack: <SiSubstack size={14} />,
-                    venmo: <SiVenmo size={14} />,
-                    cashapp: <SiCashapp size={14} />,
-                    calendly: <SiCalendly size={14} />,
-                    discord: <FaDiscord size={14} />,
-                  }[icon]}
-                </div>
-                <span className="text-[13px] font-semibold text-gray-700">{name}</span>
-              </div>
-            ))}
-          </motion.div>
-        </div>
-      </div>
 
-      {/* ── SECTION 4: ANALYTICS (dark) ── */}
-      <div className="bg-[#0a0a0a] px-6 pt-14 pb-14">
-        <p className="text-sm font-semibold text-blue-400 tracking-wide mb-6">Analytics</p>
-        <h2 className="text-[2.4rem] font-black tracking-tighter leading-[1.05] text-white mb-4">
-          See who's<br />connecting.
-        </h2>
-        <p className="text-[16px] text-white/50 leading-relaxed mb-10">
-          Real-time stats on every view, tap, and save — so you know what's working.
-        </p>
-
-        {/* Analytics widget */}
-        <div className="rounded-3xl border border-white/8 overflow-hidden" style={{ background: "rgba(255,255,255,0.04)" }}>
-          {/* Mini bar chart header */}
-          <div className="px-5 pt-5 pb-4 border-b border-white/6">
-            <div className="flex justify-between items-end mb-3">
-              <div>
-                <p className="text-[12px] text-white/40 mb-1">Profile views this week</p>
-                <p className="text-[32px] font-black text-white tracking-tight">1,284</p>
-              </div>
-              <span className="text-[13px] font-bold text-green-400 bg-green-400/10 px-3 py-1.5 rounded-full">+14%</span>
-            </div>
-            {/* Bar chart */}
-            <div className="flex items-end gap-1.5 h-12">
-              {[30, 45, 38, 60, 52, 72, 88].map((h, i) => (
-                <div key={i} className="flex-1 rounded-sm" style={{
-                  height: `${h}%`,
-                  background: i === 6 ? "#2563eb" : "rgba(255,255,255,0.12)"
-                }} />
-              ))}
-            </div>
-            <div className="flex justify-between mt-2">
-              {["M", "T", "W", "T", "F", "S", "S"].map((d, i) => (
-                <span key={i} className="flex-1 text-center text-[10px] text-white/25">{d}</span>
-              ))}
-            </div>
-          </div>
-
-          {/* 3 stat rows */}
-          <div className="divide-y divide-white/6">
-            {[
-              { label: "Link taps", value: "342", change: "+8%", bars: [5, 8, 6, 10, 8, 12, 14] },
-              { label: "Contact saves", value: "89", change: "+22%", bars: [3, 5, 4, 7, 6, 9, 11] },
-              { label: "Save rate", value: "28%", change: "+3%", bars: [6, 8, 7, 9, 8, 10, 12] },
-            ].map(({ label, value, change, bars }) => (
-              <div key={label} className="flex items-center justify-between px-5 py-4">
-                <div>
-                  <p className="text-[13px] text-white/40 mb-0.5">{label}</p>
-                  <p className="text-[22px] font-black text-white tracking-tight">{value}</p>
-                </div>
-                <div className="flex items-center gap-3">
-                  <div className="flex items-end gap-[2px] h-7">
-                    {bars.map((h, i) => (
-                      <div key={i} className="w-[4px] rounded-sm bg-blue-500" style={{ height: h * 2, opacity: i === bars.length - 1 ? 1 : 0.4 }} />
-                    ))}
-                  </div>
-                  <span className="text-[12px] font-bold text-green-400">{change}</span>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      
       {/* ── SECTION 6: CTA (black) ── */}
-<div className="px-6 py-16 text-center" style={{ background: "linear-gradient(135deg,#1d4ed8,#4f46e5)" }}>        <p className="text-sm font-semibold text-blue-400 tracking-wide mb-6">Get started</p>
+<div className="px-6 py-16 text-center" style={{ background: "linear-gradient(135deg,#1d4ed8,#4f46e5)" }}>        <p className="text-lg font-semibold text-blue-400 tracking-wide mb-6">Get started</p>
         <h2 className="text-[2.6rem] font-black tracking-tighter leading-[1.05] text-white mb-4">
-          Your identity.<br />One tap away.
+          Build your digital.<br />business card today.
         </h2>
         <p className="text-[16px] text-white/40 leading-relaxed mb-10 max-w-xs mx-auto">
-          Join creators, founders, and professionals already on Taply.
+     
         </p>
         <button onClick={() => window.open("/signup", "_blank")}
           className="w-full bg-white text-black py-5 rounded-2xl text-[16px] font-black flex items-center justify-between px-6 hover:bg-gray-100 active:scale-[0.98] transition">
           <span>Create your Taply Card →</span>
           <span>→</span>
         </button>
-  <div className="flex items-center justify-center gap-6 mt-8 flex-wrap">
+  <div className="flex items-center justify-center gap-6 mt-8 text flex-wrap">
   {[
     "Built for modern networking",
-    "Designed for every occasion",
   ].map((t) => (
     <span
       key={t}
-      className="text-[11px] uppercase tracking-[0.18em] text-white/30 font-semibold"
+      className="text-[13px] uppercase tracking-[0.18em] text-white/30 font-semibold"
     >
       {t}
     </span>
@@ -574,7 +415,7 @@ useEffect(() => {
         <div className="flex justify-between items-center mb-4">
           <img src="/taply-logo.svg" className="h-10 object-contain brightness-0 invert" />
         </div>
-        <p className="text-[13px] text-gray-600 mb-8 leading-relaxed">Your digital identity, for every occasion.</p>
+        <p className="text-[13px] text-gray-600 mb-8 leading-relaxed">The business card you'll never run out of.</p>
 <div className="grid grid-cols-2 gap-6 mb-8">
   {[
     { title: "Legal", links: ["Privacy", "Terms", "Cookies"] },
