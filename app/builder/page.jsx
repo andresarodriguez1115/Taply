@@ -473,11 +473,20 @@ const tutorialMode = mode
 );
 const [studioOpen, setStudioOpen] = useState(false);
 const [studioHeight, setStudioHeight] = useState(60);
+const [studioFullscreen, setStudioFullscreen] = useState(false);
+const [studioDragging, setStudioDragging] = useState(false);
 const dragStartY = useRef(null);
 const dragStartHeight = useRef(null);
 const handleDragStart = (e) => {
   dragStartY.current = e.touches?.[0]?.clientY ?? e.clientY;
-  dragStartHeight.current = studioHeight;
+  if (studioFullscreen) {
+    setStudioFullscreen(false);
+    setStudioHeight(90);
+    dragStartHeight.current = 90;
+  } else {
+    dragStartHeight.current = studioHeight;
+  }
+  setStudioDragging(true);
 };
 
 const handleDrag = (e) => {
@@ -1044,8 +1053,11 @@ return (
       animate={{ y: 0 }}
       exit={{ y: "100%" }}
       transition={{ duration: 0.3 }}
-  className="fixed bottom-0 left-0 right-0 bg-white rounded-t-3xl shadow-xl z-50 flex flex-col overflow-hidden touch-pan-y"
-style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
+  className={`fixed bottom-0 left-0 right-0 bg-white rounded-t-3xl shadow-xl ${studioFullscreen ? "z-[60]" : "z-50"} flex flex-col overflow-hidden touch-pan-y`}
+  style={{
+    height: studioFullscreen ? "calc(100dvh - 72px)" : `${studioHeight}vh`,
+    transition: studioDragging ? "none" : "height 0.3s ease",
+  }}
     >
 {/* DRAG HANDLE */}
 <div
@@ -1054,18 +1066,39 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
   onMouseMove={(e) => e.buttons === 1 && handleDrag(e)}
   onTouchStart={handleDragStart}
   onTouchMove={handleDrag}
+  onTouchEnd={() => setStudioDragging(false)}
+  onMouseUp={() => setStudioDragging(false)}
+  onMouseLeave={() => setStudioDragging(false)}
 >
   <div className="w-10 h-1 bg-gray-300 rounded-full" />
 </div>
 
 {/* HEADER */}
 <div className="flex justify-between items-center px-4 pb-3 border-b">
-  <h2 className="font-semibold">Visuals Studio</h2>
-  <button onClick={() => setStudioOpen(false)}>Close</button>
+  <h2 className={`font-semibold transition-all duration-300 ${studioFullscreen ? "text-xl" : "text-base"}`}>Visuals Studio</h2>
+  <div className="flex items-center gap-2">
+    <button
+      onClick={() => setStudioFullscreen(f => !f)}
+      className="w-9 h-9 rounded-full bg-gray-100 flex items-center justify-center hover:bg-gray-200 transition"
+      aria-label={studioFullscreen ? "Minimize" : "Fullscreen"}
+    >
+      {studioFullscreen ? (
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#374151" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><polyline points="4 14 10 14 10 20"/><polyline points="20 10 14 10 14 4"/><line x1="14" y1="10" x2="21" y2="3"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+      ) : (
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#374151" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+      )}
+    </button>
+    <button
+      onClick={() => { setStudioOpen(false); setStudioFullscreen(false); }}
+      className="px-3 py-1.5 text-sm font-medium"
+    >
+      Close
+    </button>
+  </div>
 </div>
 
       {/* TABS */}
-<div className="flex gap-3 px-4 py-3 border-b">
+<div className="flex gap-3 px-4 py-3 border-b" style={{ zoom: studioFullscreen ? 1.15 : 1 }}>
         {["layout", "content", "design"].map((tab) => (
           <button
             key={tab}
@@ -1085,7 +1118,8 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
   className="p-4 flex-1 overflow-y-auto min-h-0"
   style={{
     WebkitOverflowScrolling: "touch",
-    overscrollBehavior: "contain"
+    overscrollBehavior: "contain",
+    zoom: studioFullscreen ? 1.15 : 1,
   }}
 >
   
@@ -1108,7 +1142,15 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
         </div>
         <ChevronDown size={16} className={`text-gray-400 transition-transform duration-300 ${bizDesignOpen.bg ? "rotate-180" : ""}`} />
       </button>
+      <AnimatePresence initial={false}>
       {bizDesignOpen.bg && (
+        <motion.div
+          initial={{ opacity: 0, scale: 0.96 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 0.96 }}
+          transition={{ duration: 0.2 }}
+          style={{ transformOrigin: "top" }}
+        >
         <div className="px-4 pb-4 border-t border-gray-100">
           {layout !== "minimal" && (
             <div className="flex gap-2 mt-3 mb-4">
@@ -1169,7 +1211,9 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
             </div>
           )}
         </div>
+        </motion.div>
       )}
+      </AnimatePresence>
     </div>
 
     {/* TEXT COLORS */}
@@ -1181,7 +1225,15 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
         </div>
         <ChevronDown size={16} className={`text-gray-400 transition-transform duration-300 ${bizDesignOpen.colors ? "rotate-180" : ""}`} />
       </button>
+      <AnimatePresence initial={false}>
       {bizDesignOpen.colors && (
+        <motion.div
+          initial={{ opacity: 0, scale: 0.96 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 0.96 }}
+          transition={{ duration: 0.2 }}
+          style={{ transformOrigin: "top" }}
+        >
         <div className="px-4 pb-4 border-t border-gray-100">
           <div className="flex items-center justify-between mt-3">
             <span className="text-sm text-gray-600">Name</span>
@@ -1202,7 +1254,9 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
             </label>
           </div>
         </div>
+        </motion.div>
       )}
+      </AnimatePresence>
     </div>
 
     {/* FONT */}
@@ -1214,7 +1268,15 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
         </div>
         <ChevronDown size={16} className={`text-gray-400 transition-transform duration-300 ${bizDesignOpen.font ? "rotate-180" : ""}`} />
       </button>
+      <AnimatePresence initial={false}>
       {bizDesignOpen.font && (
+        <motion.div
+          initial={{ opacity: 0, scale: 0.96 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 0.96 }}
+          transition={{ duration: 0.2 }}
+          style={{ transformOrigin: "top" }}
+        >
         <div className="px-4 pb-4 border-t border-gray-100">
           <div className="grid grid-cols-3 gap-2 mt-3">
             {[
@@ -1233,7 +1295,9 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
             ))}
           </div>
         </div>
+        </motion.div>
       )}
+      </AnimatePresence>
     </div>
 
     {/* CONTENT SIZE */}
@@ -1245,13 +1309,21 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
         </div>
         <ChevronDown size={16} className={`text-gray-400 transition-transform duration-300 ${bizDesignOpen.size ? "rotate-180" : ""}`} />
       </button>
+      <AnimatePresence initial={false}>
       {bizDesignOpen.size && (
+        <motion.div
+          initial={{ opacity: 0, scale: 0.96 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 0.96 }}
+          transition={{ duration: 0.2 }}
+          style={{ transformOrigin: "top" }}
+        >
         <div className="border-t border-gray-100">
           {(layout === "executive" ? [
             { label: "Profile Photo", value: execAvatarSize, set: setExecAvatarSize, min: 70, max: 150 },
             { label: "Name", value: fontSize, set: setFontSize, min: 70, max: 150 },
             { label: "Title", value: titleSize, set: setTitleSize, min: 70, max: 150 },
-            { label: "Save Button`", value: execSaveSize, set: setExecSaveSize, min: 70, max: 150 },
+            { label: "Save Button", value: execSaveSize, set: setExecSaveSize, min: 70, max: 150 },
             { label: "Contact", value: execContactSize, set: setExecContactSize, min: 70, max: 150 },
           ] : [
             { label: "Name", value: minNameSize, set: setMinNameSize, min: 70, max: 150 },
@@ -1266,7 +1338,9 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
             </div>
           ))}
         </div>
+        </motion.div>
       )}
+      </AnimatePresence>
     </div>
 
   </div>
@@ -1285,7 +1359,15 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
           </div>
           <ChevronDown size={16} className={`text-gray-400 transition-transform duration-300 ${uniDesignOpen.bg ? "rotate-180" : ""}`} />
         </button>
+        <AnimatePresence initial={false}>
         {uniDesignOpen.bg && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.96 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.96 }}
+            transition={{ duration: 0.2 }}
+            style={{ transformOrigin: "top" }}
+          >
           <div className="px-4 pb-4 border-t border-gray-100">
             <div className="flex gap-2 mt-3 mb-4">
               {["solid", "diffused"].map(t => (
@@ -1344,7 +1426,9 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
               </div>
             )}
           </div>
+          </motion.div>
         )}
+        </AnimatePresence>
       </div>
 
       {/* TEXT COLORS */}
@@ -1356,7 +1440,15 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
           </div>
           <ChevronDown size={16} className={`text-gray-400 transition-transform duration-300 ${uniDesignOpen.colors ? "rotate-180" : ""}`} />
         </button>
+        <AnimatePresence initial={false}>
         {uniDesignOpen.colors && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.96 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.96 }}
+            transition={{ duration: 0.2 }}
+            style={{ transformOrigin: "top" }}
+          >
           <div className="px-4 pb-4 border-t border-gray-100">
             <div className="flex items-center justify-between mt-3">
               <span className="text-sm text-gray-600">Name</span>
@@ -1375,7 +1467,9 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
               </label>
             </div>
           </div>
+          </motion.div>
         )}
+        </AnimatePresence>
       </div>
 
       {/* FONT */}
@@ -1387,7 +1481,15 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
           </div>
           <ChevronDown size={16} className={`text-gray-400 transition-transform duration-300 ${uniDesignOpen.font ? "rotate-180" : ""}`} />
         </button>
+        <AnimatePresence initial={false}>
         {uniDesignOpen.font && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.96 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.96 }}
+            transition={{ duration: 0.2 }}
+            style={{ transformOrigin: "top" }}
+          >
           <div className="px-4 pb-4 border-t border-gray-100">
             <div className="grid grid-cols-3 gap-2 mt-3">
               {[
@@ -1406,7 +1508,9 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
               ))}
             </div>
           </div>
+          </motion.div>
         )}
+        </AnimatePresence>
       </div>
 
       {/* CONTENT SIZE */}
@@ -1418,7 +1522,15 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
           </div>
           <ChevronDown size={16} className={`text-gray-400 transition-transform duration-300 ${uniDesignOpen.size ? "rotate-180" : ""}`} />
         </button>
+        <AnimatePresence initial={false}>
         {uniDesignOpen.size && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.96 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.96 }}
+            transition={{ duration: 0.2 }}
+            style={{ transformOrigin: "top" }}
+          >
           <div className="border-t border-gray-100">
             {[
               { label: "Profile Photo", value: uniAvatarSize, set: setUniAvatarSize, min: 40, max: 150 },
@@ -1436,7 +1548,9 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
               </div>
             ))}
           </div>
+          </motion.div>
         )}
+        </AnimatePresence>
       </div>
 
     </div>
@@ -1457,7 +1571,15 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
         </div>
         <ChevronDown size={16} className={`text-gray-400 transition-transform duration-300 ${socDesignOpen.bg ? "rotate-180" : ""}`} />
       </button>
+   <AnimatePresence initial={false}>
    {socDesignOpen.bg && (
+  <motion.div
+    initial={{ opacity: 0, scale: 0.96 }}
+    animate={{ opacity: 1, scale: 1 }}
+    exit={{ opacity: 0, scale: 0.96 }}
+    transition={{ duration: 0.2 }}
+    style={{ transformOrigin: "top" }}
+  >
   <div className="px-4 pb-4 border-t border-gray-100">
 
     {layout === "circle" && (
@@ -1553,7 +1675,9 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
     )}
 
   </div>
+  </motion.div>
 )}
+</AnimatePresence>
     </div>
 
     {/* TEXT COLORS */}
@@ -1565,7 +1689,15 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
         </div>
         <ChevronDown size={16} className={`text-gray-400 transition-transform duration-300 ${socDesignOpen.colors ? "rotate-180" : ""}`} />
       </button>
+      <AnimatePresence initial={false}>
       {socDesignOpen.colors && (
+        <motion.div
+          initial={{ opacity: 0, scale: 0.96 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 0.96 }}
+          transition={{ duration: 0.2 }}
+          style={{ transformOrigin: "top" }}
+        >
         <div className="px-4 pb-4 border-t border-gray-100">
           <div className="flex items-center justify-between mt-3">
             <span className="text-sm text-gray-600">Name</span>
@@ -1586,7 +1718,9 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
             </label>
           </div>
         </div>
+        </motion.div>
       )}
+      </AnimatePresence>
     </div>
 
    {/* FONT */}
@@ -1598,7 +1732,15 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
         </div>
         <ChevronDown size={16} className={`text-gray-400 transition-transform duration-300 ${socDesignOpen.font ? "rotate-180" : ""}`} />
       </button>
+      <AnimatePresence initial={false}>
       {socDesignOpen.font && (
+        <motion.div
+          initial={{ opacity: 0, scale: 0.96 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 0.96 }}
+          transition={{ duration: 0.2 }}
+          style={{ transformOrigin: "top" }}
+        >
         <div className="px-4 pb-4 border-t border-gray-100">
           <div className="grid grid-cols-3 gap-2 mt-3">
             {[
@@ -1617,7 +1759,9 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
             ))}
           </div>
         </div>
+        </motion.div>
       )}
+      </AnimatePresence>
     </div>
 
     {/* CONTENT SIZE */}
@@ -1629,7 +1773,15 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
         </div>
         <ChevronDown size={16} className={`text-gray-400 transition-transform duration-300 ${socDesignOpen.size ? "rotate-180" : ""}`} />
       </button>
+      <AnimatePresence initial={false}>
       {socDesignOpen.size && (
+        <motion.div
+          initial={{ opacity: 0, scale: 0.96 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 0.96 }}
+          transition={{ duration: 0.2 }}
+          style={{ transformOrigin: "top" }}
+        >
         <div className="border-t border-gray-100">
           {[
             ...(layout === "circle" ? [{ label: "Profile Photo", value: socialAvatarSize, set: setSocialAvatarSize, min: 80, max: 280, px: true }] : []),
@@ -1647,7 +1799,9 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
             </div>
           ))}
         </div>
+        </motion.div>
       )}
+      </AnimatePresence>
     </div>
 
   </div>
@@ -1666,7 +1820,15 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
         </div>
         <ChevronDown size={16} className={`text-gray-400 transition-transform duration-300 ${netDesignOpen.bg ? "rotate-180" : ""}`} />
       </button>
+      <AnimatePresence initial={false}>
       {netDesignOpen.bg && (
+        <motion.div
+          initial={{ opacity: 0, scale: 0.96 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 0.96 }}
+          transition={{ duration: 0.2 }}
+          style={{ transformOrigin: "top" }}
+        >
         <div className="px-4 pb-4 border-t border-gray-100">
           <div className="flex gap-2 mt-3 mb-4">
             {["solid", "diffused"].map(t => (
@@ -1725,7 +1887,9 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
             </div>
           )}
         </div>
+        </motion.div>
       )}
+      </AnimatePresence>
     </div>
 
     <div className="border border-gray-200 rounded-2xl overflow-hidden" data-tutorial="net-design-text-colors">
@@ -1736,7 +1900,15 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
         </div>
         <ChevronDown size={16} className={`text-gray-400 transition-transform duration-300 ${netDesignOpen.colors ? "rotate-180" : ""}`} />
       </button>
+      <AnimatePresence initial={false}>
       {netDesignOpen.colors && (
+        <motion.div
+          initial={{ opacity: 0, scale: 0.96 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 0.96 }}
+          transition={{ duration: 0.2 }}
+          style={{ transformOrigin: "top" }}
+        >
         <div className="px-4 pb-4 border-t border-gray-100">
           <div className="flex items-center justify-between mt-3">
             <span className="text-sm text-gray-600">Name</span>
@@ -1757,7 +1929,9 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
             </label>
           </div>
         </div>
+        </motion.div>
       )}
+      </AnimatePresence>
     </div>
 
     <div className="border border-gray-200 rounded-2xl overflow-hidden" data-tutorial="net-design-font">
@@ -1768,7 +1942,15 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
         </div>
         <ChevronDown size={16} className={`text-gray-400 transition-transform duration-300 ${netDesignOpen.font ? "rotate-180" : ""}`} />
       </button>
+      <AnimatePresence initial={false}>
       {netDesignOpen.font && (
+        <motion.div
+          initial={{ opacity: 0, scale: 0.96 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 0.96 }}
+          transition={{ duration: 0.2 }}
+          style={{ transformOrigin: "top" }}
+        >
         <div className="px-4 pb-4 border-t border-gray-100">
           <div className="grid grid-cols-3 gap-2 mt-3">
             {[
@@ -1787,7 +1969,9 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
             ))}
           </div>
         </div>
+        </motion.div>
       )}
+      </AnimatePresence>
     </div>
 
     <div className="border border-gray-200 rounded-2xl overflow-hidden" data-tutorial="net-design-content-size">
@@ -1798,7 +1982,15 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
         </div>
         <ChevronDown size={16} className={`text-gray-400 transition-transform duration-300 ${netDesignOpen.size ? "rotate-180" : ""}`} />
       </button>
+      <AnimatePresence initial={false}>
       {netDesignOpen.size && (
+        <motion.div
+          initial={{ opacity: 0, scale: 0.96 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 0.96 }}
+          transition={{ duration: 0.2 }}
+          style={{ transformOrigin: "top" }}
+        >
         <div className="border-t border-gray-100">
           {[
             { label: "Photo", value: netAvatarSize, set: setNetAvatarSize, min: 80, max: 320, px: true },
@@ -1816,7 +2008,9 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
             </div>
           ))}
         </div>
+        </motion.div>
       )}
+      </AnimatePresence>
     </div>
 
   </div>
@@ -1844,7 +2038,16 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
   </div>
   <ChevronDown size={16} className={`text-gray-400 transition-transform duration-300 ${openSections.identity ? "rotate-180" : ""}`} />
 </button>
-{openSections.identity && <div className="space-y-3 border p-3 rounded-xl">
+<AnimatePresence initial={false}>
+{openSections.identity && (
+  <motion.div
+    initial={{ opacity: 0, scale: 0.96 }}
+    animate={{ opacity: 1, scale: 1 }}
+    exit={{ opacity: 0, scale: 0.96 }}
+    transition={{ duration: 0.2 }}
+    style={{ transformOrigin: "top" }}
+  >
+  <div className="space-y-3 border p-3 rounded-xl">
         <div className="flex justify-between items-center">
           <span className="text-sm">Full Name</span>
           <input value={name} onChange={(e) => setName(e.target.value)} placeholder="Your Name"
@@ -1855,7 +2058,10 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
           <input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="CS @ MIT"
             className="w-40 border border-gray-200 rounded-lg px-3 py-1.5 bg-gray-50 text-sm focus:outline-none focus:ring-2 focus:ring-black/10" />
         </div>
-      </div>}
+      </div>
+  </motion.div>
+)}
+</AnimatePresence>
     </div>
 
     {/* GPA & GRAD YEAR */}
@@ -1869,7 +2075,16 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
   </div>
   <ChevronDown size={16} className={`text-gray-400 transition-transform duration-300 ${openSections.academic ? "rotate-180" : ""}`} />
 </button>
-{openSections.academic && <div className="space-y-3">
+<AnimatePresence initial={false}>
+{openSections.academic && (
+  <motion.div
+    initial={{ opacity: 0, scale: 0.96 }}
+    animate={{ opacity: 1, scale: 1 }}
+    exit={{ opacity: 0, scale: 0.96 }}
+    transition={{ duration: 0.2 }}
+    style={{ transformOrigin: "top" }}
+  >
+  <div className="space-y-3">
         {[
           { key: "uni_gpa", label: "GPA", placeholder: "e.g. 3.8 / 4.0" },
           { key: "uni_grad_year", label: "Grad Year", placeholder: "e.g. Class of 2026" },
@@ -1895,7 +2110,10 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
             </div>
           );
         })}
-      </div>}
+      </div>
+  </motion.div>
+)}
+</AnimatePresence>
     </div>
 
     {/* BIO */}
@@ -1909,13 +2127,25 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
   </div>
   <ChevronDown size={16} className={`text-gray-400 transition-transform duration-300 ${openSections.bio ? "rotate-180" : ""}`} />
 </button>
-{openSections.bio && <textarea
+<AnimatePresence initial={false}>
+{openSections.bio && (
+  <motion.div
+    initial={{ opacity: 0, scale: 0.96 }}
+    animate={{ opacity: 1, scale: 1 }}
+    exit={{ opacity: 0, scale: 0.96 }}
+    transition={{ duration: 0.2 }}
+    style={{ transformOrigin: "top" }}
+  >
+  <textarea
         value={fieldValues?.uni_bio || ""}
         onChange={(e) => setFieldValues((prev) => ({ ...prev, uni_bio: e.target.value }))}
         placeholder="Tell people about yourself, your interests, and what you're working on..."
         rows={4}
         className="w-full border border-gray-200 rounded-2xl px-4 py-3 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-black/10 resize-none"
-      />}
+      />
+  </motion.div>
+)}
+</AnimatePresence>
     </div>
 
     {/* RESUME */}
@@ -1929,7 +2159,16 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
   </div>
   <ChevronDown size={16} className={`text-gray-400 transition-transform duration-300 ${openSections.resume ? "rotate-180" : ""}`} />
 </button>
-{openSections.resume && <div className="rounded-2xl border border-gray-200 bg-white px-4 py-3">
+<AnimatePresence initial={false}>
+{openSections.resume && (
+  <motion.div
+    initial={{ opacity: 0, scale: 0.96 }}
+    animate={{ opacity: 1, scale: 1 }}
+    exit={{ opacity: 0, scale: 0.96 }}
+    transition={{ duration: 0.2 }}
+    style={{ transformOrigin: "top" }}
+  >
+  <div className="rounded-2xl border border-gray-200 bg-white px-4 py-3">
         <p className="text-xs font-medium text-gray-500 mb-1.5 ml-1"
 >Link to your resume (Google Drive, Notion, etc.)</p>
         <input
@@ -1938,7 +2177,10 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
           placeholder="https://drive.google.com/your-resume"
           className="w-full border border-gray-200 rounded-xl px-3 py-2.5 bg-gray-50 text-sm focus:outline-none focus:ring-2 focus:ring-black/10"
         />
-      </div>}
+      </div>
+  </motion.div>
+)}
+</AnimatePresence>
     </div>
 
 {/* CONTACT */}
@@ -1952,7 +2194,16 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
   </div>
   <ChevronDown size={16} className={`text-gray-400 transition-transform duration-300 ${openSections.contact ? "rotate-180" : ""}`} />
 </button>
-{openSections.contact && <div className="space-y-3">
+<AnimatePresence initial={false}>
+{openSections.contact && (
+  <motion.div
+    initial={{ opacity: 0, scale: 0.96 }}
+    animate={{ opacity: 1, scale: 1 }}
+    exit={{ opacity: 0, scale: 0.96 }}
+    transition={{ duration: 0.2 }}
+    style={{ transformOrigin: "top" }}
+  >
+  <div className="space-y-3">
 {[
           { key: "phone", label: "Phone", placeholder: "Your phone number" },
           { key: "email", label: "Email", placeholder: "Your email" },
@@ -1981,7 +2232,10 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
             </div>
           );
         })}
-      </div>}
+      </div>
+  </motion.div>
+)}
+</AnimatePresence>
     </div>
 
     {/* PORTFOLIO PROJECTS */}
@@ -1995,7 +2249,16 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
   </div>
   <ChevronDown size={16} className={`text-gray-400 transition-transform duration-300 ${openSections.projects ? "rotate-180" : ""}`} />
 </button>
-{openSections.projects && <div className="space-y-2">
+<AnimatePresence initial={false}>
+{openSections.projects && (
+  <motion.div
+    initial={{ opacity: 0, scale: 0.96 }}
+    animate={{ opacity: 1, scale: 1 }}
+    exit={{ opacity: 0, scale: 0.96 }}
+    transition={{ duration: 0.2 }}
+    style={{ transformOrigin: "top" }}
+  >
+  <div className="space-y-2">
         {(fieldValues?.uni_projects || []).map((project, i) => {
           const isActive = !!project;
           return (
@@ -2065,7 +2328,10 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
           + Add Project
         </button>
       )}
-      </div>}
+      </div>
+  </motion.div>
+)}
+</AnimatePresence>
     </div>
   </>
 )}
@@ -2083,7 +2349,16 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
   </div>
   <ChevronDown size={16} className={`text-gray-400 transition-transform duration-300 ${openSections.identity ? "rotate-180" : ""}`} />
 </button>
-{openSections.identity && <div className="space-y-3 border p-3 rounded-xl mb-3">
+<AnimatePresence initial={false}>
+{openSections.identity && (
+  <motion.div
+    initial={{ opacity: 0, scale: 0.96 }}
+    animate={{ opacity: 1, scale: 1 }}
+    exit={{ opacity: 0, scale: 0.96 }}
+    transition={{ duration: 0.2 }}
+    style={{ transformOrigin: "top" }}
+  >
+  <div className="space-y-3 border p-3 rounded-xl mb-3">
         <div className="flex justify-between items-center">
           <span className="text-sm">Display Name</span>
           <input value={name} onChange={(e) => setName(e.target.value)} placeholder="Your Name"
@@ -2094,7 +2369,10 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
           <input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Health & Fitness Coach"
             className="w-40 border border-gray-200 rounded-lg px-3 py-1.5 bg-gray-50 text-sm focus:outline-none focus:ring-2 focus:ring-black/10" />
         </div>
-      </div>}
+      </div>
+  </motion.div>
+)}
+</AnimatePresence>
     </div>
 
 {/* SOCIAL ICONS */}
@@ -2108,7 +2386,16 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
   </div>
   <ChevronDown size={16} className={`text-gray-400 transition-transform duration-300 ${openSections.socialIcons ? "rotate-180" : ""}`} />
 </button>
-{openSections.socialIcons && <div className="space-y-3">
+<AnimatePresence initial={false}>
+{openSections.socialIcons && (
+  <motion.div
+    initial={{ opacity: 0, scale: 0.96 }}
+    animate={{ opacity: 1, scale: 1 }}
+    exit={{ opacity: 0, scale: 0.96 }}
+    transition={{ duration: 0.2 }}
+    style={{ transformOrigin: "top" }}
+  >
+  <div className="space-y-3">
         {["instagram", "tiktok", "twitter", "youtube", "whatsapp", "cashapp"].map((platform) => {
           const isActive = !!(fieldValues?.social_icons?.[platform]);
           return (
@@ -2137,7 +2424,10 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
             </div>
           );
         })}
-      </div>}
+      </div>
+  </motion.div>
+)}
+</AnimatePresence>
     </div>
 
     {/* LINKS */}
@@ -2151,7 +2441,16 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
   </div>
   <ChevronDown size={16} className={`text-gray-400 transition-transform duration-300 ${openSections.links ? "rotate-180" : ""}`} />
 </button>
-{openSections.links && <div className="space-y-2">
+<AnimatePresence initial={false}>
+{openSections.links && (
+  <motion.div
+    initial={{ opacity: 0, scale: 0.96 }}
+    animate={{ opacity: 1, scale: 1 }}
+    exit={{ opacity: 0, scale: 0.96 }}
+    transition={{ duration: 0.2 }}
+    style={{ transformOrigin: "top" }}
+  >
+  <div className="space-y-2">
         {(fieldValues?.social_links || []).map((link, i) => {
           const isActive = !!link;
           return (
@@ -2224,7 +2523,10 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
       >
         + Add Link
       </button>
-      </div>}
+      </div>
+  </motion.div>
+)}
+</AnimatePresence>
     </div>
 
     {/* SHOP PRODUCTS */}
@@ -2238,7 +2540,16 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
   </div>
   <ChevronDown size={16} className={`text-gray-400 transition-transform duration-300 ${openSections.products ? "rotate-180" : ""}`} />
 </button>
-{openSections.products && <div className="space-y-2">
+<AnimatePresence initial={false}>
+{openSections.products && (
+  <motion.div
+    initial={{ opacity: 0, scale: 0.96 }}
+    animate={{ opacity: 1, scale: 1 }}
+    exit={{ opacity: 0, scale: 0.96 }}
+    transition={{ duration: 0.2 }}
+    style={{ transformOrigin: "top" }}
+  >
+  <div className="space-y-2">
         {(fieldValues?.social_products || []).map((product, i) => {
           const isActive = !!product;
           return (
@@ -2319,7 +2630,10 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
       >
         + Add Product
       </button>
-      </div>}
+      </div>
+  </motion.div>
+)}
+</AnimatePresence>
     </div>
   </>
 )}
@@ -2336,7 +2650,16 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
   </div>
   <ChevronDown size={16} className={`text-gray-400 transition-transform duration-300 ${openSections.identity ? "rotate-180" : ""}`} />
 </button>
-{openSections.identity && <div className="space-y-3 border p-3 rounded-xl">
+<AnimatePresence initial={false}>
+{openSections.identity && (
+  <motion.div
+    initial={{ opacity: 0, scale: 0.96 }}
+    animate={{ opacity: 1, scale: 1 }}
+    exit={{ opacity: 0, scale: 0.96 }}
+    transition={{ duration: 0.2 }}
+    style={{ transformOrigin: "top" }}
+  >
+  <div className="space-y-3 border p-3 rounded-xl">
         <div className="flex justify-between items-center">
           <span className="text-sm">Full Name</span>
           <input value={name} onChange={(e) => setName(e.target.value)} placeholder="Your Name"
@@ -2347,7 +2670,10 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
           <input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Your Title"
             className="w-40 border border-gray-200 rounded-lg px-3 py-1.5 bg-gray-50 text-sm focus:outline-none focus:ring-2 focus:ring-black/10" />
         </div>
-      </div>}
+      </div>
+  </motion.div>
+)}
+</AnimatePresence>
     </div>
 
     {/* CONTACT */}
@@ -2361,7 +2687,16 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
   </div>
   <ChevronDown size={16} className={`text-gray-400 transition-transform duration-300 ${openSections.contact ? "rotate-180" : ""}`} />
 </button>
-{openSections.contact && <div className="space-y-3">
+<AnimatePresence initial={false}>
+{openSections.contact && (
+  <motion.div
+    initial={{ opacity: 0, scale: 0.96 }}
+    animate={{ opacity: 1, scale: 1 }}
+    exit={{ opacity: 0, scale: 0.96 }}
+    transition={{ duration: 0.2 }}
+    style={{ transformOrigin: "top" }}
+  >
+  <div className="space-y-3">
         {[
           { key: "phone", label: "Phone", placeholder: "Your phone number" },
           { key: "email", label: "Email", placeholder: "Your email" },
@@ -2390,7 +2725,10 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
             </div>
           );
         })}
-      </div>}
+      </div>
+  </motion.div>
+)}
+</AnimatePresence>
     </div>
 
     <div data-tutorial="net-buttons">
@@ -2403,7 +2741,16 @@ style={{ height: `${studioHeight}vh`, marginTop: "80px" }}
   </div>
   <ChevronDown size={16} className={`text-gray-400 transition-transform duration-300 ${openSections.buttons ? "rotate-180" : ""}`} />
 </button>
-{openSections.buttons && <div>
+<AnimatePresence initial={false}>
+{openSections.buttons && (
+  <motion.div
+    initial={{ opacity: 0, scale: 0.96 }}
+    animate={{ opacity: 1, scale: 1 }}
+    exit={{ opacity: 0, scale: 0.96 }}
+    transition={{ duration: 0.2 }}
+    style={{ transformOrigin: "top" }}
+  >
+  <div>
 
   <div className="space-y-3">
     {(fieldValues?.buttons || []).map((button, i) => {
@@ -2507,7 +2854,10 @@ const isActive = button !== null && button !== undefined;
   >
     + Add Button
   </button>
-</div>}
+</div>
+  </motion.div>
+)}
+</AnimatePresence>
 </div>
   </>
 )}
@@ -2524,7 +2874,16 @@ const isActive = button !== null && button !== undefined;
   </div>
   <ChevronDown size={16} className={`text-gray-400 transition-transform duration-300 ${openSections.identity ? "rotate-180" : ""}`} />
 </button>
-{openSections.identity && <div className="space-y-3 border p-3 rounded-xl">
+<AnimatePresence initial={false}>
+{openSections.identity && (
+  <motion.div
+    initial={{ opacity: 0, scale: 0.96 }}
+    animate={{ opacity: 1, scale: 1 }}
+    exit={{ opacity: 0, scale: 0.96 }}
+    transition={{ duration: 0.2 }}
+    style={{ transformOrigin: "top" }}
+  >
+  <div className="space-y-3 border p-3 rounded-xl">
     <div className="flex justify-between items-center">
       <span className="text-sm">Full Name</span>
       <input
@@ -2543,7 +2902,10 @@ const isActive = button !== null && button !== undefined;
         className="w-40 border border-gray-200 rounded-lg px-3 py-1.5 bg-gray-50 text-sm focus:outline-none focus:ring-2 focus:ring-black/10"
       />
     </div>
-  </div>}
+  </div>
+  </motion.div>
+)}
+</AnimatePresence>
 </div>
 
         {/* ADD FIELDS */}
@@ -2557,7 +2919,16 @@ const isActive = button !== null && button !== undefined;
   </div>
   <ChevronDown size={16} className={`text-gray-400 transition-transform duration-300 ${openSections.contact ? "rotate-180" : ""}`} />
 </button>
-{openSections.contact && <div className="space-y-3">
+<AnimatePresence initial={false}>
+{openSections.contact && (
+  <motion.div
+    initial={{ opacity: 0, scale: 0.96 }}
+    animate={{ opacity: 1, scale: 1 }}
+    exit={{ opacity: 0, scale: 0.96 }}
+    transition={{ duration: 0.2 }}
+    style={{ transformOrigin: "top" }}
+  >
+  <div className="space-y-3">
     {["phone", "email", "linkedin", "instagram", "website", "whatsapp", "cashapp"].map((field) => {
       const isActive = fields[field];
 
@@ -2602,7 +2973,10 @@ const isActive = button !== null && button !== undefined;
 </div>
       );
     })}
-  </div>}
+  </div>
+  </motion.div>
+)}
+</AnimatePresence>
 </div>
 
         {/* ACTIVE FIELDS */}

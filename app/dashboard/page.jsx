@@ -399,8 +399,8 @@ backdrop-blur-xl border shadow-[0_8px_30px_rgba(0,0,0,0.08)] ring-2 ${
               </svg>
             </div>
             <div>
-              <p className="text-[14px] font-bold text-white leading-tight">Upgrade to Pro</p>
-              <p className="text-[12px] text-white/70 leading-tight mt-0.5">All modes, 4 profiles, more</p>
+              <p className="text-[15px] font-bold text-white leading-tight">Upgrade to Pro</p>
+              <p className="text-[13px] text-white/70 leading-tight mt-0.5">Apple wallet, multiple modes, qr code</p>
             </div>
           </div>
           <span className="text-white text-lg">→</span>
@@ -542,7 +542,7 @@ backdrop-blur-xl border shadow-[0_8px_30px_rgba(0,0,0,0.08)] ring-2 ${
 
       </div>
       {/* APPLE WALLET HEADER */}
-<div data-tutorial="wallet" className="mt-10 mb-3 relative z-20">
+<div data-tutorial="wallet" className={`${profiles.length === 0 ? "mt-2" : "mt-10"} mb-3 relative z-20`}>
   <h2 className="text-xl font-semibold tracking-tight relative z-20">
  
   </h2>

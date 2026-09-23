@@ -57,7 +57,7 @@ useEffect(() => {
   const cashapp = fieldValues?.cashapp || "";
 
   return (
-    <div className="w-full min-h-screen pt-[75px]" style={{ background: backgroundColor, fontFamily: fontFamily }}>
+    <div className="w-full min-h-screen pt-[50px]" style={{ background: backgroundColor, fontFamily: fontFamily }}>
 
       {/* ── HEADER CARD ── */}
       <div className="px-5 pt-6 pb-4">

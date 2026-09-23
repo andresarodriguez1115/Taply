@@ -71,13 +71,15 @@ if (data.scale !== undefined && setProfileScale) {
 <div className="relative w-full max-w-5xl mx-auto aspect-[1/.9] sm:aspect-[1/0.8] overflow-hidden group">
 {isEditing && profileImage && (
 <div
-className="absolute bottom-4 left-1/2 -translate-x-1/2 
-           bg-white/90 px-4 py-2 rounded-full shadow-lg
+className="absolute bottom-4 left-4
+           flex items-center gap-1.5
+           bg-white border border-gray-200 px-3 py-1.5 rounded-full shadow-sm
            opacity-0 group-hover:opacity-100
            transition
            z-20"
+style={{ width: 150 }}
 >
-
+    <span className="text-[10px] text-gray-400">−</span>
     <input
       type="range"
       min="0.5"
@@ -85,8 +87,10 @@ className="absolute bottom-4 left-1/2 -translate-x-1/2
       step="0.01"
 value={profileScale}
 onChange={(e) => setProfileScale && setProfileScale(Number(e.target.value))}
-      className="w-[120px]"
+      className="accent-black"
+      style={{ width: 110 }}
     />
+    <span className="text-[10px] text-gray-400">+</span>
   </div>
 )}
 

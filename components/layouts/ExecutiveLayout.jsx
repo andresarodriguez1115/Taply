@@ -165,7 +165,8 @@ onTouchEnd={profileMouseUp}
         </div>
 
         {isEditing && profileImage && (
-          <div className="absolute bottom-2 left-1/2 -translate-x-1/2 bg-white/90 px-3 py-2 rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition">
+          <div className="absolute -bottom-9 left-1/2 -translate-x-1/2 flex items-center gap-1 bg-white border border-gray-200 rounded-full px-2 py-1 shadow-sm opacity-0 group-hover:opacity-100 transition z-20" style={{ width: 90 }}>
+            <span className="text-[9px] text-gray-400">−</span>
             <input
               type="range"
               min="0.5"
@@ -173,8 +174,10 @@ onTouchEnd={profileMouseUp}
               step="0.01"
               value={profileScale}
               onChange={(e) => setProfileScale(Number(e.target.value))}
-              className="w-[70px] sm:w-[110px]"
+              className="flex-1 accent-black"
+              style={{ width: 60 }}
             />
+            <span className="text-[9px] text-gray-400">+</span>
           </div>
         )}
 

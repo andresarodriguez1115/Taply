@@ -23,6 +23,14 @@ const [firstName, setFirstName] = useState("")
 const [lastName, setLastName] = useState("")
 const [username, setUsername] = useState("")
 
+const handleUsernameChange = (e) => {
+  const cleaned = e.target.value
+    .toLowerCase()
+    .replace(/\s+/g, "")
+    .replace(/[^a-z0-9]/g, "")
+  setUsername(cleaned)
+}
+
 const getRedirectTarget = () => {
   if (typeof window === "undefined") return "/dashboard"
   const params = new URLSearchParams(window.location.search)
@@ -66,6 +74,11 @@ useEffect(() => {
 
     if (password !== confirmPassword) {
       setError("Passwords do not match")
+      return
+    }
+
+    if (!/^[a-z0-9_]+$/.test(username)) {
+      setError("Username can only contain lowercase letters, numbers, and underscores — no spaces or symbols.")
       return
     }
 
@@ -209,9 +222,9 @@ return (
 
           <input
             type="text"
-            placeholder="Username"
+            placeholder="Username (letters and numbers only)"
             value={username}
-            onChange={(e)=>setUsername(e.target.value)}
+            onChange={handleUsernameChange}
             className="w-full border border-gray-200 p-3 rounded-lg"
           />
 
