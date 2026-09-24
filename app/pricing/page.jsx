@@ -159,6 +159,10 @@ export default function PricingPage() {
     console.log("SESSION CHECK:", session)
 
     if (!session) {
+      localStorage.setItem(
+        "pending_checkout_plan",
+        JSON.stringify({ plan, ts: Date.now() })
+      )
       router.push("/signup")
       return
     }

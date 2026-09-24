@@ -484,8 +484,9 @@ function BigLinkCard({ title, image, url, profileId, isEditing, netButtonSize = 
 
   return (
     <a
-      href={isEditing ? undefined : safeUrl}
-      target={isEditing ? undefined : "_blank"}
+      href={url ? safeUrl : undefined}
+      target="_blank"
+      rel="noopener noreferrer"
       onClick={() => !isEditing && logEvent(profileId, "tap")}
       className="bg-white rounded-3xl shadow-[0_12px_30px_rgba(0,0,0,0.08)] hover:shadow-[0_18px_40px_rgba(0,0,0,0.12)] transition-all duration-300 flex items-center justify-between cursor-pointer"
       style={{ width: "100%", padding: `${16 * netButtonSize / 100}px` }}

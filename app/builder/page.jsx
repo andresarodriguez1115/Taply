@@ -502,7 +502,7 @@ useEffect(() => {
     if (!done) setTimeout(() => setShowBuilderTutorial(true), 1000);
   }
 }, [profileId]);
-const [activeTab, setActiveTab] = useState("layout");
+const [activeTab, setActiveTab] = useState("content");
 const [openMode, setOpenMode] = useState(null);
 const [avatarMenuOpen, setAvatarMenuOpen] = useState(false);
 const [openSections, setOpenSections] = useState({
@@ -958,6 +958,7 @@ return (
 {/* FLOATING PREVIEW BUTTON */}
 {isEditing && (
   <button
+    data-tutorial="preview-btn"
     onClick={() => setIsEditing(false)}
     className="
       fixed
@@ -1048,7 +1049,7 @@ return (
     </div>
 <AnimatePresence>
 {studioOpen && (
-  <motion.div key="studio-panel"
+  <motion.div key="studio-panel" data-tutorial="studio-panel"
       initial={{ y: "100%" }}
       animate={{ y: 0 }}
       exit={{ y: "100%" }}
@@ -1099,7 +1100,7 @@ return (
 
       {/* TABS */}
 <div className="flex gap-3 px-4 py-3 border-b" style={{ zoom: studioFullscreen ? 1.15 : 1 }}>
-        {["layout", "content", "design"].map((tab) => (
+        {["content", "design"].map((tab) => (
           <button
             key={tab}
             data-tutorial={tab === "content" ? "content-tab" : tab === "design" ? "design-tab" : undefined}
@@ -1130,6 +1131,27 @@ return (
 {/* BUSINESS MODE DESIGN */}
 {mode === "business" && (
   <div className="space-y-3 pb-20">
+
+    {/* STYLE */}
+    <div className="border border-gray-200 rounded-2xl overflow-hidden">
+      <div className="w-full flex items-center justify-between px-4 py-3.5 bg-white">
+        <div className="flex items-center gap-3">
+          <div className="w-8 h-8 rounded-xl bg-gray-100 flex items-center justify-center flex-shrink-0">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#6b7280" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+          </div>
+          <span className="text-base font-semibold text-gray-900">Style</span>
+        </div>
+        <div className="flex bg-gray-100 rounded-full p-1" data-tutorial="design-style">
+          {["executive", "minimal"].map((l) => (
+            <button key={l} onClick={() => setLayout(l)}
+              className={`px-3.5 py-1.5 rounded-full text-sm font-medium transition ${layout === l ? "bg-white shadow-sm text-gray-900" : "text-gray-500"}`}>
+              {l.charAt(0).toUpperCase() + l.slice(1)}
+            </button>
+          ))}
+        </div>
+      </div>
+    </div>
+
 
     {/* BACKGROUND */}
     <div className="border border-gray-200 rounded-2xl overflow-hidden" data-tutorial="design-background">
@@ -1559,6 +1581,28 @@ return (
 {/* SOCIAL MODE DESIGN */}
 {mode === "social" && (
   <div className="space-y-3 pb-20">
+
+    {/* STYLE */}
+    <div className="border border-gray-200 rounded-2xl overflow-hidden">
+      <div className="w-full flex items-center justify-between px-4 py-3.5 bg-white">
+        <div className="flex items-center gap-3">
+          <div className="w-8 h-8 rounded-xl bg-gray-100 flex items-center justify-center flex-shrink-0">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#6b7280" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+          </div>
+          <span className="text-base font-semibold text-gray-900">Style</span>
+        </div>
+        <div className="flex bg-gray-100 rounded-full p-1" data-tutorial="soc-design-style">
+          {["circle", "banner"].map((l) => (
+            <button key={l} onClick={() => setLayout(l)}
+              className={`px-3.5 py-1.5 rounded-full text-sm font-medium transition ${layout === l ? "bg-white shadow-sm text-gray-900" : "text-gray-500"}`}>
+              {l.charAt(0).toUpperCase() + l.slice(1)}
+            </button>
+          ))}
+        </div>
+      </div>
+    </div>
+
+   
 
     {/* BACKGROUND */}
     <div className="border border-gray-200 rounded-2xl overflow-hidden" data-tutorial="soc-design-background">
@@ -2110,6 +2154,18 @@ return (
             </div>
           );
         })}
+        <div className={`p-3 rounded-xl border transition ${!fieldValues?.uni_hide_projects_stat ? "bg-blue-50 border-blue-400" : "bg-gray-50"}`}>
+          <div className="flex justify-between items-center">
+            <div>
+              <span className="text-sm">Projects Count</span>
+              <p className="text-[11px] text-gray-400">Shows how many portfolio projects you have</p>
+            </div>
+            <button
+              onClick={() => setFieldValues((prev) => ({ ...prev, uni_hide_projects_stat: !prev.uni_hide_projects_stat }))}
+              className={`w-5 h-5 rounded-full border flex-shrink-0 ${!fieldValues?.uni_hide_projects_stat ? "bg-blue-500 border-blue-500" : "bg-white border-gray-300"}`}
+            />
+          </div>
+        </div>
       </div>
   </motion.div>
 )}
@@ -2501,6 +2557,14 @@ return (
                     }}
                     className="w-full border border-gray-200 rounded-xl px-3 py-2.5 bg-gray-50 text-sm focus:outline-none focus:ring-2 focus:ring-black/10"
  />
+                  <textarea placeholder="Short description (optional)" value={link?.desc || ""} rows={2}
+                    onChange={(e) => {
+                      const updated = [...(fieldValues?.social_links || [])];
+                      updated[i] = { ...updated[i], desc: e.target.value };
+                      setFieldValues({ ...fieldValues, social_links: updated });
+                    }}
+                    className="w-full border border-gray-200 rounded-xl px-3 py-2.5 bg-gray-50 text-sm focus:outline-none focus:ring-2 focus:ring-black/10 resize-none"
+                  />
                   <input placeholder="Link URL" value={link?.url || ""}
                     onChange={(e) => {
                       const updated = [...(fieldValues?.social_links || [])];
@@ -2988,118 +3052,7 @@ const isActive = button !== null && button !== undefined;
 )}
 
 
-      {/* LAYOUT TAB */}
-{activeTab === "layout" && (
-  <div className="space-y-3" data-tutorial="mode-selector">
-    <p className="text-base font-bold text-gray-800 mb-3"
->Select a mode</p>{[
-{ id: "business", label: "Business", color: "#2563eb", iconBg: "#eff6ff", desc: "Professional card with contact fields",
-  icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2563eb" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg> },
-{ id: "networking", label: "Company", color: "#7c3aed", iconBg: "#f5f3ff", desc: "Clean profile with social links",
-  icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#7c3aed" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg> },
-{ id: "university", label: "University", color: "#059669", iconBg: "#ecfdf5", desc: "Student & campus identity",
-  icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#059669" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg> },
-{ id: "social", label: "Social", color: "#ea580c", iconBg: "#fff7ed", desc: "Creator & social-first layout", hasStyles: true,
-  icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ea580c" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg> },
-    ].map((m) => {
-      const isActive = mode === m.id;
-      return (
-        <div key={m.id} className="space-y-2">
-          <button
-            onClick={() => {
-              if (m.id !== "business" && subscriptionTier !== "pro") {
-                setUpgradeModalOpen(true);
-                return;
-              }
-              if (m.id === "business" || m.id === "social") {
-                setMode(m.id);
-                setLayout(m.id === "business" ? "executive" : "circle");
-                setOpenMode(openMode === m.id ? null : m.id);
-              } else {
-                setMode(m.id);
-                setOpenMode(null);
-              }
-            }}
 
-            className={`w-full p-3 rounded-2xl text-left transition border ${
-              isActive
-                ? "bg-white text-black border-2 border-black"
-                : "bg-white border-gray-200 hover:border-gray-300"
-            }`}
-          >
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: m.iconBg }}>
-  {m.icon}
-</div>                <div>
-                  <p className={`text-base font-medium flex items-center gap-1.5 ${isActive ? "text-black" : "text-gray-900"}`}>
-                    {m.label}
-                    {m.id !== "business" && subscriptionTier !== "pro" && (
-                      <span className="text-[9px] font-bold bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-1.5 py-0.5 rounded-full tracking-wide">PRO</span>
-                    )}
-                  </p>
-
-                  <p className={`text-sm ${isActive ? "text-gray-500" : "text-gray-400"}`}>{m.desc}</p>
-                </div>
-              </div>
- {(m.id === "business" || m.id === "social") && (
-                <ChevronDown size={16} className={`transition-transform duration-300 ${openMode === m.id ? "rotate-180" : ""} ${isActive ? "text-black" : "text-gray-400"}`} />
-              )}
-            </div>
-          </button>
-          <AnimatePresence>
-            {m.id === "business" && openMode === "business" && (
-              <motion.div
-                initial={{ height: 0, opacity: 0 }}
-                animate={{ height: "auto", opacity: 1 }}
-                exit={{ height: 0, opacity: 0 }}
-                transition={{ duration: 0.25 }}
-                className="pl-2 space-y-2 overflow-hidden"
-              >
-                <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest px-1">Style</p>
-                <div className="flex gap-2">
-                  {["executive", "minimal"].map((l) => (
-                    <button key={l} onClick={() => { setMode("business"); setLayout(l); }}
-                      className={`flex-1 py-2 rounded-xl text-sm font-medium border transition ${
-                        layout === l
-                          ? "bg-white text-black border-2 border-black"
-                          : "bg-white border-gray-200 text-gray-600"
-                      }`}>
-                      {l.charAt(0).toUpperCase() + l.slice(1)}
-                    </button>
-                  ))}
-                </div>
-              </motion.div>
-            )}
-            {m.id === "social" && openMode === "social" && (
-              <motion.div
-                initial={{ height: 0, opacity: 0 }}
-                animate={{ height: "auto", opacity: 1 }}
-                exit={{ height: 0, opacity: 0 }}
-                transition={{ duration: 0.25 }}
-                className="pl-2 space-y-2 overflow-hidden"
-              >
-                <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest px-1">Style</p>
-                <div className="flex gap-2">
-                  {["circle", "banner"].map((l) => (
-                    <button key={l} onClick={() => { setMode("social"); setLayout(l); }}
-                      className={`flex-1 py-2 rounded-xl text-sm font-medium border transition ${
-                        layout === l
-                          ? "bg-white text-black border-2 border-black"
-                          : "bg-white border-gray-200 text-gray-600"
-                      }`}>
-                      {l.charAt(0).toUpperCase() + l.slice(1)}
-                    </button>
-                  ))}
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
-      );
-    })}
-  </div>
-)}
       </div>
     </motion.div>
   )}
@@ -3269,7 +3222,7 @@ const isActive = button !== null && button !== undefined;
     onClick={() => {
       const wasOpen = studioOpen
       setStudioOpen(true)
-      setActiveTab("layout")
+      setActiveTab("content")
       if (wasOpen) {
         setShowBuilderTutorial(true)
       } else {

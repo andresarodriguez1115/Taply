@@ -142,6 +142,35 @@ const { data: accountData } = await supabase
 
 setSubscriptionTier(accountData?.subscription_tier || "free");
 
+// Resume checkout if user picked a plan before logging in
+const pendingRaw = localStorage.getItem("pending_checkout_plan");
+if (pendingRaw) {
+  localStorage.removeItem("pending_checkout_plan");
+  try {
+    const { plan, ts } = JSON.parse(pendingRaw);
+    const fresh = Date.now() - ts < 30 * 60 * 1000;
+    const isPro = (accountData?.subscription_tier || "free") === "pro";
+    if (fresh && !isPro && plan) {
+      const res = await fetch("/api/create-checkout-session", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          plan,
+          userId: userData.user.id,
+          userEmail: userData.user.email,
+        }),
+      });
+      const json = await res.json();
+      if (json.url) {
+        window.location.href = json.url;
+        return;
+      }
+    }
+  } catch (e) {
+    console.error("Pending checkout error:", e);
+  }
+}
+
 const { data: profilesData } = await supabase
   .from("profiles")
   .select("*")
@@ -876,7 +905,7 @@ label: "QR Code",
         label: "Copy Link",
         arrowColor: "text-green-600",
         onClick: () => {
-          if (!mounted) return;a
+          if (!mounted) return;
           navigator.clipboard.writeText(`${window.location.origin}/${username}`);
           alert("Link copied!");
         },

@@ -5,21 +5,23 @@ import { motion, AnimatePresence } from "framer-motion"
 
 const MODE_STEPS = {
   business: [
-    { id: "mode-selector", title: "Business mode", desc: "Your professional digital card, shared in one tap.", position: "top" },
+    { id: "studio-intro", title: "Business mode", desc: "Your professional digital card, shared in one tap.", position: "top" },
     { id: "content-tab", title: "Content tab", desc: "Add your name, title, and contact info here.", position: "bottom" },
     { id: "identity-section", title: "Name & title", desc: "Use your real name and a clear, specific title.", position: "bottom" },
     { id: "contact-fields", title: "Contact fields", desc: "Toggle on what you want people to see and tap.", position: "top" },
     { id: "design-tab", title: "Design tab", desc: "Control every visual aspect of your card.", position: "top" },
+    { id: "design-style", title: "Style", desc: "Switch between Executive and Minimal layouts.", position: "bottom" },
     { id: "design-background", title: "Background", desc: "Pick a color or gradient that matches your brand.", position: "bottom" },
     { id: "design-text-colors", title: "Text colors", desc: "Set name and title colors with enough contrast.", position: "bottom" },
     { id: "design-font", title: "Font", desc: "Choose a typeface that fits your style.", position: "bottom" },
     { id: "design-content-size", title: "Content size", desc: "Scale elements up or down to fit your layout.", position: "bottom" },
     { id: "profile-photo-btn", title: "Profile photo", desc: "Upload a photo — faces make cards memorable.", position: "bottom" },
     { id: "save-btn", title: "Save", desc: "Go live. Share via link, QR, or NFC tap.", position: "bottom" },
-    { id: "preview", title: "Live preview", desc: "This is exactly what people see. You're done.", position: "top" },
+    { id: "preview-btn", title: "Preview", desc: "Tap here anytime to see exactly what people will see.", position: "bottom" },
+    { id: "preview", title: "You're all set!", desc: "This is your card. Save it and start sharing with a tap.", position: "top" },
   ],
   networking: [
-    { id: "mode-selector", title: "Networking mode", desc: "Your in-person card for events, fairs, and meetups.", position: "top" },
+    { id: "studio-intro", title: "Company mode", desc: "Your in-person card for events, fairs, and meetups.", position: "top" },
     { id: "content-tab", title: "Content tab", desc: "Fill in your identity, contact info, and link buttons.", position: "bottom" },
     { id: "net-identity", title: "Name & title", desc: "Be specific — 'Software Engineer @ Google' not just 'Engineer'.", position: "bottom" },
     { id: "net-contact", title: "Contact circles", desc: "Toggle phone, email, and location. Each becomes a tap circle.", position: "top" },
@@ -31,10 +33,11 @@ const MODE_STEPS = {
     { id: "net-design-content-size", title: "Content size", desc: "Scale elements up or down to fit your layout.", position: "bottom" },
     { id: "profile-photo-btn", title: "Change photo", desc: "Upload a photo — faces make cards memorable.", position: "bottom" },
     { id: "save-btn", title: "Save", desc: "Go live. Share via link, QR, or NFC tap.", position: "bottom" },
-    { id: "preview", title: "Live preview", desc: "This is exactly what people see. You're done.", position: "top" },
+    { id: "preview-btn", title: "Preview", desc: "Tap here anytime to see exactly what people will see.", position: "bottom" },
+    { id: "preview", title: "You're all set!", desc: "This is your card. Save it and start sharing with a tap.", position: "top" },
   ],
   university: [
-    { id: "mode-selector", title: "University mode", desc: "Your student card for career fairs and recruiters.", position: "top" },
+    { id: "studio-intro", title: "University mode", desc: "Your student card for career fairs and recruiters.", position: "top" },
     { id: "content-tab", title: "Content tab", desc: "Fill in your academic info, bio, resume, contact info, and projects here.", position: "bottom" },
     { id: "identity-section", title: "Name & major", desc: "Use your real name and format clearly — 'CS @ MIT, Class of 2026'.", position: "bottom" },
     { id: "uni-academic", title: "Academic info", desc: "Add your GPA and grad year. They show as stat cards.", position: "top" },
@@ -49,23 +52,26 @@ const MODE_STEPS = {
     { id: "uni-design-content-size", title: "Content size", desc: "Scale elements up or down to fit your layout.", position: "bottom" },
     { id: "profile-photo-btn", title: "Profile photo", desc: "Upload a photo — faces make cards memorable.", position: "bottom" },
     { id: "save-btn", title: "Save", desc: "Go live. Share via link, QR, or NFC tap.", position: "bottom" },
-    { id: "preview", title: "Live preview", desc: "This is exactly what people see. You're done.", position: "top" },
+    { id: "preview-btn", title: "Preview", desc: "Tap here anytime to see exactly what people will see.", position: "bottom" },
+    { id: "preview", title: "You're all set!", desc: "This is your card. Save it and start sharing with a tap.", position: "top" },
   ],
   social: [
-    { id: "mode-selector", title: "Social mode", desc: "Your link-in-bio for creators — links, shop, and social handles in one page.", position: "top" },
+    { id: "studio-intro", title: "Social mode", desc: "Your link-in-bio: links, shop, and socials in one page.", position: "top" },
     { id: "content-tab", title: "Content tab", desc: "Set up your name, bio, social icons, link cards, and shop products here.", position: "bottom" },
     { id: "social-identity", title: "Name & bio", desc: "Your display name and one-line bio — make it clear who you are.", position: "bottom" },
     { id: "social-icons", title: "Social icons", desc: "Toggle on your handles. Each shows as a branded icon circle.", position: "top" },
     { id: "social-links", title: "Link cards", desc: "Add big link cards with a title, URL, and cover image.", position: "top" },
     { id: "social-products", title: "Shop products", desc: "Add products with a name, price, image, and buy link.", position: "top" },
     { id: "design-tab", title: "Design tab", desc: "Control every visual aspect of your page.", position: "top" },
+    { id: "soc-design-style", title: "Style", desc: "Switch between a Circle photo or a full Banner.", position: "bottom" },
     { id: "soc-design-background", title: "Background", desc: "Pick a color that fits your vibe.", position: "bottom" },
     { id: "soc-design-text-colors", title: "Text colors", desc: "Set name and bio colors with enough contrast.", position: "bottom" },
     { id: "soc-design-font", title: "Font", desc: "Choose a typeface that fits your style.", position: "bottom" },
     { id: "soc-design-content-size", title: "Content size", desc: "Scale elements up or down to fit your layout.", position: "bottom" },
     { id: "profile-photo-btn", title: "Profile photo", desc: "Upload a photo — faces make pages memorable.", position: "bottom" },
     { id: "save-btn", title: "Save", desc: "Go live. Share via link, QR, or NFC tap.", position: "bottom" },
-    { id: "preview", title: "Live preview", desc: "This is exactly what people see. You're done.", position: "top" },
+    { id: "preview-btn", title: "Preview", desc: "Tap here anytime to see exactly what people will see.", position: "bottom" },
+    { id: "preview", title: "You're all set!", desc: "This is your card. Save it and start sharing with a tap.", position: "top" },
   ],
 }
 
@@ -90,7 +96,8 @@ export default function BuilderTutorial({ onComplete, onGoToContent, onGoToDesig
   const getElement = (id) => {
     const map = {
       "preview": "[data-tutorial='preview']",
-      "mode-selector": "[data-tutorial='mode-selector']",
+      "preview-btn": "[data-tutorial='preview-btn']",
+      "studio-intro": "[data-tutorial='studio-panel']",
       "content-tab": "[data-tutorial='content-tab']",
       "design-tab": "[data-tutorial='design-tab']",
       "identity-section": "[data-tutorial='identity-section']",
@@ -108,6 +115,8 @@ export default function BuilderTutorial({ onComplete, onGoToContent, onGoToDesig
       "social-icons": "[data-tutorial='social-icons']",
       "social-links": "[data-tutorial='social-links']",
       "social-products": "[data-tutorial='social-products']",
+      "design-style": "[data-tutorial='design-style']",
+      "soc-design-style": "[data-tutorial='soc-design-style']",
       "design-background": "[data-tutorial='design-background']",
       "design-text-colors": "[data-tutorial='design-text-colors']",
       "design-font": "[data-tutorial='design-font']",
@@ -189,26 +198,34 @@ export default function BuilderTutorial({ onComplete, onGoToContent, onGoToDesig
         return
       }
 
-      // All other steps: original logic
-      const panel = el.closest(".overflow-y-auto")
-      if (panel) {
-        const panelRect = panel.getBoundingClientRect()
-        const elRect = el.getBoundingClientRect()
-        const isFullyVisible =
-          elRect.top >= panelRect.top + 12 &&
-          elRect.bottom <= panelRect.bottom - 12
-        if (!isFullyVisible) {
-          const scrollTop = panel.scrollTop + (elRect.top - panelRect.top) - 80
-          panel.scrollTo({ top: Math.max(0, scrollTop), behavior: "smooth" })
+      // All other steps: scroll once, then keep tracking until scroll settles
+      if (!scrollTriggered) {
+        scrollTriggered = true
+        const panel = el.closest(".overflow-y-auto")
+        if (panel) {
+          const panelRect = panel.getBoundingClientRect()
+          const elRect = el.getBoundingClientRect()
+          const isFullyVisible =
+            elRect.top >= panelRect.top + 12 &&
+            elRect.bottom <= panelRect.bottom - 12
+          if (!isFullyVisible) {
+            const scrollTop = elRect.bottom > panelRect.bottom - 12
+              ? panel.scrollTop + (elRect.bottom - panelRect.bottom) + 24
+              : panel.scrollTop + (elRect.top - panelRect.top) - 24
+            panel.scrollTo({ top: Math.max(0, scrollTop), behavior: "auto" })
+          }
+        } else {
+          el.scrollIntoView({ behavior: "smooth", block: "center" })
         }
-      } else {
-        el.scrollIntoView({ behavior: "smooth", block: "center" })
       }
       const r = el.getBoundingClientRect()
-      if (r.width === 0 && r.height === 0) return
+      if (r.width === 0 && r.height === 0) {
+        if (frames > 40) clearInterval(interval)
+        return
+      }
       setRect({ top: r.top, left: r.left, width: r.width, height: r.height })
       setDisplayStep(step)
-      clearInterval(interval)
+      if (frames > 20) clearInterval(interval)
     }
 
     interval = setInterval(findAndMeasure, 50)
@@ -220,15 +237,15 @@ export default function BuilderTutorial({ onComplete, onGoToContent, onGoToDesig
   useEffect(() => {
     const update = () => measureRect(STEPS[step].id)
     window.addEventListener("resize", update)
-    window.addEventListener("scroll", update)
-    return () => { window.removeEventListener("resize", update); window.removeEventListener("scroll", update) }
+    window.addEventListener("scroll", update, true)
+    return () => { window.removeEventListener("resize", update); window.removeEventListener("scroll", update, true) }
   }, [step])
 
   const handleNext = () => {
     if (step < STEPS.length - 1) {
       const nextStep = STEPS[step + 1]
       const currentStep = STEPS[step]
-      if (currentStep.id === "mode-selector") onGoToContent?.()
+      if (currentStep.id === "studio-intro") onGoToContent?.()
       if (nextStep.id === "design-tab") onGoToDesign?.()
       if (nextStep.id === "profile-photo-btn") onCloseStudio?.()
       if (nextStep.id === "save-btn") onCloseStudio?.()
@@ -325,7 +342,7 @@ if (current.position === "bottom") {
 
 tooltipTop = Math.max(16, Math.min(tooltipTop, window.innerHeight - TOOLTIP_HEIGHT - 16))
 
-const wideTooltipIds = ["content-tab", "design-tab", "profile-photo-btn", "save-btn"]
+const wideTooltipIds = ["content-tab", "design-tab", "profile-photo-btn", "save-btn", "preview-btn", "preview"]
 const shouldUseWideTooltip = wideTooltipIds.includes(current.id)
 
 const tooltipWidth = shouldUseWideTooltip

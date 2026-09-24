@@ -95,7 +95,7 @@ onChange={(e) => setProfileScale && setProfileScale(Number(e.target.value))}
 )}
 
 
-<motion.img
+{profileImage && <motion.img
   src={profileImage}
   className="absolute inset-0 w-full h-full object-contain cursor-grab touch-none"
   style={{
@@ -112,7 +112,7 @@ onChange={(e) => setProfileScale && setProfileScale(Number(e.target.value))}
   onTouchEnd={profileMouseUp}
 
   draggable={false}
-/>
+/>}
 
 {isEditing && (
   <label className="absolute bottom-4 right-4 bg-white border border-gray-200 shadow-md px-4 py-1.5 rounded-full text-xs font-medium text-gray-700 cursor-pointer z-20">
@@ -126,19 +126,7 @@ onChange={(e) => setProfileScale && setProfileScale(Number(e.target.value))}
   </label>
 )}
 
-{!profileImage && bannerImage && (
-  <img
-    src={bannerImage}
-    className="w-full h-full object-cover cursor-move"
-    style={{
-      transform: `scale(${imageScale}) translateY(${imageY}px)`
-    }}
-    onMouseDown={handleMouseDown}
-    onMouseMove={handleMouseMove}
-    onMouseUp={handleMouseUp}
-    onMouseLeave={handleMouseUp}
-  />
-)}
+
 
 
 

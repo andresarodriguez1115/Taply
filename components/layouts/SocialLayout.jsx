@@ -247,9 +247,13 @@ useEffect(() => {
           {links.length === 0 && isEditing && (
             <div className="space-y-3">
               {[1, 2].map(i => (
-                <div key={i} className="w-full rounded-2xl overflow-hidden bg-white border border-dashed border-gray-300 opacity-60">
-                  <div className="w-full h-44 bg-gray-200" />
-                  <div className="px-4 py-3"><div className="h-4 w-32 bg-gray-300 rounded-full" /></div>
+                <div key={i} className="flex items-center gap-4 w-full rounded-3xl bg-white border border-dashed border-gray-300 p-3 opacity-60">
+                  <div className="w-24 h-24 rounded-2xl bg-gray-200 flex-shrink-0" />
+                  <div className="flex-1 space-y-2">
+                    <div className="h-4 w-32 bg-gray-300 rounded-full" />
+                    <div className="h-3 w-40 bg-gray-200 rounded-full" />
+                  </div>
+                  <span className="text-gray-300 text-xl pr-1">→</span>
                 </div>
               ))}
             </div>
@@ -257,70 +261,44 @@ useEffect(() => {
           {links.length === 0 && !isEditing && (
             <div className="text-center text-gray-400 text-sm py-10">No links yet</div>
           )}
-          {links.map((link, i) => (
-            <a key={i} href={link.url ? (link.url.startsWith("http") ? link.url : `https://${link.url}`) : "#"} target="_blank"
-              onClick={() => logEvent(profileId, "tap")}
-              className="block w-full rounded-2xl overflow-hidden bg-white shadow-sm border border-gray-100 hover:shadow-md transition">
-{link.image && (
-                <div className="w-full h-44 overflow-hidden relative group"
-                  onTouchStart={isEditing ? (e) => {
-                    e.preventDefault();
-                    const t = e.touches[0];
-                    const startX = t.clientX;
-                    const startY = t.clientY;
-                    const startPosX = fieldValues?.social_links?.[i]?.imgX || 0;
-                    const startPosY = fieldValues?.social_links?.[i]?.imgY || 0;
-                    const onMove = (ev) => {
-                      ev.preventDefault();
-                      const touch = ev.touches[0];
-                      const updated = [...(fieldValues?.social_links || [])];
-                      updated[i] = { ...updated[i], imgX: startPosX + (touch.clientX - startX), imgY: startPosY + (touch.clientY - startY) };
-                      setFieldValues({ ...fieldValues, social_links: updated });
-                    };
-                    const onEnd = () => { window.removeEventListener("touchmove", onMove); window.removeEventListener("touchend", onEnd); };
-                    window.addEventListener("touchmove", onMove, { passive: false });
-                    window.addEventListener("touchend", onEnd);
-                  } : undefined}
-                  style={{ cursor: isEditing ? "grab" : "default", background: "#e4e2e2" }}
+          {links.map((link, i) => {
+            const href = link.url ? (link.url.startsWith("http") ? link.url : `https://${link.url}`) : undefined;
+            const thumb = 96 * socialLinkSize / 100;
+            return (
+              <a
+                key={i}
+                href={href}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => !isEditing && logEvent(profileId, "tap")}
+                className="flex items-center gap-4 w-full rounded-3xl bg-white border border-gray-100 shadow-[0_8px_30px_rgba(0,0,0,0.06)] hover:shadow-[0_12px_36px_rgba(0,0,0,0.10)] transition p-3 text-left"
+              >
+                <div
+                  className="rounded-2xl overflow-hidden bg-gray-100 flex-shrink-0 flex items-center justify-center"
+                  style={{ width: thumb, height: thumb }}
                 >
-                  <img src={link.image}
-                    draggable={false}
-                    style={{
-                      position: "absolute",
-                      width: "100%",
-                      height: "100%",
-                      objectFit: "cover",
-                      transform: `translate(${link.imgX || 0}px, ${link.imgY || 0}px) scale(${link.imgScale || 1})`,
-                      transformOrigin: "center",
-                      pointerEvents: "none",
-                      userSelect: "none",
-                    }}
-                  />
-                  {isEditing && (
-                    <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex items-center gap-1 bg-white/90 border border-gray-200 rounded-full px-2 py-1 shadow-sm" style={{ width: 90, zIndex: 10 }}>
-                      <span className="text-[9px] text-gray-400">−</span>
-                      <input type="range" min="0.5" max="3" step="0.05"
-                        value={link.imgScale || 1}
-                        onChange={(e) => {
-                          const updated = [...(fieldValues?.social_links || [])];
-                          updated[i] = { ...updated[i], imgScale: parseFloat(e.target.value) };
-                          setFieldValues({ ...fieldValues, social_links: updated });
-                        }}
-                        className="flex-1 accent-black" style={{ width: 60 }} />
-                      <span className="text-[9px] text-gray-400">+</span>
-                    </div>
+                  {link.image ? (
+                    <img src={link.image} draggable={false} className="w-full h-full object-cover" />
+                  ) : (
+                    <span className="text-[10px] text-gray-400">Image</span>
                   )}
                 </div>
-              )}
-              <div className="px-4 py-3 flex items-center justify-between">
-                <p className="font-semibold text-gray-900" style={{ fontSize: `${0.875 * socialLinkSize / 100}rem` }}>{link.title || "Untitled"}</p>
-                <span className="text-gray-400 text-lg">→</span>
-              </div>
-            </a>
-          ))}
-        </div>
+                <div className="flex-1 min-w-0">
+                  <p className="font-semibold text-gray-900 leading-tight" style={{ fontSize: `${1.05 * socialLinkSize / 100}rem` }}>
+                    {link.title || "Untitled"}
+                  </p>
+                  {link.desc && (
+                    <p className="text-gray-500 mt-1 leading-snug line-clamp-2" style={{ fontSize: `${0.85 * socialLinkSize / 100}rem` }}>
+                      {link.desc}
+                    </p>
+                  )}
+                </div>
+                <span className="text-gray-400 text-xl flex-shrink-0 pr-1">→</span>
+              </a>
+            );
+          })}
+                  </div>
       )}
-
       {/* ── SHOP TAB ── */}
       {activeTab === "shop" && (
         <div className="px-5 mt-5 pb-16">

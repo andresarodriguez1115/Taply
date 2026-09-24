@@ -172,37 +172,37 @@ useEffect(() => {
       {activeTab === "about" && (
         <div className="px-5 space-y-4 pb-20">
 {/* Stats */}
-{(fieldValues?.uni_gpa?.trim() || projects.length > 0 || fieldValues?.uni_grad_year?.trim()) ? (
-  <div className="grid grid-cols-3 gap-3">
-    {fieldValues?.uni_gpa?.trim() && (
-      <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 text-center">
-        <p className="font-bold text-blue-500 leading-none" style={{ fontSize: `${1.5 * uniStatsSize / 100}rem` }}>{fieldValues.uni_gpa.trim()}</p>
-        <p className="text-[11px] uppercase tracking-wide text-gray-400 mt-1">GPA</p>
-      </div>
-    )}
-    {projects.length > 0 && (
-      <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 text-center">
-        <p className="font-bold text-blue-500 leading-none" style={{ fontSize: `${1.5 * uniStatsSize / 100}rem` }}>{projects.length}</p>
-        <p className="text-[11px] uppercase tracking-wide text-gray-400 mt-1">Projects</p>
-      </div>
-    )}
-    {fieldValues?.uni_grad_year?.trim() && (
-      <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 text-center">
-        <p className="font-bold text-blue-500 leading-none" style={{ fontSize: `${1.5 * uniStatsSize / 100}rem` }}>{fieldValues.uni_grad_year.trim()}</p>
-        <p className="text-[11px] uppercase tracking-wide text-gray-400 mt-1">Grad</p>
-      </div>
-    )}
-  </div>
-) : isEditing ? (
-  <div className="grid grid-cols-3 gap-3 opacity-30">
-    {["GPA", "Projects", "Grad"].map((label) => (
-      <div key={label} className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 text-center">
-        <div className="h-6 w-10 bg-gray-200 rounded-full mx-auto mb-1" />
-        <p className="text-[11px] uppercase tracking-wide text-gray-400 mt-1">{label}</p>
-      </div>
-    ))}
-  </div>
-) : null}
+{(() => {
+  const stats = [
+    fieldValues?.uni_gpa?.trim() && { value: fieldValues.uni_gpa.trim(), label: "GPA" },
+    !fieldValues?.uni_hide_projects_stat && projects.length > 0 && { value: projects.length, label: "Projects" },
+    fieldValues?.uni_grad_year?.trim() && { value: fieldValues.uni_grad_year.trim(), label: "Grad" },
+  ].filter(Boolean);
+
+  if (stats.length > 0) return (
+    <div className="grid gap-3" style={{ gridTemplateColumns: `repeat(${stats.length}, minmax(0, 1fr))` }}>
+      {stats.map(({ value, label }) => (
+        <div key={label} className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 text-center">
+          <p className="font-bold text-blue-500 leading-none" style={{ fontSize: `${1.5 * uniStatsSize / 100}rem` }}>{value}</p>
+          <p className="text-[11px] uppercase tracking-wide text-gray-400 mt-1">{label}</p>
+        </div>
+      ))}
+    </div>
+  );
+
+  if (isEditing) return (
+    <div className="grid grid-cols-3 gap-3 opacity-30">
+      {["GPA", "Projects", "Grad"].map((label) => (
+        <div key={label} className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 text-center">
+          <div className="h-6 w-10 bg-gray-200 rounded-full mx-auto mb-1" />
+          <p className="text-[11px] uppercase tracking-wide text-gray-400 mt-1">{label}</p>
+        </div>
+      ))}
+    </div>
+  );
+
+  return null;
+})()}
     {/* Bio */}
           <div>
             <p className="text-[15px] font-semibold text-gray-400 uppercase tracking-widest px-1 mb-2">About</p>            
