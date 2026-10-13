@@ -370,40 +370,53 @@ export default function ActivateClaim({ deviceId, productType }) {
     }
 
     if (current === "name") {
-      return (
-        <Question label={`Step 1 of ${totalSteps}`} title="What's your name?" sub="This is how it'll appear on your card.">
-          <input autoFocus className={inputClass} placeholder="First name" value={answers.firstName} onChange={(e) => set("firstName", e.target.value)} />
-          <input className={inputClass} placeholder="Last name" value={answers.lastName} onChange={(e) => set("lastName", e.target.value)} />
-        </Question>
-      )
+      return Question({
+        label: `Step 1 of ${totalSteps}`,
+        title: "What's your name?",
+        sub: "This is how it'll appear on your card.",
+        children: (
+          <>
+            <input autoFocus className={inputClass} placeholder="First name" value={answers.firstName} onChange={(e) => set("firstName", e.target.value)} />
+            <input className={inputClass} placeholder="Last name" value={answers.lastName} onChange={(e) => set("lastName", e.target.value)} />
+          </>
+        ),
+      })
     }
 
     if (current === "title") {
-      return (
-        <Question label={`Step 2 of ${totalSteps}`} title="What do you do?" sub="Your job title or position." optional>
+      return Question({
+        label: `Step 2 of ${totalSteps}`,
+        title: "What do you do?",
+        sub: "Your job title or position.",
+        optional: true,
+        children: (
           <input autoFocus className={inputClass} placeholder="e.g. Marketing Director" value={answers.title} onChange={(e) => set("title", e.target.value)} />
-        </Question>
-      )
+        ),
+      })
     }
 
     if (current === "contact") {
-      return (
-        <Question
-          label={`Step 3 of ${totalSteps}`}
-          title="How can people reach you?"
-          sub="These show as tap-to-call and tap-to-email buttons."
-          nextLabel={user ? "Activate my card" : "Continue"}
-          optional
-        >
-          <input type="tel" className={inputClass} placeholder="Phone number" value={answers.phone} onChange={(e) => set("phone", e.target.value)} />
-          <input type="email" className={inputClass} placeholder="Email address" value={answers.email} onChange={(e) => set("email", e.target.value)} />
-        </Question>
-      )
+      return Question({
+        label: `Step 3 of ${totalSteps}`,
+        title: "How can people reach you?",
+        sub: "These show as tap-to-call and tap-to-email buttons.",
+        nextLabel: user ? "Activate my card" : "Continue",
+        optional: true,
+        children: (
+          <>
+            <input type="tel" className={inputClass} placeholder="Phone number" value={answers.phone} onChange={(e) => set("phone", e.target.value)} />
+            <input type="email" className={inputClass} placeholder="Email address" value={answers.email} onChange={(e) => set("email", e.target.value)} />
+          </>
+        ),
+      })
     }
 
     if (current === "link") {
-      return (
-        <Question label={`Step 4 of ${totalSteps}`} title="Pick your link" sub="Your card will always open this page. Letters and numbers only.">
+      return Question({
+        label: `Step 4 of ${totalSteps}`,
+        title: "Pick your link",
+        sub: "Your card will always open this page. Letters and numbers only.",
+        children: (
           <div className="flex items-center border border-gray-200 bg-white rounded-2xl px-4 focus-within:ring-2 focus-within:ring-blue-500/30">
             <span className="text-gray-400 text-base">taply.now/</span>
             <input
@@ -414,8 +427,8 @@ export default function ActivateClaim({ deviceId, productType }) {
               onChange={(e) => set("username", cleanUsername(e.target.value))}
             />
           </div>
-        </Question>
-      )
+        ),
+      })
     }
 
     if (current === "account") {
@@ -548,7 +561,7 @@ export default function ActivateClaim({ deviceId, productType }) {
           <p className="text-gray-500 text-[15px] max-w-xs leading-relaxed mb-2">Anyone who taps it will see</p>
           <p className="font-semibold text-gray-900 mb-10">taply.now/{liveUsername}</p>
           <div className="flex-1" />
-          <a href={`/${liveUsername}`} className={primaryBtn}>View my card</a>
+          <a href={`/${liveUsername}`} target="_blank" rel="noopener noreferrer" className={primaryBtn}>View my card</a>
           <a href="/dashboard" className="w-full text-center py-4 mt-3 rounded-2xl border border-gray-200 bg-white font-semibold text-gray-700">
             Customize in dashboard
           </a>
