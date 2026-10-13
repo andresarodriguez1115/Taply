@@ -5,76 +5,26 @@ import { motion, AnimatePresence } from "framer-motion"
 
 const MODE_STEPS = {
   business: [
-    { id: "studio-intro", title: "Business mode", desc: "Your professional digital card, shared in one tap.", position: "top" },
-    { id: "content-tab", title: "Content tab", desc: "Add your name, title, and contact info here.", position: "bottom" },
-    { id: "identity-section", title: "Name & title", desc: "Use your real name and a clear, specific title.", position: "bottom" },
-    { id: "contact-fields", title: "Contact fields", desc: "Toggle on what you want people to see and tap.", position: "top" },
-    { id: "design-tab", title: "Design tab", desc: "Control every visual aspect of your card.", position: "top" },
-    { id: "design-style", title: "Style", desc: "Switch between Executive and Minimal layouts.", position: "bottom" },
-    { id: "design-background", title: "Background", desc: "Pick a color or gradient that matches your brand.", position: "bottom" },
-    { id: "design-text-colors", title: "Text colors", desc: "Set name and title colors with enough contrast.", position: "bottom" },
-    { id: "design-font", title: "Font", desc: "Choose a typeface that fits your style.", position: "bottom" },
-    { id: "design-content-size", title: "Content size", desc: "Scale elements up or down to fit your layout.", position: "bottom" },
-    { id: "profile-photo-btn", title: "Profile photo", desc: "Upload a photo — faces make cards memorable.", position: "bottom" },
-    { id: "save-btn", title: "Save", desc: "Go live. Share via link, QR, or NFC tap.", position: "bottom" },
-    { id: "preview-btn", title: "Preview", desc: "Tap here anytime to see exactly what people will see.", position: "bottom" },
-    { id: "preview", title: "You're all set!", desc: "This is your card. Save it and start sharing with a tap.", position: "top" },
+    { id: "studio-content", title: "Add your info", desc: "Fill in your name, title, and contact info here.", position: "top" },
+    { id: "studio-design", title: "Make it yours", desc: "Pick your style, colors, font, and sizes.", position: "top" },
+    { id: "save-btn", title: "Go live", desc: "Tap Save and share by link, QR, or NFC tap.", position: "bottom" },
   ],
   networking: [
-    { id: "studio-intro", title: "Company mode", desc: "Your in-person card for events, fairs, and meetups.", position: "top" },
-    { id: "content-tab", title: "Content tab", desc: "Fill in your identity, contact info, and link buttons.", position: "bottom" },
-    { id: "net-identity", title: "Name & title", desc: "Be specific — 'Software Engineer @ Google' not just 'Engineer'.", position: "bottom" },
-    { id: "net-contact", title: "Contact circles", desc: "Toggle phone, email, and location. Each becomes a tap circle.", position: "top" },
-    { id: "net-buttons", title: "Link buttons", desc: "Add links to your work, socials, or website so people can follow up.", position: "top" },
-    { id: "design-tab", title: "Design tab", desc: "Control every visual aspect of your card.", position: "top" },
-    { id: "net-design-background", title: "Background", desc: "Pick a color or gradient that matches your brand.", position: "bottom" },
-    { id: "net-design-text-colors", title: "Text colors", desc: "Set name and title colors with enough contrast.", position: "bottom" },
-    { id: "net-design-font", title: "Font", desc: "Choose a typeface that fits your style.", position: "bottom" },
-    { id: "net-design-content-size", title: "Content size", desc: "Scale elements up or down to fit your layout.", position: "bottom" },
-    { id: "profile-photo-btn", title: "Change photo", desc: "Upload a photo — faces make cards memorable.", position: "bottom" },
-    { id: "save-btn", title: "Save", desc: "Go live. Share via link, QR, or NFC tap.", position: "bottom" },
-    { id: "preview-btn", title: "Preview", desc: "Tap here anytime to see exactly what people will see.", position: "bottom" },
-    { id: "preview", title: "You're all set!", desc: "This is your card. Save it and start sharing with a tap.", position: "top" },
+    { id: "studio-content", title: "Add your info", desc: "Fill in your name, contact info, and link buttons here.", position: "top" },
+    { id: "studio-design", title: "Make it yours", desc: "Pick your colors, font, and sizes.", position: "top" },
+    { id: "save-btn", title: "Go live", desc: "Tap Save and share by link, QR, or NFC tap.", position: "bottom" },
   ],
   university: [
-    { id: "studio-intro", title: "University mode", desc: "Your student card for career fairs and recruiters.", position: "top" },
-    { id: "content-tab", title: "Content tab", desc: "Fill in your academic info, bio, resume, contact info, and projects here.", position: "bottom" },
-    { id: "identity-section", title: "Name & major", desc: "Use your real name and format clearly — 'CS @ MIT, Class of 2026'.", position: "bottom" },
-    { id: "uni-academic", title: "Academic info", desc: "Add your GPA and grad year. They show as stat cards.", position: "top" },
-    { id: "uni-bio", title: "Bio", desc: "Write a short intro about yourself, your interests, and what you're working on.", position: "top" },
-    { id: "uni-resume", title: "Resume link", desc: "Paste a Drive or Notion link. Shows as a 'View Resume' button.", position: "top" },
-    { id: "uni-contact", title: "Contact", desc: "Add phone, email, and LinkedIn so recruiters can reach you.", position: "top" },
-    { id: "uni-projects", title: "Portfolio projects", desc: "Add projects with a title, subtitle, and link. Shows in a grid.", position: "top" },
-    { id: "design-tab", title: "Design tab", desc: "Control every visual aspect of your card.", position: "top" },
-    { id: "uni-design-background", title: "Background", desc: "Pick a color or gradient that matches your brand.", position: "bottom" },
-    { id: "uni-design-text-colors", title: "Text colors", desc: "Set name and title colors with enough contrast.", position: "bottom" },
-    { id: "uni-design-font", title: "Font", desc: "Choose a typeface that fits your style.", position: "bottom" },
-    { id: "uni-design-content-size", title: "Content size", desc: "Scale elements up or down to fit your layout.", position: "bottom" },
-    { id: "profile-photo-btn", title: "Profile photo", desc: "Upload a photo — faces make cards memorable.", position: "bottom" },
-    { id: "save-btn", title: "Save", desc: "Go live. Share via link, QR, or NFC tap.", position: "bottom" },
-    { id: "preview-btn", title: "Preview", desc: "Tap here anytime to see exactly what people will see.", position: "bottom" },
-    { id: "preview", title: "You're all set!", desc: "This is your card. Save it and start sharing with a tap.", position: "top" },
+    { id: "studio-content", title: "Add your info", desc: "Fill in your academic info, bio, resume, contact, and projects here.", position: "top" },
+    { id: "studio-design", title: "Make it yours", desc: "Pick your colors, font, and sizes.", position: "top" },
+    { id: "save-btn", title: "Go live", desc: "Tap Save and share by link, QR, or NFC tap.", position: "bottom" },
   ],
   social: [
-    { id: "studio-intro", title: "Social mode", desc: "Your link-in-bio: links, shop, and socials in one page.", position: "top" },
-    { id: "content-tab", title: "Content tab", desc: "Set up your name, bio, social icons, link cards, and shop products here.", position: "bottom" },
-    { id: "social-identity", title: "Name & bio", desc: "Your display name and one-line bio — make it clear who you are.", position: "bottom" },
-    { id: "social-icons", title: "Social icons", desc: "Toggle on your handles. Each shows as a branded icon circle.", position: "top" },
-    { id: "social-links", title: "Link cards", desc: "Add big link cards with a title, URL, and cover image.", position: "top" },
-    { id: "social-products", title: "Shop products", desc: "Add products with a name, price, image, and buy link.", position: "top" },
-    { id: "design-tab", title: "Design tab", desc: "Control every visual aspect of your page.", position: "top" },
-    { id: "soc-design-style", title: "Style", desc: "Switch between a Circle photo or a full Banner.", position: "bottom" },
-    { id: "soc-design-background", title: "Background", desc: "Pick a color that fits your vibe.", position: "bottom" },
-    { id: "soc-design-text-colors", title: "Text colors", desc: "Set name and bio colors with enough contrast.", position: "bottom" },
-    { id: "soc-design-font", title: "Font", desc: "Choose a typeface that fits your style.", position: "bottom" },
-    { id: "soc-design-content-size", title: "Content size", desc: "Scale elements up or down to fit your layout.", position: "bottom" },
-    { id: "profile-photo-btn", title: "Profile photo", desc: "Upload a photo — faces make pages memorable.", position: "bottom" },
-    { id: "save-btn", title: "Save", desc: "Go live. Share via link, QR, or NFC tap.", position: "bottom" },
-    { id: "preview-btn", title: "Preview", desc: "Tap here anytime to see exactly what people will see.", position: "bottom" },
-    { id: "preview", title: "You're all set!", desc: "This is your card. Save it and start sharing with a tap.", position: "top" },
+    { id: "studio-content", title: "Add your info", desc: "Fill in your bio, social icons, links, and shop here.", position: "top" },
+    { id: "studio-design", title: "Make it yours", desc: "Pick your style, colors, font, and sizes.", position: "top" },
+    { id: "save-btn", title: "Go live", desc: "Tap Save and share by link, QR, or NFC tap.", position: "bottom" },
   ],
 }
-
 const PAD = 8
 
 export default function BuilderTutorial({ onComplete, onGoToContent, onGoToDesign, onCloseStudio, onOpenSection, mode = "business" }) {
@@ -98,6 +48,8 @@ export default function BuilderTutorial({ onComplete, onGoToContent, onGoToDesig
       "preview": "[data-tutorial='preview']",
       "preview-btn": "[data-tutorial='preview-btn']",
       "studio-intro": "[data-tutorial='studio-panel']",
+      "studio-content": "[data-tutorial='studio-panel']",
+      "studio-design": "[data-tutorial='studio-panel']",
       "content-tab": "[data-tutorial='content-tab']",
       "design-tab": "[data-tutorial='design-tab']",
       "identity-section": "[data-tutorial='identity-section']",
@@ -149,7 +101,7 @@ export default function BuilderTutorial({ onComplete, onGoToContent, onGoToDesig
     const currentId = STEPS[step]?.id
     if (!currentId) return
 
-    if (currentId === "design-tab") {
+    if (currentId === "design-tab" || currentId === "studio-design") {
       const panel = document.querySelector(".overflow-y-auto")
       if (panel) panel.scrollTop = 0
     }
@@ -244,64 +196,8 @@ export default function BuilderTutorial({ onComplete, onGoToContent, onGoToDesig
   const handleNext = () => {
     if (step < STEPS.length - 1) {
       const nextStep = STEPS[step + 1]
-      const currentStep = STEPS[step]
-      if (currentStep.id === "studio-intro") onGoToContent?.()
-      if (nextStep.id === "design-tab") onGoToDesign?.()
-      if (nextStep.id === "profile-photo-btn") onCloseStudio?.()
+      if (nextStep.id === "studio-design") onGoToDesign?.()
       if (nextStep.id === "save-btn") onCloseStudio?.()
-
-           const keepClosedIds = [
-        // Shared / Business content accordions
-        "identity-section",
-        "contact-fields",
-
-        // Business design accordions
-        "design-background",
-        "design-text-colors",
-        "design-font",
-        "design-content-size",
-
-        // Networking content accordions
-        "net-identity",
-        "net-contact",
-        "net-buttons",
-
-        // Networking design accordions
-        "net-design-background",
-        "net-design-text-colors",
-        "net-design-font",
-        "net-design-content-size",
-
-        // University content accordions
-        "uni-academic",
-        "uni-bio",
-        "uni-resume",
-        "uni-contact",
-        "uni-projects",
-
-        // University design accordions
-        "uni-design-background",
-        "uni-design-text-colors",
-        "uni-design-font",
-        "uni-design-content-size",
-
-        // Social content accordions
-        "social-identity",
-        "social-icons",
-        "social-links",
-        "social-products",
-
-        // Social design accordions
-        "soc-design-background",
-        "soc-design-text-colors",
-        "soc-design-font",
-        "soc-design-content-size",
-      ]
-
-      if (nextStep.id && !keepClosedIds.includes(nextStep.id)) {
-        onOpenSection?.(nextStep.id)
-      }
-
       setStep(s => s + 1)
     } else {
       localStorage.setItem(`taply_tutorial_done_${mode}`, "1")
@@ -342,7 +238,7 @@ if (current.position === "bottom") {
 
 tooltipTop = Math.max(16, Math.min(tooltipTop, window.innerHeight - TOOLTIP_HEIGHT - 16))
 
-const wideTooltipIds = ["content-tab", "design-tab", "profile-photo-btn", "save-btn", "preview-btn", "preview"]
+const wideTooltipIds = ["studio-content", "studio-design", "content-tab", "design-tab", "profile-photo-btn", "save-btn", "preview-btn", "preview"]
 const shouldUseWideTooltip = wideTooltipIds.includes(current.id)
 
 const tooltipWidth = shouldUseWideTooltip
