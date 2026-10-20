@@ -445,7 +445,7 @@ useEffect(() => {
   </div>
 </div>
         <div className="h-px bg-white/5 mb-5" />
-        <span className="text-[11px] text-gray-600">© 2025 Taply Inc.</span>
+        <span className="text-[11px] text-gray-600">© 2026 Taply Inc.</span>
       </div>
 
       {/* ── MENU ── */}
