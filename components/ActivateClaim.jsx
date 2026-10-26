@@ -284,8 +284,8 @@ export default function ActivateClaim({ deviceId, productType }) {
         setView("checkEmail")
         return
       }
-      setUser(data.user)
-      await finalize(data.user, pending, [])
+      setView("finishing")
+      window.location.reload()
       return
     }
 
@@ -295,9 +295,8 @@ export default function ActivateClaim({ deviceId, productType }) {
       setError(loginError.message)
       return
     }
-    setUser(data.user)
-    const existing = await loadProfiles(data.user.id)
-    await finalize(data.user, pending, existing)
+    setView("finishing")
+    window.location.reload()
   }
 
   const retry = async () => {
