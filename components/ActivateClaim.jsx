@@ -581,15 +581,15 @@ export default function ActivateClaim({ deviceId, productType }) {
       }
 
       return (
-        <div className="flex-1 flex flex-col items-center text-center pt-10">
+        <div className="flex-1 flex flex-col items-center justify-center text-center py-6">
           {/* CHECK */}
           <motion.div
             initial={{ scale: 0.6, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ type: "spring", stiffness: 260, damping: 18 }}
-            className="w-20 h-20 rounded-full bg-gradient-to-br from-sky-400 to-blue-600 flex items-center justify-center mb-5 shadow-[0_12px_35px_rgba(37,99,235,0.35)]"
+            className="w-28 h-28 rounded-full bg-gradient-to-br from-sky-400 to-blue-600 flex items-center justify-center mb-6 shadow-[0_16px_45px_rgba(37,99,235,0.4)]"
           >
-            <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+            <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
               <polyline points="20 6 9 17 4 12" />
             </svg>
           </motion.div>
@@ -604,8 +604,8 @@ export default function ActivateClaim({ deviceId, productType }) {
             CARD ACTIVATED
           </motion.span>
 
-          <h1 className="text-[28px] font-bold text-gray-900 tracking-tight mb-1">Your card is live!</h1>
-          <p className="text-gray-500 text-[15px] mb-7">Your profile is ready to share.</p>
+          <h1 className="text-[36px] font-extrabold text-gray-900 tracking-tight leading-tight mb-2">Your card is live!</h1>
+          <p className="text-gray-500 text-[17px] mb-8">Your profile is ready to share.</p>
 
           {/* PREVIEW CARD */}
           <motion.div
@@ -638,10 +638,13 @@ export default function ActivateClaim({ deviceId, productType }) {
             </div>
           </motion.div>
 
-          <div className="flex-1 min-h-8" />
+          <div className="h-7" />
 
-          <a href={`/${liveUsername}`} target="_blank" rel="noopener noreferrer" className={primaryBtn}>View live card</a>
-          <a href="/dashboard" className="w-full text-center py-4 mt-3 rounded-2xl border border-gray-200 bg-white font-semibold text-gray-800">
+          <a href={`/${liveUsername}`} target="_blank" rel="noopener noreferrer"
+            className="w-full text-center py-4 rounded-2xl bg-gradient-to-r from-sky-500 to-violet-500 text-white font-semibold text-base shadow-[0_8px_24px_rgba(99,102,241,0.3)] active:scale-[0.98] transition-transform">
+            View live card
+          </a>
+          <a href="/dashboard" className="w-full text-center py-4 mt-3 rounded-2xl border border-gray-300 bg-white font-semibold text-gray-900 active:scale-[0.98] transition-transform">
             Manage dashboard
           </a>
         </div>
@@ -664,7 +667,7 @@ export default function ActivateClaim({ deviceId, productType }) {
             </button>
           )}
         </div>
-        <img src="/taply-logo.svg" className="h-10 object-contain" />
+        {view !== "done" && <img src="/taply-logo.svg" className="h-10 object-contain" />}
         <div className="w-9" />
       </div>
 
