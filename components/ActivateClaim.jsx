@@ -60,6 +60,7 @@ export default function ActivateClaim({ deviceId, productType }) {
   const [error, setError] = useState(null)
   const [busy, setBusy] = useState(false)
   const [liveUsername, setLiveUsername] = useState(null)
+  const [liveProfile, setLiveProfile] = useState(null)
 
   const set = (k, v) => setAnswers((a) => ({ ...a, [k]: v }))
 
@@ -130,7 +131,15 @@ export default function ActivateClaim({ deviceId, productType }) {
         localStorage.removeItem("pending_card_id")
       } catch {}
 
-      setLiveUsername(uname)
+      const { data: live } = await supabase
+        .from("profiles")
+        .select("name, title, avatar_url, field_values, username")
+        .eq("user_id", u.id)
+        .eq("is_active", true)
+        .maybeSingle()
+
+      setLiveProfile(live)
+      setLiveUsername(live?.username || uname)
       setView("done")
     } catch (err) {
       console.error(err)
@@ -548,26 +557,97 @@ export default function ActivateClaim({ deviceId, productType }) {
     }
 
     if (view === "done") {
+      const p = liveProfile || {}
+      const fv = p.field_values || {}
+      const displayName = p.name || `${answers.firstName} ${answers.lastName}`.trim() || "Your Name"
+      const displayTitle = p.title ?? answers.title
+      const initials = displayName.split(" ").map((n) => n[0]).join("").slice(0, 2).toUpperCase()
+      const rows = [
+        fv.phone?.trim() && { icon: "phone", text: fv.phone },
+        fv.email?.trim() && { icon: "mail", text: fv.email },
+        { icon: "link", text: `taply.now/${liveUsername}` },
+      ].filter(Boolean)
+
+      const RowIcon = ({ type }) => {
+        if (type === "phone") return (
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.48C2 2.41 2.9 1.68 4 1.68h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+        )
+        if (type === "mail") return (
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 6L2 7"/></svg>
+        )
+        return (
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+        )
+      }
+
       return (
-        <div className="flex-1 flex flex-col items-center text-center pt-16">
-          <motion.div initial={{ scale: 0.6, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ type: "spring", stiffness: 260, damping: 18 }}
-            className="w-20 h-20 rounded-full bg-green-500 flex items-center justify-center mb-6 shadow-[0_10px_30px_rgba(34,197,94,0.35)]">
+        <div className="flex-1 flex flex-col items-center text-center pt-10">
+          {/* CHECK */}
+          <motion.div
+            initial={{ scale: 0.6, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ type: "spring", stiffness: 260, damping: 18 }}
+            className="w-20 h-20 rounded-full bg-gradient-to-br from-sky-400 to-blue-600 flex items-center justify-center mb-5 shadow-[0_12px_35px_rgba(37,99,235,0.35)]"
+          >
             <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
               <polyline points="20 6 9 17 4 12" />
             </svg>
           </motion.div>
-          <h1 className="text-[28px] font-bold text-gray-900 tracking-tight mb-2">Your card is live!</h1>
-          <p className="text-gray-500 text-[15px] max-w-xs leading-relaxed mb-2">Anyone who taps it will see</p>
-          <p className="font-semibold text-gray-900 mb-10">taply.now/{liveUsername}</p>
-          <div className="flex-1" />
-          <a href={`/${liveUsername}`} target="_blank" rel="noopener noreferrer" className={primaryBtn}>View my card</a>
-          <a href="/dashboard" className="w-full text-center py-4 mt-3 rounded-2xl border border-gray-200 bg-white font-semibold text-gray-700">
-            Customize in dashboard
+
+          {/* PILL */}
+          <motion.span
+            initial={{ opacity: 0, y: 6 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.15 }}
+            className="text-[11px] font-bold tracking-widest text-green-700 bg-green-50 border border-green-100 px-3 py-1.5 rounded-full mb-4"
+          >
+            CARD ACTIVATED
+          </motion.span>
+
+          <h1 className="text-[28px] font-bold text-gray-900 tracking-tight mb-1">Your card is live!</h1>
+          <p className="text-gray-500 text-[15px] mb-7">Your profile is ready to share.</p>
+
+          {/* PREVIEW CARD */}
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.25, duration: 0.35 }}
+            className="relative w-full overflow-hidden rounded-2xl bg-gradient-to-br from-gray-900 to-black p-5 shadow-[0_16px_40px_rgba(0,0,0,0.25)] text-left"
+          >
+            <div className="absolute -right-12 -bottom-14 w-52 h-52 rounded-full bg-gradient-to-tr from-blue-600/50 via-purple-600/40 to-transparent blur-2xl pointer-events-none" />
+            <div className="relative flex items-center gap-4">
+              {p.avatar_url ? (
+                <img src={p.avatar_url} className="w-16 h-16 rounded-full object-cover border-2 border-white/15 flex-shrink-0" />
+              ) : (
+                <div className="w-16 h-16 rounded-full bg-white/10 border-2 border-white/15 flex items-center justify-center text-white font-bold text-lg flex-shrink-0">
+                  {initials}
+                </div>
+              )}
+              <div className="min-w-0">
+                <p className="text-white font-semibold text-[17px] leading-tight truncate">{displayName}</p>
+                {displayTitle && <p className="text-white/60 text-sm mt-0.5 truncate">{displayTitle}</p>}
+              </div>
+            </div>
+            <div className="relative mt-4 space-y-2">
+              {rows.map((r) => (
+                <div key={r.icon} className="flex items-center gap-2.5 text-white/80 text-[13px]">
+                  <span className="text-white/50 flex-shrink-0"><RowIcon type={r.icon} /></span>
+                  <span className="truncate">{r.text}</span>
+                </div>
+              ))}
+            </div>
+          </motion.div>
+
+          <div className="flex-1 min-h-8" />
+
+          <a href={`/${liveUsername}`} target="_blank" rel="noopener noreferrer" className={primaryBtn}>View live card</a>
+          <a href="/dashboard" className="w-full text-center py-4 mt-3 rounded-2xl border border-gray-200 bg-white font-semibold text-gray-800">
+            Manage dashboard
           </a>
         </div>
       )
     }
-    return null
+        return null
   }
 
   const showBack = view === "wizard" && step > 0
