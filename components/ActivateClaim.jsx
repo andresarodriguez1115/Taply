@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import supabase from "@/lib/supabase"
+import Cropper from "react-easy-crop"
 
 const STORAGE_KEY = "taply_onboarding"
 const STEPS = ["intro", "name", "photo", "title", "contact", "link", "account"]
@@ -28,20 +29,11 @@ function CardVisual() {
       <div className="relative mb-8">
         <div className="absolute -inset-8 rounded-[40px] bg-gradient-to-br from-blue-400/40 via-indigo-400/30 to-purple-500/40 blur-2xl pointer-events-none" />
         <div className="relative w-64 h-40 rounded-[20px] bg-gradient-to-br from-gray-800 via-gray-950 to-black shadow-[0_20px_40px_rgba(0,0,0,0.35)] flex items-center justify-center gap-2">
-          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="white" strokeOpacity="0.35" strokeWidth="1.5">
-            <circle cx="12" cy="12" r="9" /><circle cx="12" cy="12" r="5.5" />
-            <circle cx="12" cy="12" r="2" fill="white" fillOpacity="0.35" stroke="none" />
-          </svg>
-          <span
-            className="text-white/40 font-bold text-2xl tracking-tight"
-            style={{ textShadow: "0 1px 0 rgba(255,255,255,0.08), 0 -1px 0 rgba(0,0,0,0.6)" }}
-          >
-            taply
-          </span>
+          <img src="/taply-grey-logo.png" alt="Taply" className="h-9 object-contain" />
         </div>
       </div>
 
-      <span className="flex items-center gap-2 text-[15px] font-medium text-green-600 bg-green-50 px-4 py-2 rounded-full mb-8">
+      <span className="relative z-10 flex items-center gap-2 text-[15px] font-semibold text-green-700 bg-green-100 border border-green-200 px-4 py-2 rounded-full mb-8 shadow-sm">
         <span className="w-2 h-2 rounded-full bg-green-500" />Ready to activate
       </span>
     </div>
@@ -70,25 +62,43 @@ export default function ActivateClaim({ deviceId, productType }) {
   const [busy, setBusy] = useState(false)
   const [liveUsername, setLiveUsername] = useState(null)
   const [liveProfile, setLiveProfile] = useState(null)
+  const [photoSrc, setPhotoSrc] = useState(null)
+  const [cropSrc, setCropSrc] = useState(null)
+  const [crop, setCrop] = useState({ x: 0, y: 0 })
+  const [zoom, setZoom] = useState(1)
+  const [croppedArea, setCroppedArea] = useState(null)
 
   const set = (k, v) => setAnswers((a) => ({ ...a, [k]: v }))
 
-  // Crop to a square + shrink so it's light enough to save
+  // Pick a photo → open the cropper
   const handlePhoto = (e) => {
     const file = e.target.files?.[0]
+    e.target.value = ""
     if (!file) return
     const url = URL.createObjectURL(file)
+    setPhotoSrc(url)
+    setCrop({ x: 0, y: 0 })
+    setZoom(1)
+    setCropSrc(url)
+  }
+
+  // Save the cropped area as a light 400x400 image
+  const applyCrop = () => {
+    if (!croppedArea || !cropSrc) return
     const img = new Image()
     img.onload = () => {
-      const size = Math.min(img.width, img.height)
       const canvas = document.createElement("canvas")
       canvas.width = 400
       canvas.height = 400
-      canvas.getContext("2d").drawImage(img, (img.width - size) / 2, (img.height - size) / 2, size, size, 0, 0, 400, 400)
+      canvas.getContext("2d").drawImage(
+        img,
+        croppedArea.x, croppedArea.y, croppedArea.width, croppedArea.height,
+        0, 0, 400, 400
+      )
       set("photo", canvas.toDataURL("image/jpeg", 0.85))
-      URL.revokeObjectURL(url)
+      setCropSrc(null)
     }
-    img.src = url
+    img.src = cropSrc
   }
 
   const persist = (data) => {
@@ -385,7 +395,7 @@ export default function ActivateClaim({ deviceId, productType }) {
       return (
         <div className="flex-1 flex flex-col">
           <CardVisual />
-          <h1 className="text-[32px] font-extrabold text-gray-900 tracking-tight leading-tight text-center whitespace-nowrap mb-3">
+          <h1 className="text-[32px] font-bold text-gray-900 tracking-tight leading-tight text-center whitespace-nowrap mb-3">
             Your {productType === "metal" ? "metal " : ""}card is ready.
           </h1>
           <p className="text-gray-500 text-[17px] leading-relaxed text-center max-w-xs mx-auto">
@@ -437,6 +447,7 @@ export default function ActivateClaim({ deviceId, productType }) {
         sub: "Cards with a face get remembered.",
         optional: true,
         children: (
+          <>
           <label className="flex flex-col items-center gap-4 py-4 cursor-pointer">
             <div className="w-36 h-36 rounded-full bg-white border-2 border-dashed border-gray-300 flex items-center justify-center overflow-hidden shadow-sm">
               {answers.photo ? (
@@ -452,6 +463,16 @@ export default function ActivateClaim({ deviceId, productType }) {
             </span>
             <input type="file" accept="image/*" className="hidden" onChange={handlePhoto} />
           </label>
+          {answers.photo && photoSrc && (
+            <button
+              type="button"
+              onClick={() => setCropSrc(photoSrc)}
+              className="mx-auto block text-gray-500 text-sm font-medium"
+            >
+              Adjust photo
+            </button>
+          )}
+          </>
         ),
       })
     }
@@ -776,6 +797,51 @@ export default function ActivateClaim({ deviceId, productType }) {
           </motion.div>
         </AnimatePresence>
       </div>
+
+      {/* PHOTO CROPPER */}
+      {cropSrc && (
+        <div className="fixed inset-0 z-[9999] bg-black/80 flex items-center justify-center px-4">
+          <div className="bg-white rounded-3xl overflow-hidden w-full max-w-sm">
+            <div className="relative w-full h-72 bg-gray-900">
+              <Cropper
+                image={cropSrc}
+                crop={crop}
+                zoom={zoom}
+                aspect={1}
+                cropShape="round"
+                showGrid={false}
+                onCropChange={setCrop}
+                onZoomChange={setZoom}
+                onCropComplete={(_, pixels) => setCroppedArea(pixels)}
+              />
+            </div>
+            <div className="p-5 space-y-4">
+              <p className="text-sm text-gray-500 text-center">Drag to reposition, pinch or slide to zoom</p>
+              <input
+                type="range" min={1} max={3} step={0.05} value={zoom}
+                onChange={(e) => setZoom(Number(e.target.value))}
+                className="w-full accent-blue-600"
+              />
+              <div className="flex gap-2">
+                <button
+                  type="button"
+                  onClick={() => setCropSrc(null)}
+                  className="flex-1 py-3.5 rounded-2xl border border-gray-200 text-sm font-semibold text-gray-700"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  onClick={applyCrop}
+                  className="flex-1 py-3.5 rounded-2xl bg-gradient-to-r from-blue-600 to-purple-600 text-white text-sm font-semibold"
+                >
+                  Use photo
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
