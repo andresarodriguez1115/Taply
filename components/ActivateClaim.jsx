@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "framer-motion"
 import supabase from "@/lib/supabase"
 
 const STORAGE_KEY = "taply_onboarding"
-const STEPS = ["intro", "name", "title", "contact", "link", "account"]
+const STEPS = ["intro", "name", "photo", "title", "contact", "link", "account"]
 
 const DEFAULT_FIELD_VALUES = {
   phone: "", email: "", linkedin: "", location: "", instagram: "", website: "", bio: "",
@@ -53,7 +53,7 @@ export default function ActivateClaim({ deviceId, productType }) {
   const [step, setStep] = useState(0)
   const [user, setUser] = useState(null)
   const [profiles, setProfiles] = useState([])
-  const [answers, setAnswers] = useState({ firstName: "", lastName: "", title: "", phone: "", email: "", username: "" })
+  const [answers, setAnswers] = useState({ firstName: "", lastName: "", photo: "", title: "", phone: "", email: "", username: "" })
   const [authMode, setAuthMode] = useState("signup")
   const [authEmail, setAuthEmail] = useState("")
   const [password, setPassword] = useState("")
@@ -63,6 +63,24 @@ export default function ActivateClaim({ deviceId, productType }) {
   const [liveProfile, setLiveProfile] = useState(null)
 
   const set = (k, v) => setAnswers((a) => ({ ...a, [k]: v }))
+
+  // Crop to a square + shrink so it's light enough to save
+  const handlePhoto = (e) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+    const url = URL.createObjectURL(file)
+    const img = new Image()
+    img.onload = () => {
+      const size = Math.min(img.width, img.height)
+      const canvas = document.createElement("canvas")
+      canvas.width = 400
+      canvas.height = 400
+      canvas.getContext("2d").drawImage(img, (img.width - size) / 2, (img.height - size) / 2, size, size, 0, 0, 400, 400)
+      set("photo", canvas.toDataURL("image/jpeg", 0.85))
+      URL.revokeObjectURL(url)
+    }
+    img.src = url
+  }
 
   const persist = (data) => {
     try { localStorage.setItem(STORAGE_KEY, JSON.stringify({ ...data, deviceId })) } catch {}
@@ -96,6 +114,17 @@ export default function ActivateClaim({ deviceId, productType }) {
       }
 
       if (existing.length === 0) {
+        let avatarUrl = null
+        if (a.photo) {
+          try {
+            const blob = await (await fetch(a.photo)).blob()
+            const fileName = `${u.id}-${Date.now()}.jpg`
+            const { error: upError } = await supabase.storage.from("avatars").upload(fileName, blob, { contentType: "image/jpeg" })
+            if (!upError) avatarUrl = supabase.storage.from("avatars").getPublicUrl(fileName).data.publicUrl
+          } catch (e) {
+            console.error("Photo upload failed:", e)
+          }
+        }
         const fullName = `${a.firstName || meta.first_name || ""} ${a.lastName || meta.last_name || ""}`.trim()
         const { error: insertError } = await supabase.from("profiles").insert({
           user_id: u.id,
@@ -108,6 +137,7 @@ export default function ActivateClaim({ deviceId, productType }) {
           fields: { phone: !!a.phone, email: !!a.email, linkedin: false, instagram: false, website: false, bio: false },
           field_values: { ...DEFAULT_FIELD_VALUES, phone: a.phone || "", email: a.email || "" },
           bg_color: "#f3f4f6",
+          avatar_url: avatarUrl,
         })
         if (insertError) throw insertError
       } else {
@@ -199,7 +229,7 @@ export default function ActivateClaim({ deviceId, productType }) {
     if (view === "wizard") persist(answers)
   }, [answers, view])
 
-  const totalSteps = user ? 3 : 5
+  const totalSteps = user ? 4 : 6
 
   const goNext = async (e) => {
     e?.preventDefault()
@@ -391,9 +421,87 @@ export default function ActivateClaim({ deviceId, productType }) {
       })
     }
 
-    if (current === "title") {
+    if (current === "photo") {
       return Question({
         label: `Step 2 of ${totalSteps}`,
+        title: "Add a profile photo",
+        sub: "Cards with a face get remembered.",
+        optional: true,
+        children: (
+          <label className="flex flex-col items-center gap-4 py-4 cursor-pointer">
+            <div className="w-36 h-36 rounded-full bg-white border-2 border-dashed border-gray-300 flex items-center justify-center overflow-hidden shadow-sm">
+              {answers.photo ? (
+                <img src={answers.photo} className="w-full h-full object-cover" />
+              ) : (
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" /><circle cx="12" cy="13" r="4" />
+                </svg>
+              )}
+            </div>
+            <span className="text-blue-600 font-semibold text-[15px]">
+              {answers.photo ? "Change photo" : "Choose a photo"}
+            </span>
+            <input type="file" accept="image/*" className="hidden" onChange={handlePhoto} />
+          </label>
+        ),
+      })
+    }
+
+    if (current === "photo") {
+      return Question({
+        label: `Step 2 of ${totalSteps}`,
+        title: "Add a profile photo",
+        sub: "Cards with a face get remembered.",
+        optional: true,
+        children: (
+          <label className="flex flex-col items-center gap-4 py-4 cursor-pointer">
+            <div className="w-36 h-36 rounded-full bg-white border-2 border-dashed border-gray-300 flex items-center justify-center overflow-hidden shadow-sm">
+              {answers.photo ? (
+                <img src={answers.photo} className="w-full h-full object-cover" />
+              ) : (
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" /><circle cx="12" cy="13" r="4" />
+                </svg>
+              )}
+            </div>
+            <span className="text-blue-600 font-semibold text-[15px]">
+              {answers.photo ? "Change photo" : "Choose a photo"}
+            </span>
+            <input type="file" accept="image/*" className="hidden" onChange={handlePhoto} />
+          </label>
+        ),
+      })
+    }
+
+    if (current === "photo") {
+      return Question({
+        label: `Step 2 of ${totalSteps}`,
+        title: "Add a profile photo",
+        sub: "Cards with a face get remembered.",
+        optional: true,
+        children: (
+          <label className="flex flex-col items-center gap-4 py-4 cursor-pointer">
+            <div className="w-36 h-36 rounded-full bg-white border-2 border-dashed border-gray-300 flex items-center justify-center overflow-hidden shadow-sm">
+              {answers.photo ? (
+                <img src={answers.photo} className="w-full h-full object-cover" />
+              ) : (
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" /><circle cx="12" cy="13" r="4" />
+                </svg>
+              )}
+            </div>
+            <span className="text-blue-600 font-semibold text-[15px]">
+              {answers.photo ? "Change photo" : "Choose a photo"}
+            </span>
+            <input type="file" accept="image/*" className="hidden" onChange={handlePhoto} />
+          </label>
+        ),
+      })
+    }
+
+    if (current === "title") {
+      return Question({
+        label: `Step 3 of ${totalSteps}`,
         title: "What do you do?",
         sub: "Your job title or position.",
         optional: true,
@@ -405,7 +513,7 @@ export default function ActivateClaim({ deviceId, productType }) {
 
     if (current === "contact") {
       return Question({
-        label: `Step 3 of ${totalSteps}`,
+        label: `Step 4 of ${totalSteps}`,
         title: "How can people reach you?",
         sub: "These show as tap-to-call and tap-to-email buttons.",
         nextLabel: user ? "Activate my card" : "Continue",
@@ -421,7 +529,7 @@ export default function ActivateClaim({ deviceId, productType }) {
 
     if (current === "link") {
       return Question({
-        label: `Step 4 of ${totalSteps}`,
+        label: `Step 5 of ${totalSteps}`,
         title: "Pick your link",
         sub: "Your card will always open this page. Letters and numbers only.",
         children: (
@@ -444,7 +552,7 @@ export default function ActivateClaim({ deviceId, productType }) {
       return (
         <div className="flex-1 flex flex-col pt-8">
           <p className="text-[12px] font-bold text-blue-600 uppercase tracking-wider mb-2">
-            {isLogin ? "Welcome back" : `Step 5 of ${totalSteps}`}
+            {isLogin ? "Welcome back" : `Step 6 of ${totalSteps}`}
           </p>
           <h1 className="text-[28px] font-bold text-gray-900 tracking-tight leading-tight mb-2">
             {isLogin ? "Log in to link your card" : "Last step: save your card"}
@@ -638,14 +746,23 @@ export default function ActivateClaim({ deviceId, productType }) {
             </div>
           </motion.div>
 
-          <div className="h-7" />
+          <div className="w-full flex items-center gap-3 bg-white border border-gray-100 rounded-2xl px-4 py-3.5 mt-5 text-left shadow-sm">
+            <div className="w-9 h-9 rounded-xl bg-blue-50 flex items-center justify-center flex-shrink-0">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2563eb" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+            </div>
+            <p className="text-gray-600 text-[13px] leading-snug">
+              Add links, socials, and change your design anytime in your Taply dashboard.
+            </p>
+          </div>
+
+          <div className="h-6" />
 
           <a href={`/${liveUsername}`} target="_blank" rel="noopener noreferrer"
             className="w-full text-center py-4 rounded-2xl bg-gradient-to-r from-sky-500 to-violet-500 text-white font-semibold text-base shadow-[0_8px_24px_rgba(99,102,241,0.3)] active:scale-[0.98] transition-transform">
             View live card
           </a>
           <a href="/dashboard" className="w-full text-center py-4 mt-3 rounded-2xl border border-gray-300 bg-white font-semibold text-gray-900 active:scale-[0.98] transition-transform">
-            Manage dashboard
+            Customize in dashboard
           </a>
         </div>
       )
