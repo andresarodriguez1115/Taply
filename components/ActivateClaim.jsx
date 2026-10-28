@@ -20,20 +20,29 @@ const cleanUsername = (v) => (v || "").toLowerCase().replace(/[^a-z0-9]/g, "")
 
 function CardVisual() {
   return (
-    <div className="flex flex-col items-center pt-6 relative">
-      <div className="absolute inset-0 flex justify-center pointer-events-none">
-        <div className="w-72 h-72 rounded-full bg-gradient-to-br from-blue-100 via-purple-100 to-transparent blur-2xl opacity-70" />
+    <div className="flex flex-col items-center pt-4 relative">
+      <span className="text-[13px] font-semibold tracking-wide text-blue-600 bg-blue-50 px-4 py-2 rounded-full mb-8">
+        NEW TAPLY CARD
+      </span>
+
+      <div className="relative mb-8">
+        <div className="absolute -inset-8 rounded-[40px] bg-gradient-to-br from-blue-400/40 via-indigo-400/30 to-purple-500/40 blur-2xl pointer-events-none" />
+        <div className="relative w-72 h-44 rounded-[22px] bg-gradient-to-br from-gray-800 via-gray-950 to-black shadow-[0_20px_40px_rgba(0,0,0,0.35)] flex items-center justify-center gap-2">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="white" strokeOpacity="0.35" strokeWidth="1.5">
+            <circle cx="12" cy="12" r="9" /><circle cx="12" cy="12" r="5.5" />
+            <circle cx="12" cy="12" r="2" fill="white" fillOpacity="0.35" stroke="none" />
+          </svg>
+          <span
+            className="text-white/40 font-bold text-2xl tracking-tight"
+            style={{ textShadow: "0 1px 0 rgba(255,255,255,0.08), 0 -1px 0 rgba(0,0,0,0.6)" }}
+          >
+            taply
+          </span>
+        </div>
       </div>
-      <span className="relative z-10 text-xs font-bold text-blue-600 bg-white px-3 py-1.5 rounded-full mb-6 shadow-sm">NEW CARD</span>
-      <div className="relative z-10 w-52 h-32 rounded-2xl bg-gradient-to-br from-gray-900 to-black shadow-xl flex items-center justify-center gap-2 mb-6">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeOpacity="0.5" strokeWidth="1.5">
-          <circle cx="12" cy="12" r="9" /><circle cx="12" cy="12" r="5.5" />
-          <circle cx="12" cy="12" r="2" fill="white" fillOpacity="0.5" stroke="none" />
-        </svg>
-        <span className="text-white font-bold text-lg opacity-70">taply</span>
-      </div>
-      <span className="relative z-10 flex items-center gap-1.5 text-sm font-medium text-green-600 bg-green-50 px-3 py-1.5 rounded-full mb-8">
-        <span className="w-1.5 h-1.5 rounded-full bg-green-500" />Card detected
+
+      <span className="flex items-center gap-2 text-[15px] font-medium text-green-600 bg-green-50 px-4 py-2 rounded-full mb-8">
+        <span className="w-2 h-2 rounded-full bg-green-500" />Ready to activate
       </span>
     </div>
   )
@@ -376,15 +385,15 @@ export default function ActivateClaim({ deviceId, productType }) {
       return (
         <div className="flex-1 flex flex-col">
           <CardVisual />
-          <h1 className="text-2xl font-bold text-gray-900 mb-2 tracking-tight text-center">
-            Activate your Taply {productType === "metal" ? "Metal " : ""}card
+          <h1 className="text-[38px] font-extrabold text-gray-900 tracking-tight leading-tight text-center mb-3">
+            Your {productType === "metal" ? "metal " : ""}card is ready.
           </h1>
-          <p className="text-gray-500 text-sm mb-8 max-w-xs mx-auto leading-relaxed text-center">
-            Answer a few quick questions and your card will be live in about a minute.
+          <p className="text-gray-500 text-[17px] leading-relaxed text-center max-w-xs mx-auto">
+            Set up your profile and start sharing in under a minute.
           </p>
-          <div className="flex-1" />
+          <div className="flex-1 min-h-8" />
           <button onClick={() => setStep(1)} className={primaryBtn}>
-            Get started
+            Activate my card
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5">
               <line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" />
             </svg>
@@ -392,7 +401,7 @@ export default function ActivateClaim({ deviceId, productType }) {
           {!user && (
             <button
               onClick={() => { setAuthMode("login"); setStep(STEPS.indexOf("account")) }}
-              className="text-blue-600 text-sm font-medium mt-5"
+              className="text-blue-600 text-[15px] font-medium mt-5"
             >
               I already have an account
             </button>
@@ -447,57 +456,8 @@ export default function ActivateClaim({ deviceId, productType }) {
       })
     }
 
-    if (current === "photo") {
-      return Question({
-        label: `Step 2 of ${totalSteps}`,
-        title: "Add a profile photo",
-        sub: "Cards with a face get remembered.",
-        optional: true,
-        children: (
-          <label className="flex flex-col items-center gap-4 py-4 cursor-pointer">
-            <div className="w-36 h-36 rounded-full bg-white border-2 border-dashed border-gray-300 flex items-center justify-center overflow-hidden shadow-sm">
-              {answers.photo ? (
-                <img src={answers.photo} className="w-full h-full object-cover" />
-              ) : (
-                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" /><circle cx="12" cy="13" r="4" />
-                </svg>
-              )}
-            </div>
-            <span className="text-blue-600 font-semibold text-[15px]">
-              {answers.photo ? "Change photo" : "Choose a photo"}
-            </span>
-            <input type="file" accept="image/*" className="hidden" onChange={handlePhoto} />
-          </label>
-        ),
-      })
-    }
 
-    if (current === "photo") {
-      return Question({
-        label: `Step 2 of ${totalSteps}`,
-        title: "Add a profile photo",
-        sub: "Cards with a face get remembered.",
-        optional: true,
-        children: (
-          <label className="flex flex-col items-center gap-4 py-4 cursor-pointer">
-            <div className="w-36 h-36 rounded-full bg-white border-2 border-dashed border-gray-300 flex items-center justify-center overflow-hidden shadow-sm">
-              {answers.photo ? (
-                <img src={answers.photo} className="w-full h-full object-cover" />
-              ) : (
-                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" /><circle cx="12" cy="13" r="4" />
-                </svg>
-              )}
-            </div>
-            <span className="text-blue-600 font-semibold text-[15px]">
-              {answers.photo ? "Change photo" : "Choose a photo"}
-            </span>
-            <input type="file" accept="image/*" className="hidden" onChange={handlePhoto} />
-          </label>
-        ),
-      })
-    }
+
 
     if (current === "title") {
       return Question({
