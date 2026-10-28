@@ -27,7 +27,7 @@ function CardVisual() {
 
       <div className="relative mb-8">
         <div className="absolute -inset-8 rounded-[40px] bg-gradient-to-br from-blue-400/40 via-indigo-400/30 to-purple-500/40 blur-2xl pointer-events-none" />
-        <div className="relative w-72 h-44 rounded-[22px] bg-gradient-to-br from-gray-800 via-gray-950 to-black shadow-[0_20px_40px_rgba(0,0,0,0.35)] flex items-center justify-center gap-2">
+        <div className="relative w-64 h-40 rounded-[20px] bg-gradient-to-br from-gray-800 via-gray-950 to-black shadow-[0_20px_40px_rgba(0,0,0,0.35)] flex items-center justify-center gap-2">
           <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="white" strokeOpacity="0.35" strokeWidth="1.5">
             <circle cx="12" cy="12" r="9" /><circle cx="12" cy="12" r="5.5" />
             <circle cx="12" cy="12" r="2" fill="white" fillOpacity="0.35" stroke="none" />
@@ -385,7 +385,7 @@ export default function ActivateClaim({ deviceId, productType }) {
       return (
         <div className="flex-1 flex flex-col">
           <CardVisual />
-          <h1 className="text-[38px] font-extrabold text-gray-900 tracking-tight leading-tight text-center mb-3">
+          <h1 className="text-[32px] font-extrabold text-gray-900 tracking-tight leading-tight text-center whitespace-nowrap mb-3">
             Your {productType === "metal" ? "metal " : ""}card is ready.
           </h1>
           <p className="text-gray-500 text-[17px] leading-relaxed text-center max-w-xs mx-auto">
@@ -744,7 +744,7 @@ export default function ActivateClaim({ deviceId, productType }) {
             </button>
           )}
         </div>
-        {view !== "done" && <img src="/taply-logo.svg" className="h-10 object-contain" />}
+        {view !== "done" && <img src="/taply-logo.svg" className={`${view === "wizard" && step === 0 ? "h-14" : "h-10"} object-contain`} />}
         <div className="w-9" />
       </div>
 
