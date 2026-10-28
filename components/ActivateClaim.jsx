@@ -631,6 +631,19 @@ export default function ActivateClaim({ deviceId, productType }) {
           )}
           <div className="flex-1 min-h-8" />
           <button onClick={() => finalize(user, answers, profiles)} className={primaryBtn}>Activate card</button>
+          <button
+            onClick={async () => {
+              await supabase.auth.signOut()
+              setUser(null)
+              setProfiles([])
+              setAuthMode("signup")
+              setStep(0)
+              setView("wizard")
+            }}
+            className="text-blue-600 text-[15px] font-medium mt-5"
+          >
+            Use another account
+          </button>
         </div>
       )
     }
