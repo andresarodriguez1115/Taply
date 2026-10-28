@@ -40,25 +40,7 @@ function CardVisual() {
   )
 }
 
-function ProfileChip({ username, avatarUrl, label = "Active profile" }) {
-  return (
-    <div className="w-full bg-white border border-gray-100 rounded-2xl p-4 shadow-sm flex items-center gap-3 text-left">
-      <div className="w-11 h-11 rounded-full bg-gray-100 flex items-center justify-center shrink-0 overflow-hidden">
-        {avatarUrl ? (
-          <img src={avatarUrl} className="w-full h-full object-cover" />
-        ) : (
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" strokeWidth="2">
-            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" />
-          </svg>
-        )}
-      </div>
-      <div className="min-w-0">
-        <p className="text-[11px] font-semibold text-gray-400 uppercase tracking-wide">{label}</p>
-        <p className="font-semibold text-gray-900 text-sm truncate">taply.now/{username}</p>
-      </div>
-    </div>
-  )
-}
+
 
 function ProfileChip({ username, avatarUrl, label = "Active profile" }) {
   return (
