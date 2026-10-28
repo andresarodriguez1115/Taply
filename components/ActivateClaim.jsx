@@ -40,6 +40,46 @@ function CardVisual() {
   )
 }
 
+function ProfileChip({ username, avatarUrl, label = "Active profile" }) {
+  return (
+    <div className="w-full bg-white border border-gray-100 rounded-2xl p-4 shadow-sm flex items-center gap-3 text-left">
+      <div className="w-11 h-11 rounded-full bg-gray-100 flex items-center justify-center shrink-0 overflow-hidden">
+        {avatarUrl ? (
+          <img src={avatarUrl} className="w-full h-full object-cover" />
+        ) : (
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" strokeWidth="2">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" />
+          </svg>
+        )}
+      </div>
+      <div className="min-w-0">
+        <p className="text-[11px] font-semibold text-gray-400 uppercase tracking-wide">{label}</p>
+        <p className="font-semibold text-gray-900 text-sm truncate">taply.now/{username}</p>
+      </div>
+    </div>
+  )
+}
+
+function ProfileChip({ username, avatarUrl, label = "Active profile" }) {
+  return (
+    <div className="w-full bg-white border border-gray-100 rounded-2xl p-4 shadow-sm flex items-center gap-3 text-left">
+      <div className="w-11 h-11 rounded-full bg-gray-100 flex items-center justify-center shrink-0 overflow-hidden">
+        {avatarUrl ? (
+          <img src={avatarUrl} className="w-full h-full object-cover" />
+        ) : (
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" strokeWidth="2">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" />
+          </svg>
+        )}
+      </div>
+      <div className="min-w-0">
+        <p className="text-[11px] font-semibold text-gray-400 uppercase tracking-wide">{label}</p>
+        <p className="font-semibold text-gray-900 text-sm truncate">taply.now/{username}</p>
+      </div>
+    </div>
+  )
+}
+
 function Spinner({ text }) {
   return (
     <div className="flex-1 flex flex-col items-center justify-center gap-4 py-24">
@@ -108,7 +148,7 @@ export default function ActivateClaim({ deviceId, productType }) {
   const loadProfiles = async (uid) => {
     const { data } = await supabase
       .from("profiles")
-      .select("id, username, is_active, created_at")
+      .select("id, username, is_active, created_at, avatar_url, name")
       .eq("user_id", uid)
       .order("created_at", { ascending: true })
     return data || []
@@ -433,8 +473,8 @@ export default function ActivateClaim({ deviceId, productType }) {
         sub: "This is how it'll appear on your card.",
         children: (
           <>
-            <input autoFocus className={inputClass} placeholder="First name" value={answers.firstName} onChange={(e) => set("firstName", e.target.value)} />
-            <input className={inputClass} placeholder="Last name" value={answers.lastName} onChange={(e) => set("lastName", e.target.value)} />
+            <input autoFocus name="given-name" autoComplete="given-name" autoCapitalize="words" className={inputClass} placeholder="First name" value={answers.firstName} onChange={(e) => set("firstName", e.target.value)} />
+            <input name="family-name" autoComplete="family-name" autoCapitalize="words" className={inputClass} placeholder="Last name" value={answers.lastName} onChange={(e) => set("lastName", e.target.value)} />
           </>
         ),
       })
@@ -487,7 +527,7 @@ export default function ActivateClaim({ deviceId, productType }) {
         sub: "Your job title or position.",
         optional: true,
         children: (
-          <input autoFocus className={inputClass} placeholder="e.g. Marketing Director" value={answers.title} onChange={(e) => set("title", e.target.value)} />
+          <input autoFocus name="organization-title" autoComplete="organization-title" autoCapitalize="words" className={inputClass} placeholder="e.g. Marketing Director" value={answers.title} onChange={(e) => set("title", e.target.value)} />
         ),
       })
     }
@@ -501,8 +541,8 @@ export default function ActivateClaim({ deviceId, productType }) {
         optional: true,
         children: (
           <>
-            <input type="tel" className={inputClass} placeholder="Phone number" value={answers.phone} onChange={(e) => set("phone", e.target.value)} />
-            <input type="email" className={inputClass} placeholder="Email address" value={answers.email} onChange={(e) => set("email", e.target.value)} />
+            <input type="tel" name="tel" autoComplete="tel" inputMode="tel" className={inputClass} placeholder="Phone number" value={answers.phone} onChange={(e) => set("phone", e.target.value)} />
+            <input type="email" name="email" autoComplete="email" inputMode="email" autoCapitalize="none" className={inputClass} placeholder="Email address" value={answers.email} onChange={(e) => set("email", e.target.value)} />
           </>
         ),
       })
@@ -518,6 +558,10 @@ export default function ActivateClaim({ deviceId, productType }) {
             <span className="text-gray-400 text-base">taply.now/</span>
             <input
               autoFocus
+              autoComplete="off"
+              autoCapitalize="none"
+              autoCorrect="off"
+              spellCheck={false}
               className="flex-1 py-4 text-base text-gray-900 bg-transparent focus:outline-none"
               placeholder="yourname"
               value={answers.username}
@@ -558,8 +602,8 @@ export default function ActivateClaim({ deviceId, productType }) {
           </div>
 
           <form onSubmit={handleEmailAuth} className="space-y-3">
-            <input type="email" className={inputClass} placeholder="Email" value={authEmail} onChange={(e) => setAuthEmail(e.target.value)} />
-            <input type="password" className={inputClass} placeholder={isLogin ? "Password" : "Create a password (6+ characters)"} value={password} onChange={(e) => setPassword(e.target.value)} />
+            <input type="email" name="email" autoComplete={isLogin ? "username" : "email"} inputMode="email" autoCapitalize="none" className={inputClass} placeholder="Email" value={authEmail} onChange={(e) => setAuthEmail(e.target.value)} />
+            <input type="password" name="password" autoComplete={isLogin ? "current-password" : "new-password"} className={inputClass} placeholder={isLogin ? "Password" : "Create a password (6+ characters)"} value={password} onChange={(e) => setPassword(e.target.value)} />
             <ErrorText />
             <button type="submit" disabled={busy} className={primaryBtn}>
               {busy ? "Please wait..." : isLogin ? "Log in & activate" : "Create account & activate"}
@@ -601,17 +645,7 @@ export default function ActivateClaim({ deviceId, productType }) {
             This card will open your active profile.
           </p>
           {active?.username && (
-            <div className="w-full bg-white border border-gray-100 rounded-2xl p-4 shadow-sm flex items-center gap-3">
-              <div className="w-11 h-11 rounded-full bg-gray-100 flex items-center justify-center shrink-0">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" strokeWidth="2">
-                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" />
-                </svg>
-              </div>
-              <div>
-                <p className="text-[11px] font-semibold text-gray-400 uppercase tracking-wide">Active profile</p>
-                <p className="font-semibold text-gray-900 text-sm">taply.now/{active.username}</p>
-              </div>
-            </div>
+            <ProfileChip username={active.username} avatarUrl={active.avatar_url} />
           )}
           <div className="flex-1 min-h-8" />
           <button onClick={() => finalize(user, answers, profiles)} className={primaryBtn}>Activate card</button>
@@ -696,37 +730,15 @@ export default function ActivateClaim({ deviceId, productType }) {
           <h1 className="text-[36px] font-extrabold text-gray-900 tracking-tight leading-tight mb-2">Your card is live!</h1>
           <p className="text-gray-500 text-[17px] mb-8">Your profile is ready to share.</p>
 
-          {/* PREVIEW CARD */}
+                   {/* PROFILE */}
           <motion.div
-            initial={{ opacity: 0, y: 16 }}
+            initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.25, duration: 0.35 }}
-            className="relative w-full overflow-hidden rounded-2xl bg-gradient-to-br from-gray-900 to-black p-5 shadow-[0_16px_40px_rgba(0,0,0,0.25)] text-left"
+            transition={{ delay: 0.25, duration: 0.3 }}
+            className="w-full"
           >
-            <div className="absolute -right-12 -bottom-14 w-52 h-52 rounded-full bg-gradient-to-tr from-blue-600/50 via-purple-600/40 to-transparent blur-2xl pointer-events-none" />
-            <div className="relative flex items-center gap-4">
-              {p.avatar_url ? (
-                <img src={p.avatar_url} className="w-16 h-16 rounded-full object-cover border-2 border-white/15 flex-shrink-0" />
-              ) : (
-                <div className="w-16 h-16 rounded-full bg-white/10 border-2 border-white/15 flex items-center justify-center text-white font-bold text-lg flex-shrink-0">
-                  {initials}
-                </div>
-              )}
-              <div className="min-w-0">
-                <p className="text-white font-semibold text-[17px] leading-tight truncate">{displayName}</p>
-                {displayTitle && <p className="text-white/60 text-sm mt-0.5 truncate">{displayTitle}</p>}
-              </div>
-            </div>
-            <div className="relative mt-4 space-y-2">
-              {rows.map((r) => (
-                <div key={r.icon} className="flex items-center gap-2.5 text-white/80 text-[13px]">
-                  <span className="text-white/50 flex-shrink-0"><RowIcon type={r.icon} /></span>
-                  <span className="truncate">{r.text}</span>
-                </div>
-              ))}
-            </div>
+            <ProfileChip username={liveUsername} avatarUrl={p.avatar_url} />
           </motion.div>
-
           <div className="w-full flex items-center gap-3 bg-white border border-gray-100 rounded-2xl px-4 py-3.5 mt-5 text-left shadow-sm">
             <div className="w-9 h-9 rounded-xl bg-blue-50 flex items-center justify-center flex-shrink-0">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2563eb" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
