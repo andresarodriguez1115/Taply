@@ -22,7 +22,7 @@ const cleanUsername = (v) => (v || "").toLowerCase().replace(/[^a-z0-9]/g, "")
 function CardVisual() {
   return (
     <div className="flex flex-col items-center pt-4 relative">
-      <span className="text-[13px] font-semibold tracking-wide text-blue-600 bg-blue-50 px-4 py-2 rounded-full mb-8">
+      <span className="relative z-10 text-[13px] font-bold tracking-wide text-blue-700 bg-blue-100 border border-blue-200 px-4 py-2 rounded-full mb-8 shadow-sm">
         NEW TAPLY CARD
       </span>
 
@@ -395,11 +395,11 @@ export default function ActivateClaim({ deviceId, productType }) {
       return (
         <div className="flex-1 flex flex-col">
           <CardVisual />
-          <h1 className="text-[32px] font-bold text-gray-900 tracking-tight leading-tight text-center whitespace-nowrap mb-3">
+          <h1 className="text-[34px] font-bold text-gray-900 tracking-tight leading-tight text-center whitespace-nowrap mt-4 mb-3">
             Your {productType === "metal" ? "metal " : ""}card is ready.
           </h1>
-          <p className="text-gray-500 text-[17px] leading-relaxed text-center max-w-xs mx-auto">
-            Set up your profile and start sharing in under a minute.
+          <p className="text-gray-500 text-[18px] leading-relaxed text-center max-w-xs mx-auto">
+            Set up your profile and start networking
           </p>
           <div className="flex-1 min-h-8" />
           <button onClick={() => setStep(1)} className={primaryBtn}>
