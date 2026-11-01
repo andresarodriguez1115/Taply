@@ -24,9 +24,9 @@ const [qrModal, setQrModal] = useState(null);
 const [qrOpen, setQrOpen] = useState(false);
 const [statsLoading, setStatsLoading] = useState(true);
 const [stats, setStats] = useState({ views: 0, taps: 0, saves: 0, saveRate: 0 });const [walletCustomizerOpen, setWalletCustomizerOpen] = useState(false);
-const [walletBgColor, setWalletBgColor] = useState("rgb(0,0,0)");
-const [walletLogoUrl, setWalletLogoUrl] = useState("/taply-logo.png");
-const [walletTextColor, setWalletTextColor] = useState("rgb(255,255,255)");
+const [walletBgColor, setWalletBgColor] = useState("rgb(238,243,255)");
+const [walletLogoUrl, setWalletLogoUrl] = useState("/taply-wallet-logo.png");
+const [walletTextColor, setWalletTextColor] = useState("rgb(0,0,0)");
 const [showTutorial, setShowTutorial] = useState(false);
 const [showProfileCardTutorial, setShowProfileCardTutorial] = useState(false)
 const [cropImageSrc, setCropImageSrc] = useState(null)
@@ -675,6 +675,8 @@ backdrop-blur-xl border shadow-[0_8px_30px_rgba(0,0,0,0.08)] ring-2 ${
             title: activeProfile.title || "",
             phone: activeProfile.field_values?.phone || "",
             email: activeProfile.field_values?.email || "",
+            website: activeProfile.field_values?.website || "",
+            linkedin: activeProfile.field_values?.linkedin || "",
             username: username,
             photoUrl: walletPhotoUrl || activeProfile.avatar_url || null,
             bgColor: walletBgColor,
@@ -842,7 +844,7 @@ backdrop-blur-xl border shadow-[0_8px_30px_rgba(0,0,0,0.08)] ring-2 ${
             ) : (
               <div className="w-8 h-8 rounded bg-gray-100 flex items-center justify-center text-[10px] text-gray-400">Logo</div>
             )}
-            <span className="text-sm text-gray-500">{walletLogoUrl && walletLogoUrl !== "/taply-logo.png" ? "Change logo" : "Upload company logo"}</span>
+            <span className="text-sm text-gray-500">{walletLogoUrl && walletLogoUrl !== "/taply-wallet-logo.png" ? "Change logo" : "Upload company logo"}</span>
             <input type="file" accept="image/*" className="hidden" onChange={(e) => {
               const file = e.target.files[0]
               if (!file) return
@@ -861,8 +863,8 @@ backdrop-blur-xl border shadow-[0_8px_30px_rgba(0,0,0,0.08)] ring-2 ${
             }} />
           </label>
 <div className="flex gap-3 mt-1.5">
-            {walletLogoUrl && walletLogoUrl !== "/taply-logo.png" && (
-              <button onClick={() => setWalletLogoUrl("/taply-logo.png")} className="text-xs text-gray-400 hover:text-gray-600 transition">
+            {walletLogoUrl && walletLogoUrl !== "/taply-wallet-logo.png" && (
+              <button onClick={() => setWalletLogoUrl("/taply-wallet-logo.png")} className="text-xs text-gray-400 hover:text-gray-600 transition">
                 Use Taply logo
               </button>
             )}

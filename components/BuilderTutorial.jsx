@@ -27,7 +27,7 @@ const MODE_STEPS = {
 }
 const PAD = 8
 
-export default function BuilderTutorial({ onComplete, onGoToContent, onGoToDesign, onCloseStudio, onOpenSection, mode = "business" }) {
+export default function BuilderTutorial({ onComplete, onGoToContent, onGoToDesign, onCloseStudio, onOpenSection, mode = "business", userId }) {
   const STEPS = MODE_STEPS[mode] || MODE_STEPS.business
   const [step, setStep] = useState(0)
   const [displayStep, setDisplayStep] = useState(0)
@@ -200,14 +200,14 @@ export default function BuilderTutorial({ onComplete, onGoToContent, onGoToDesig
       if (nextStep.id === "save-btn") onCloseStudio?.()
       setStep(s => s + 1)
     } else {
-      localStorage.setItem(`taply_tutorial_done_${mode}`, "1")
+      localStorage.setItem(`taply_tutorial_done_${userId}_${mode}`, "1")
       localStorage.setItem("taply_builder_tutorial_done", "1")
       onComplete()
     }
   }
 
   const handleSkip = () => {
-    localStorage.setItem(`taply_tutorial_done_${mode}`, "1")
+    localStorage.setItem(`taply_tutorial_done_${userId}_${mode}`, "1")
     localStorage.setItem("taply_builder_tutorial_done", "1")
     onComplete()
   }

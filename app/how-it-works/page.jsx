@@ -2,7 +2,9 @@
 
 import { useState } from "react"
 import Link from "next/link"
-import { ArrowRight, Menu, X } from "lucide-react"
+import { useRouter } from "next/navigation"
+import { motion, AnimatePresence } from "framer-motion"
+import { ArrowRight, Menu } from "lucide-react"
 
 function RenderPlaceholder({ title, filename, className = "" }) {
   return (
@@ -32,59 +34,65 @@ function RenderPlaceholder({ title, filename, className = "" }) {
 
 export default function HowItWorksPage() {
   const [menuOpen, setMenuOpen] = useState(false)
+  const router = useRouter()
 
   return (
     <main className="min-h-screen overflow-hidden bg-[#fafaf9] text-black">
       {/* NAV */}
-      <header className="fixed left-0 top-0 z-50 w-full border-b border-gray-200 bg-white">
-        <div className="mx-auto flex h-[76px] max-w-[520px] items-center justify-between px-5">
-          <Link href="/" className="flex items-center">
-            <img
-              src="/taply-logo.svg"
-              alt="Taply"
-              className="h-12 w-auto object-contain"
-            />
-          </Link>
+      {/* NAV */}
+      <div className={`fixed top-0 left-0 w-full z-50 flex justify-between items-center pl-2 pr-6 h-[75px] bg-white ${menuOpen ? "" : "border-b border-gray-200"}`}>
+        <button onClick={() => router.push("/")} className="flex items-center h-full">
+          <img src="/taply-logo.svg" alt="Taply" className="h-14 object-contain" />
+        </button>
+        <button onClick={() => setMenuOpen(prev => !prev)} className="rounded-lg hover:bg-gray-100 transition">
+          <motion.div animate={{ rotate: menuOpen ? 90 : 0 }} transition={{ duration: 0.2 }}>
+            <Menu size={28} strokeWidth={2} />
+          </motion.div>
+        </button>
+      </div>
 
-          <button
-            onClick={() => setMenuOpen(!menuOpen)}
-            className="rounded-xl p-2 transition hover:bg-gray-100"
-            aria-label="Toggle menu"
-          >
-            {menuOpen ? <X size={29} /> : <Menu size={29} />}
-          </button>
-        </div>
-
+      <AnimatePresence>
         {menuOpen && (
-          <div className="border-t border-gray-100 bg-white px-6 pb-6 pt-4">
-            <div className="mx-auto flex max-w-[420px] flex-col gap-2">
-              <Link
-                href="/"
-                onClick={() => setMenuOpen(false)}
-                className="rounded-xl px-4 py-3 font-bold hover:bg-gray-50"
-              >
-                Home
-              </Link>
-
-              <Link
-                href="/shop"
-                onClick={() => setMenuOpen(false)}
-                className="rounded-xl px-4 py-3 font-bold hover:bg-gray-50"
-              >
-                Shop cards
-              </Link>
-
-              <Link
-                href="/signup"
-                onClick={() => setMenuOpen(false)}
-                className="rounded-xl bg-black px-4 py-3 text-center font-black text-white"
-              >
-                Get started
-              </Link>
+          <motion.div
+            className="fixed top-[75px] left-0 w-full h-[calc(100vh-75px)] bg-white z-40 overflow-y-auto"
+            style={{ transformOrigin: "top" }}
+            initial={{ clipPath: "inset(0 0 100% 0)", opacity: 0 }}
+            animate={{ clipPath: "inset(0 0 0% 0)", opacity: 1 }}
+            exit={{ clipPath: "inset(0 0 100% 0)", opacity: 0 }}
+            transition={{ duration: 0.4, ease: [0.4, 0, 0.2, 1] }}
+          >
+            <div className="flex flex-col">
+              {[
+                { label: "How it works", href: "/how-it-works", newTab: true },
+                { label: "Pricing", href: "/pricing", newTab: true },
+                { label: "Cards", href: "/cards", newTab: true },
+                { label: "Login", href: "/signup", newTab: true },
+              ].map(({ label, href, newTab }, i) => (
+                <motion.button
+                  key={label}
+                  initial={{ opacity: 0, y: -8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: i * 0.06 + 0.15 }}
+                  onClick={() => { setMenuOpen(false); newTab ? window.open(href, "_blank") : router.push(href) }}
+                  className="w-full flex items-center justify-between border-b border-gray-100 text-gray-900 active:bg-gray-50 transition"
+                  style={{ fontSize: "1.25rem", fontWeight: 500, letterSpacing: "-0.02em", padding: "18px 24px" }}
+                >
+                  <span>{label}</span>
+                  <span style={{ color: "#d1d5db" }}>›</span>
+                </motion.button>
+              ))}
+              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.45 }} className="px-6 pt-6">
+                <button
+                  onClick={() => { setMenuOpen(false); window.open("/signup", "_blank") }}
+                  className="w-full bg-black text-white py-4 rounded-2xl flex items-center justify-between px-6 text-[1rem] font-bold"
+                >
+                  Create your Taply card <span>→</span>
+                </button>
+              </motion.div>
             </div>
-          </div>
+          </motion.div>
         )}
-      </header>
+      </AnimatePresence>
 
       {/* HERO */}
       <section className="px-4 pb-12 pt-[116px]">
@@ -94,19 +102,19 @@ export default function HowItWorksPage() {
               How it works
             </p>
 
-            <h1 className="mt-5 text-[2.7rem] font-black leading-[0.98] tracking-[-0.06em]">
-              One card.
-              <br />
-              Every connection.
-            </h1>
+<h1 className="mt-5 text-[2.7rem] font-black leading-[0.98] tracking-[-0.06em]">
+  Your card,
+  <br />
+  live in minutes.
+</h1>
 
-          <p className="mt-5 text-[18px] leading-relaxed text-gray-500">
-  Activate your card, add your details, and your profile is ready to share in minutes.
+<p className="mt-5 text-[18px] leading-relaxed text-gray-500">
+  Tap your Taply card, answer a few quick questions, and start sharing your profile.
 </p>
 
             <div className="mt-8 flex items-center gap-3 text-[13px] font-bold text-gray-500">
               <span className="h-px flex-1 bg-gray-200" />
-              <span>4 simple steps</span>
+              <span>5 simple steps</span>
               <span className="h-px flex-1 bg-gray-200" />
             </div>
           </div>
@@ -130,7 +138,7 @@ export default function HowItWorksPage() {
      <img
   src="/how-it-works-activate.png"
   alt="Taply card activating on a phone"
-  className="aspect-[4/3] w-full rounded-[26px] object-cover"
+  className="aspect-[4/5] w-full rounded-[26px] object-cover"
 />
 
             <h2 className="mt-7 text-[2rem] font-black leading-none tracking-[-0.05em]">
@@ -211,7 +219,7 @@ export default function HowItWorksPage() {
       </section>
 
       {/* STEP 4 */}
-      <section className="px-4 pb-12">
+      <section className="px-4 pb-6">
         <div className="mx-auto max-w-[420px] overflow-hidden rounded-[32px] border border-blue-100 bg-white shadow-[0_18px_60px_rgba(0,0,0,0.06)]">
           <div className="p-5">
             <div className="mb-5 flex items-center gap-3">
@@ -224,12 +232,11 @@ export default function HowItWorksPage() {
               </p>
             </div>
 
-            {/* REPLACE THIS WITH STEP 4 RENDER */}
-            <RenderPlaceholder
-              title="You're live render"
-              filename="/how-it-works-live.png"
-              className="aspect-[4/5]"
-            />
+     <img
+  src="/how-it-works-live.png"
+  alt="Taply card activation complete on a phone"
+  className="aspect-[4/5] w-full rounded-[26px] object-cover"
+/>
 
             <h2 className="mt-7 text-[2rem] font-black leading-none tracking-[-0.05em]">
               Your card is live
@@ -241,7 +248,36 @@ export default function HowItWorksPage() {
           </div>
         </div>
       </section>
+{/* STEP 5 */}
+<section className="px-4 pb-12">
+  <div className="mx-auto max-w-[420px] overflow-hidden rounded-[32px] border border-blue-100 bg-white shadow-[0_18px_60px_rgba(0,0,0,0.06)]">
+    <div className="p-5">
+      <div className="mb-5 flex items-center gap-3">
+        <span className="flex h-11 w-11 items-center justify-center rounded-full bg-blue-600 text-[18px] font-black text-white">
+          5
+        </span>
 
+        <p className="text-[12px] font-black uppercase tracking-[0.15em] text-blue-600">
+          Make it yours
+        </p>
+      </div>
+
+      <RenderPlaceholder
+        title="Dashboard render"
+        filename="/how-it-works-dashboard.png"
+        className="aspect-[4/5]"
+      />
+
+      <h2 className="mt-7 text-[2rem] font-black leading-none tracking-[-0.05em]">
+        Manage your dashboard
+      </h2>
+
+      <p className="mt-4 text-[17px] leading-relaxed text-gray-500">
+        Update your details, add links, customize your profile, and switch what your card shares anytime.
+      </p>
+    </div>
+  </div>
+</section>
       {/* FINAL CTA */}
       <section className="border-t border-[#eadfbe] bg-[#fffaf0] px-4 py-14">
         <div className="mx-auto max-w-[420px] rounded-[32px] border border-[#efd795] bg-white px-6 py-9 text-center shadow-[0_18px_60px_rgba(154,104,0,0.08)]">

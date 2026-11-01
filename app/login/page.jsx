@@ -115,7 +115,7 @@ useEffect(() => {
         <div className="mt-10 flex flex-col gap-4 w-full max-w-sm">
           <button onClick={() => window.open("/signup", "_blank")}
             className="bg-black text-white py-4 rounded-2xl text-[1.05rem] font-semibold shadow-lg hover:scale-[1.02] active:scale-[0.97] transition">
-            Create your Taply card →
+            Continue to Taply  →
           </button>
           <button onClick={() => window.open("/how-it-works", "_blank")} className="bg-white border border-gray-200 py-4 rounded-2xl flex items-center justify-center gap-2 text-gray-800 text-[1.05rem] font-semibold shadow-sm hover:bg-gray-50 transition">
             See how it works <Play size={18} />
@@ -393,7 +393,7 @@ useEffect(() => {
         </p>
         <button onClick={() => window.open("/signup", "_blank")}
           className="w-full bg-white text-black py-5 rounded-2xl text-[16px] font-black flex items-center justify-between px-6 hover:bg-gray-100 active:scale-[0.98] transition">
-          <span>Create your Taply Card →</span>
+          <span>Continue to Taply  →</span>
           <span>→</span>
         </button>
   <div className="flex items-center justify-center gap-6 mt-8 text flex-wrap">
@@ -439,7 +439,9 @@ useEffect(() => {
     <p className="text-[10px] font-bold text-gray-600 uppercase tracking-[1.5px] mb-3">Account</p>
     <div className="flex flex-col gap-2">
       <button onClick={() => window.open("/signup", "_blank")} className="text-[13px] text-gray-500 font-medium hover:text-gray-400 transition text-left">Sign up</button>
-      <button onClick={() => window.open("/signup", "_blank")} className="text-[13px] text-gray-500 font-medium hover:text-gray-400 transition text-left">Log in</button>
+      <button onClick={() => window.open("/signup", "_blank")} className="text-[13px] text-gray-500 font-medium hover:text-gray-400 transition text-left">
+        
+      </button>
       <span className="text-[13px] text-gray-500 font-medium">Support</span>
     </div>
   </div>
@@ -477,7 +479,7 @@ useEffect(() => {
               <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.45 }} className="px-6 pt-6">
                 <button onClick={() => { setMenuOpen(false); window.open("/signup", "_blank") }}
                   className="w-full bg-black text-white py-4 rounded-2xl flex items-center justify-between px-6 text-[1rem] font-bold">
-                  Create your Taply card <span>→</span>
+                  Continue to Taply  <span>→</span>
                 </button>
               </motion.div>
             </div>

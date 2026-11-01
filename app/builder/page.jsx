@@ -67,6 +67,7 @@ const [universityTitleColor, setUniversityTitleColor] = useState("#6b7280");
 const [socialNameColor, setSocialNameColor] = useState("#000000");
 const [socialTitleColor2, setSocialTitleColor2] = useState("#6b7280");
 const [username, setUsername] = useState(null)
+const [userId, setUserId] = useState(null)
 const [loadingProfile, setLoadingProfile] = useState(true);
 const [subscriptionTier, setSubscriptionTier] = useState("free");
 const [upgradeModalOpen, setUpgradeModalOpen] = useState(false);
@@ -113,9 +114,10 @@ useEffect(() => {
     const { data: userData } = await supabase.auth.getUser()
 
     if (!userData?.user) {
-      router.replace("/login")
+      router.replace("/signup")
       return
     }
+    setUserId(userData.user.id)
 
     const { data: accountData } = await supabase
       .from("accounts")
@@ -496,12 +498,19 @@ const handleDrag = (e) => {
   setStudioHeight(newHeight);
 };
 useEffect(() => {
-  if (!profileId) {
+  if (loadingProfile || !userId) return;
+
+  // New profiles always open with the Studio up
+  if (!profileId) setStudioOpen(true);
+
+  // First time in the builder for this mode → open Studio + tutorial
+  const done = localStorage.getItem(`taply_tutorial_done_${userId}_${mode}`);
+  if (!done) {
     setStudioOpen(true);
-    const done = localStorage.getItem(`taply_tutorial_done_${urlMode || "business"}`);
-    if (!done) setTimeout(() => setShowBuilderTutorial(true), 1000);
+    setActiveTab("content");
+    setTimeout(() => setShowBuilderTutorial(true), 1000);
   }
-}, [profileId]);
+}, [loadingProfile]);
 const [activeTab, setActiveTab] = useState("content");
 const [openMode, setOpenMode] = useState(null);
 const [avatarMenuOpen, setAvatarMenuOpen] = useState(false);
@@ -3176,6 +3185,7 @@ const isActive = button !== null && button !== undefined;
 )}
   {showBuilderTutorial && <BuilderTutorial
     mode={tutorialMode}
+    userId={userId}
     onComplete={() => setShowBuilderTutorial(false)}
     onOpenStudio={() => setStudioOpen(true)}
     onGoToContent={() => setActiveTab("content")}
