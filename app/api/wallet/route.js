@@ -33,11 +33,21 @@ export async function POST(request) {
     });
 
     // ── FRONT ──
-    pass.headerFields.push({ key: "brand", value: "TAPLY" });
-    pass.primaryFields.push({ key: "name", value: name });
-    if (title?.trim()) pass.secondaryFields.push({ key: "title", label: "TITLE", value: title.trim() });
-    if (phone?.trim()) pass.auxiliaryFields.push({ key: "phone", label: "PHONE", value: phone.trim() });
-    if (email?.trim()) pass.auxiliaryFields.push({ key: "email", label: "EMAIL", value: email.trim() });
+    if (username?.trim()) {
+      pass.headerFields.push({
+        key: "link",
+        label: "PROFILE",
+        value: `taply.now/${username.trim()}`,
+      });
+    }
+
+    pass.primaryFields.push({
+      key: "name",
+      value: name,
+      ...(title?.trim() ? { label: title.trim() } : {}),
+    });
+    if (phone?.trim()) pass.secondaryFields.push({ key: "phone", label: "PHONE", value: phone.trim() });
+    if (email?.trim()) pass.secondaryFields.push({ key: "email", label: "EMAIL", value: email.trim() });
 
     // ── BACK (tappable) ──
     pass.backFields.push({
@@ -124,12 +134,11 @@ export async function POST(request) {
       }
     }
 
-    // ── QR + caption ──
+    // ── QR ──
     pass.setBarcodes({
       message: profileUrl,
       format: "PKBarcodeFormatQR",
       messageEncoding: "iso-8859-1",
-      altText: `taply.now/${username}`,
     });
 
     const buffer = pass.getAsBuffer();
