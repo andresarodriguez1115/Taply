@@ -50,7 +50,7 @@ export async function POST(request) {
       ...(title?.trim() ? { label: title.trim() } : {}),
     });
     if (phone?.trim()) pass.secondaryFields.push({ key: "phone", label: "PHONE", value: phone.trim() });
-    if (email?.trim()) pass.secondaryFields.push({ key: "email", label: "EMAIL", value: email.trim() });
+    if (email?.trim()) pass.auxiliaryFields.push({ key: "email", label: "EMAIL", value: email.trim() });
 
     // ── BACK (tappable) ──
     pass.backFields.push({
