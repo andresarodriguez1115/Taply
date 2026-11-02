@@ -18,11 +18,11 @@ export async function POST(request) {
     const wwdr = readFileSync(join(process.cwd(), "wwdr.pem"), "utf8");
 
     const fg = textColor || "rgb(255,255,255)";
-    // Label color follows the card color: dark gray on light cards, light gray on dark cards
+    // Label color follows the card color: black on light cards, white on dark cards
     const bg = bgColor && !bgColor.startsWith("radial") ? bgColor : "rgb(0,0,0)";
     const [r, g, b] = (bg.match(/\d+/g) || [0, 0, 0]).map(Number);
     const isLightBg = 0.299 * r + 0.587 * g + 0.114 * b > 150;
-    const labelColor = isLightBg ? "rgb(75,85,99)" : "rgb(209,213,219)";
+    const labelColor = isLightBg ? "rgb(0,0,0)" : "rgb(255,255,255)";
     const profileUrl = `https://taply.now/${username}`;
 
     const pass = await PKPass.from({
