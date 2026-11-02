@@ -39,7 +39,8 @@ export async function POST(request) {
     if (username?.trim()) {
       pass.headerFields.push({
         key: "link",
-        value: `taply.now/${username.trim()}`,
+        label: "taply.now/",
+        value: username.trim(),
       });
     }
 
