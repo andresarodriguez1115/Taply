@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import supabase from "@/lib/supabase";
-import { QrCode, Link, Wallet, Share2 } from "lucide-react";
+import { QrCode, Link, Wallet, Share2, Pencil, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import QRCode from "qrcode";
@@ -41,7 +41,21 @@ const [walletPhotoUrl, setWalletPhotoUrl] = useState(null)
 const [upgradeModalOpen, setUpgradeModalOpen] = useState(false)
 const [pendingCardId, setPendingCardId] = useState(null)
 const maxProfiles = subscriptionTier === "pro" ? 4 : 1
+const activeProfile = profiles.find((profile) => profile.is_active) || profiles[0] || null;
+const otherProfiles = profiles.filter((profile) => profile.id !== activeProfile?.id);
 
+const handleCreateProfile = () => {
+  if (profiles.length >= maxProfiles) {
+    if (subscriptionTier !== "pro") {
+      setUpgradeModalOpen(true);
+    } else {
+      alert("You've reached the maximum of 4 profiles. Delete one to create a new one.");
+    }
+    return;
+  }
+
+  router.push("/create");
+};
 useEffect(() => {
   const cardId = localStorage.getItem("pending_card_id")
   if (cardId) setPendingCardId(cardId)
@@ -58,11 +72,25 @@ const handleShowQR = async (profileUsername) => {
   setQrModal(dataUrl);
   setQrOpen(true);
 };
+const [switching, setSwitching] = useState(false);
+
 const handleSetActive = async (id) => {
+  if (switching) return;
+  if (profiles.find((p) => p.id === id)?.is_active) return;
+  setSwitching(true);
+
+  // update UI first so the switch is instant
+  setProfiles((prev) =>
+    prev.map((p) => ({
+      ...p,
+      is_active: p.id === id,
+    }))
+  );
+
   const { data: userData } = await supabase.auth.getUser();
   const userId = userData?.user?.id;
 
-  if (!userId) return;
+  if (!userId) { setSwitching(false); return; }
 
   // turn all OFF
   await supabase
@@ -77,18 +105,19 @@ await supabase
   .eq("id", id)
   .eq("user_id", userId);
 
-  // update UI
-  setProfiles((prev) =>
-    prev.map((p) => ({
-      ...p,
-      is_active: p.id === id,
-    }))
-  );
+  setSwitching(false);
 };
 
 const handleDelete = async (id) => {
-  const confirmDelete = confirm("Delete this profile?");
-  if (!confirmDelete) return;
+  const target = profiles.find((p) => p.id === id);
+  const remaining = profiles.filter((p) => p.id !== id);
+  const wasActive = target?.is_active;
+
+  const message = wasActive && remaining.length > 0
+    ? "Delete this profile? Your next profile will become active."
+    : "Delete this profile?";
+  if (!confirm(message)) return;
+
   const { error } = await supabase
     .from("profiles")
     .delete()
@@ -97,13 +126,39 @@ const handleDelete = async (id) => {
   if (error) {
     console.error(error);
     alert("Error deleting profile");
+    return;
+  }
+
+  // If the active one was deleted, make the next profile active
+  if (wasActive && remaining.length > 0) {
+    const next = remaining[0];
+    setProfiles(remaining.map((p) => ({ ...p, is_active: p.id === next.id })));
+    await supabase.from("profiles").update({ is_active: true }).eq("id", next.id);
   } else {
-    setProfiles((prev) => prev.filter((p) => p.id !== id));
+    setProfiles(remaining);
   }
 };
+const [renamingId, setRenamingId] = useState(null);
+const [renameValue, setRenameValue] = useState("");
+
+const saveRename = async (id) => {
+  const value = renameValue.trim() || null;
+  setRenamingId(null);
+  setProfiles((prev) => prev.map((p) => (p.id === id ? { ...p, label: value } : p)));
+  const { error } = await supabase.from("profiles").update({ label: value }).eq("id", id);
+  if (error) console.error("Rename failed:", error);
+};
+
 useEffect(() => {
   setMounted(true);
+  const saved = parseInt(localStorage.getItem("profileCount") || "1", 10);
+  setLastCount(Number.isNaN(saved) ? 1 : saved);
 }, []);
+
+// keep the saved count in sync when profiles are added or deleted
+useEffect(() => {
+  if (ready) localStorage.setItem("profileCount", String(Math.max(profiles.length, 1)));
+}, [profiles.length, ready]);
   useEffect(() => {
     const getUser = async () => {
       const chosen = localStorage.getItem("has_chosen");
@@ -244,7 +299,7 @@ backdrop-blur-xl border shadow-[0_8px_30px_rgba(0,0,0,0.08)] ring-2 ${
     {/* LEFT */}
     <div className="flex items-center gap-1.5">
       <span className="text-[18px] font-bold text-gray-900 tracking-tight">
-        Taply
+        taply
       </span>
       <span className="text-[18px] text-gray-300 font-light">/</span>
 <div className="flex items-center gap-1.5">
@@ -353,222 +408,286 @@ backdrop-blur-xl border shadow-[0_8px_30px_rgba(0,0,0,0.08)] ring-2 ${
     
 
 
-{/* HERO */}
-      <div data-tutorial="hero" className="mt-12 mb-8 bg-white rounded-3xl px-4 pt-7 pb-8 border border-black/7 shadow-sm">
-        {/* TOP ROW */}
-        <div className="flex justify-between items-start mb-3">
-          <div>
-<h1 className="text-2xl font-semibold text-gray-900">
-              {loading ? "..." : userName}
-            </h1>
-      <p data-tutorial="username" className="text-l text-gray-500 mt-1">
-              taply.now/{username} · {ready ? profiles.length : "..."} profiles            </p>
-          </div>
-          <div className="w-9 h-9 rounded-full bg-blue-600 flex items-center justify-center text-[12px] font-bold text-white">
-  {userName ? userName.split(" ").map(n => n[0]).join("").toUpperCase().slice(0, 2) : "?"}
-</div>
-        </div>
-
-        {/* CTA */}
-        <button
-          data-tutorial="create"
-          onClick={() => {
-            if (profiles.length >= maxProfiles) {
-              if (subscriptionTier !== "pro") {
-                setUpgradeModalOpen(true);
-              } else {
-                alert("You've reached the maximum of 4 profiles. Delete one to create a new one.");
-              }
-              return;
-            }
-            router.push("/create");
-          }}
-          className={`w-full text-[14px] font-semibold py-3 rounded-2xl transition ${profiles.length >= maxProfiles ? "bg-gray-100 text-gray-400 cursor-not-allowed" : "bg-black text-white"}`}
-        >
-          {profiles.length >= maxProfiles ? (subscriptionTier === "pro" ? "Max profiles reached" : "Upgrade to add more") : "+ Create new profile"}
-        </button>
-      </div>
-
-      {/* FINISH CARD ACTIVATION BANNER */}
-      {ready && pendingCardId && profiles.some(p => p.is_active) && (
-        <motion.div
-          whileTap={{ scale: 0.98 }}
-          whileHover={{ y: -2 }}
-          onClick={() => router.push(`/activate?id=${pendingCardId}`)}
-          className="mb-8 -mt-4 bg-gradient-to-r from-blue-600 to-purple-600 rounded-3xl px-5 py-4 flex items-center justify-between shadow-[0_8px_30px_rgba(37,99,235,0.25)] cursor-pointer"
-        >
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-white/15 flex items-center justify-center flex-shrink-0">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2">
-                <circle cx="12" cy="12" r="9" />
-                <circle cx="12" cy="12" r="4" />
-              </svg>
-            </div>
-            <div>
-              <p className="text-[14px] font-bold text-white leading-tight">Finish activating your card</p>
-              <p className="text-[12px] text-white/70 leading-tight mt-0.5">Your profile is ready — link your card now</p>
-            </div>
-          </div>
-          <span className="text-white text-lg">→</span>
-        </motion.div>
-      )}
-
-      {/* UPGRADE TO PRO BANNER */}
-      {ready && subscriptionTier !== "pro" && (
-        <motion.div
-          whileTap={{ scale: 0.98 }}
-          whileHover={{ y: -2 }}
-          onClick={() => router.push("/upgrade")}
-          className="mb-8 -mt-4 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-3xl px-5 py-4 flex items-center justify-between shadow-[0_8px_30px_rgba(99,102,241,0.25)] cursor-pointer"
-        >
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-white/15 flex items-center justify-center flex-shrink-0">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="white">
-                <path d="M5 16L3 5l5.5 4L12 3l3.5 6L21 5l-2 11H5zm0 2h14v2H5v-2z"/>
-              </svg>
-            </div>
-            <div>
-              <p className="text-[15px] font-bold text-white leading-tight">Upgrade to Pro</p>
-              <p className="text-[13px] text-white/70 leading-tight mt-0.5">Apple wallet, multiple modes, qr code</p>
-            </div>
-          </div>
-          <span className="text-white text-lg">→</span>
-        </motion.div>
-      )}
-
       {/* PROFILES */}
-      <div data-tutorial="profiles" className="mb-8 relative z-20">
-<h2 className="text-xl font-semibold mb-1 tracking-tight">
-  Your Profiles
-</h2>
-<p className="text-base text-gray-600 mb-3 h-5 flex items-center">
-  {loading ? (
-    <span className="block w-32 h-4 bg-gray-200 rounded animate-pulse"></span>
-  ) : profiles.length === 0 ? (
-    "No profiles yet"
-  ) : (
-    ready ? `${profiles.length}/${maxProfiles} saved profiles` : "..."
-  )}
-</p>
+      <div data-tutorial="profiles" className="mt-12 mb-8 relative z-20">
+        <h2 className="text-[28px] font-bold tracking-tight text-gray-900 leading-tight">
+          Your profiles
+        </h2>
+        <p className="text-[18px] text-gray-500 mt-0.5 mb-4 h-6 flex items-center">
+          {loading ? (
+            <span className="block w-28 h-4 bg-gray-200 rounded animate-pulse"></span>
+          ) : (
+            `${profiles.length} of ${maxProfiles} profile${maxProfiles === 1 ? "" : "s"}`
+          )}
+        </p>
 
         {/* Progress Bar */}
-<div className="w-full h-2.5 bg-white/40 backdrop-blur-md rounded-full mb-4 overflow-hidden border border-white/30">
-  <motion.div
-    initial={{ width: 0 }}
-    animate={{
-      width: ready
-  ? `${Math.min((profiles.length / maxProfiles) * 100, 100)}%`
-  : "0%"
-    }}
-    transition={{ duration: 0.6, ease: "easeOut" }}
-    className="h-full rounded-full bg-gradient-to-r from-blue-500 via-indigo-500 to-cyan-400 shadow-[0_0_12px_rgba(59,130,246,0.6)]"
-  />
-</div>
-
-        <div className="flex flex-col gap-3">
-
-      
-
-{loading ? (
-  Array.from({ length: Math.max(lastCount, 1) }).map((_, i) => (
-    <div
-      key={i}
-      className="bg-white/60 backdrop-blur-md p-4 min-h-[110px] rounded-2xl border border-white/40 shadow-[0_8px_30px_rgba(0,0,0,0.08)] flex justify-between items-center animate-pulse"
-    >
-      <div className="w-full">
-        <div className="h-4 w-32 bg-gray-300 rounded mb-2"></div>
-        <div className="h-3 w-24 bg-gray-200 rounded mb-2"></div>
-        <div className="flex gap-3 mt-2">
-          <div className="h-3 w-10 bg-gray-200 rounded"></div>
-          <div className="h-3 w-10 bg-gray-200 rounded"></div>
-          <div className="h-3 w-10 bg-gray-200 rounded"></div>
-        </div>
-      </div>
-
-      <div className="w-14 h-14 bg-gray-200 rounded-2xl"></div>
-    </div>
-  ))
-) : (
-  profiles.map((profile) => (
-<motion.div
-  key={profile.id}
-  data-tutorial={profiles.indexOf(profile) === 0 ? "first-profile" : undefined}
-  onClick={() => handleSetActive(profile.id)}
-  whileHover={{ y: -4 }}
-  whileTap={{ scale: 0.98 }}
-      className={`p-4 rounded-2xl flex justify-between items-center backdrop-blur-md transition-all duration-300 ease-out
-  ${
-    profile.is_active
-      ? subscriptionTier === "pro"
-        ? "bg-white border-2 border-amber-400 shadow-[0_0_0_2px_rgba(251,191,36,0.2)]"
-        : "bg-white border-2 border-blue-500 shadow-[0_0_0_2px_rgba(59,130,246,0.15)]"
-      : "bg-white/70 border border-white/40 shadow-[0_8px_30px_rgba(0,0,0,0.08)] hover:border-blue-300 cursor-pointer"
-  }
-`}
-    >
-      <div className="flex items-center gap-3 flex-1 min-w-0">
-
-        {/* MODE ICON LEFT */}
-        <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0" style={{
-          background: profile.mode === "business" ? "#eff6ff" : profile.mode === "networking" ? "#f5f3ff" : profile.mode === "university" ? "#ecfdf5" : profile.mode === "social" ? "#fff7ed" : "#eff6ff"
-        }}>
-          {profile.mode === "business" && <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2563eb" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>}
-          {profile.mode === "networking" && <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#7c3aed" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>}
-          {profile.mode === "university" && <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#059669" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>}
-          {profile.mode === "social" && <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ea580c" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>}
-          {!profile.mode && <QrCode size={18} className="text-blue-600" />}
+        <div className="w-full h-2.5 bg-gray-200/60 rounded-full mb-6 overflow-hidden">
+          <motion.div
+            initial={{ width: 0 }}
+            animate={{ width: ready ? `${Math.min((profiles.length / maxProfiles) * 100, 100)}%` : "0%" }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
+            className="h-full rounded-full bg-gradient-to-r from-blue-500 via-indigo-500 to-cyan-400"
+          />
         </div>
 
-        {/* TEXT */}
-        <div>
-          <p className="text-lg font-semibold flex items-center gap-2">
-            {profile.name || "Untitled Profile"}
-            {profile.is_active && (
-              <span className="text-xs bg-green-100 text-green-600 px-2 py-0.5 rounded-full">Active</span>
-            )}
-          </p>
-          <p className="text-sm text-gray-500">
-            {profile.mode === "networking" ? "Company mode" : profile.mode ? profile.mode.charAt(0).toUpperCase() + profile.mode.slice(1) + " mode" : profile.title || "No title"}
-          </p>
-          <div className="flex gap-4 mt-2 text-sm">
-     <button data-tutorial={profiles.indexOf(profile) === 0 ? "profile-edit" : undefined} onClick={(e) => { e.stopPropagation(); router.push(`/builder?id=${profile.id}`); }} className="text-blue-600 font-medium">Edit</button>
-<button
-  data-tutorial={profiles.indexOf(profile) === 0 ? "profile-share" : undefined}
-  onClick={(e) => {
-    e.stopPropagation()
-    if (navigator.share) {
-      navigator.share({
-        title: `${profile.name}'s Taply`,
-        text: "Check out my digital card!",
-        url: `${window.location.origin}/${profile.username}`,
-      })
-    } else {
-      navigator.clipboard.writeText(`${window.location.origin}/${profile.username}`)
-      alert("Link copied!")
-    }
-  }}
-  className="text-gray-600 flex items-center gap-1"
-><Share2 size={14} />Share</button>
-<button data-tutorial={profiles.indexOf(profile) === 0 ? "profile-delete" : undefined} onClick={(e) => { e.stopPropagation(); handleDelete(profile.id); }} className="text-red-500 font-medium">Delete</button>
+        <div className="flex flex-col gap-4">
+          {loading ? (
+            <>
+              {/* Big card skeleton */}
+              <div className="bg-white rounded-3xl border border-gray-100 shadow-sm animate-pulse">
+                <div className="flex items-center gap-4 px-5 pt-5 pb-4">
+                  <div className="w-16 h-16 rounded-full bg-gray-200 flex-shrink-0" />
+                  <div className="flex-1 space-y-2.5">
+                    <div className="h-5 w-40 bg-gray-200 rounded-full" />
+                    <div className="h-4 w-32 bg-gray-100 rounded-full" />
+                  </div>
+                </div>
+                <div className="h-px bg-gray-100 mx-5" />
+                <div className="flex items-center py-4 px-5 gap-6">
+                  <div className="flex-1 h-4 bg-gray-100 rounded-full" />
+                  <div className="flex-1 h-4 bg-gray-100 rounded-full" />
+                  <div className="flex-1 h-4 bg-gray-100 rounded-full" />
+                </div>
+              </div>
+
+              {/* Slim row skeletons */}
+              {lastCount > 1 && (
+                <div className="flex flex-col gap-2.5 mt-2">
+                  {Array.from({ length: lastCount - 1 }).map((_, i) => (
+                    <div key={i} className="flex items-center gap-4 bg-white rounded-3xl border border-gray-100 shadow-sm px-5 py-4 animate-pulse">
+                      <div className="w-12 h-12 rounded-full bg-gray-200 flex-shrink-0" />
+                      <div className="flex-1 space-y-2">
+                        <div className="h-4 w-36 bg-gray-200 rounded-full" />
+                        <div className="h-3.5 w-24 bg-gray-100 rounded-full" />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </>
+          ) : (
+            <>
+            {(activeProfile ? [activeProfile] : []).map((profile, index) => {
+              const isActive = profile.is_active;
+              const isPro = subscriptionTier === "pro";
+              const modeLabel = {
+                business: "Business profile",
+                networking: "Company profile",
+                university: "University profile",
+                social: "Social profile",
+              }[profile.mode] || "Profile";
+              const initials = (profile.name || "?")
+                .split(" ")
+                .map((n) => n[0])
+                .join("")
+                .slice(0, 2)
+                .toUpperCase();
+
+              return (
+                <motion.div
+                  key={profile.id}
+                  data-tutorial={index === 0 ? "first-profile" : undefined}
+                  onClick={() => !isActive && handleSetActive(profile.id)}
+                  initial={{ scale: 0.97 }}
+                  animate={{ scale: 1 }}
+                  transition={{ duration: 0.18, ease: "easeOut" }}
+                  className={`rounded-3xl bg-white ${
+                    isActive
+                      ? isPro
+                        ? "border-2 border-amber-400 shadow-[0_0_0_4px_rgba(251,191,36,0.15)]"
+                        : "border-2 border-blue-500 shadow-[0_0_0_4px_rgba(59,130,246,0.12)]"
+                      : "border border-gray-100 shadow-[0_8px_30px_rgba(0,0,0,0.06)] cursor-pointer"
+                  }`}
+                >
+                  {/* TOP */}
+                  <div className="flex items-center gap-4 px-5 pt-5 pb-4">
+                    <div className="w-16 h-16 rounded-full bg-blue-600 flex items-center justify-center overflow-hidden flex-shrink-0">
+                      {profile.avatar_url ? (
+                        <img src={profile.avatar_url} className="w-full h-full object-cover" />
+                      ) : (
+                        <span className="text-white text-[18px] font-bold">{initials}</span>
+                      )}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      {renamingId === profile.id ? (
+                        <input
+                          autoFocus
+                          value={renameValue}
+                          onChange={(e) => setRenameValue(e.target.value)}
+                          onClick={(e) => e.stopPropagation()}
+                          onBlur={() => saveRename(profile.id)}
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter") e.currentTarget.blur();
+                            if (e.key === "Escape") setRenamingId(null);
+                          }}
+                          placeholder={profile.name || "Profile name"}
+                          maxLength={30}
+                          className="w-full text-[20px] font-bold text-gray-900 tracking-tight leading-tight bg-gray-50 rounded-lg px-2 py-0.5 -ml-2 focus:outline-none focus:ring-2 focus:ring-blue-500/30"
+                        />
+                      ) : (
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setRenamingId(profile.id);
+                            setRenameValue(profile.label || "");
+                          }}
+                          className="flex items-center gap-3 max-w-full text-left"
+                        >
+                          <span className="text-[20px] font-bold text-gray-900 tracking-tight leading-tight truncate">
+                            {profile.label || profile.name || "Untitled profile"}
+                          </span>
+                          <Pencil size={14} className="text-gray-300 flex-shrink-0" />
+                        </button>
+                      )}
+                      <div className="flex items-center gap-2 mt-1">
+                        <span className="text-[15px] text-gray-500 truncate">
+                          {profile.label ? profile.name : modeLabel}
+                        </span>
+                        {isActive ? (
+                          <span className="flex items-center gap-1.5 text-[12px] font-semibold text-green-700 bg-green-50 px-2.5 py-0.5 rounded-full flex-shrink-0">
+                            <span className="w-1.5 h-1.5 rounded-full bg-green-500" />
+                            Active
+                          </span>
+                        ) : (
+                          <span className="text-[12px] font-semibold text-blue-600 flex-shrink-0">Set active</span>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="h-px bg-gray-100 mx-5" />
+
+                  {/* ACTIONS */}
+                  <div className="flex items-center py-1">
+                    <button
+                      data-tutorial={index === 0 ? "profile-edit" : undefined}
+                      onClick={(e) => { e.stopPropagation(); router.push(`/builder?id=${profile.id}`); }}
+                      className="flex-1 flex items-center justify-center gap-2 py-3 text-[15px] font-semibold text-blue-600"
+                    >
+                      <Pencil size={16} />
+                      Edit
+                    </button>
+
+                    <div className="w-px h-6 bg-gray-200" />
+
+                    <button
+                      data-tutorial={index === 0 ? "profile-delete" : undefined}
+                      onClick={(e) => { e.stopPropagation(); handleDelete(profile.id); }}
+                      className="flex-1 flex items-center justify-center gap-2 py-3 text-[15px] font-semibold text-red-500"
+                    >
+                      <Trash2 size={16} />
+                      Delete
+                    </button>
+
+                    <div className="w-px h-6 bg-gray-200" />
+
+                    <button
+                      data-tutorial={index === 0 ? "profile-qr" : undefined}
+                      onClick={(e) => { e.stopPropagation(); handleShowQR(profile.username); }}
+                      className="relative flex-1 flex items-center justify-center gap-2 py-3 text-[15px] font-semibold text-blue-600"
+                    >
+                      <QrCode size={16} />
+                      QR
+                      {!isPro && ready && (
+                        <span className="absolute top-0.5 right-2 text-[9px] font-bold bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-1.5 py-0.5 rounded-full">PRO</span>
+                      )}
+                    </button>
+                  </div>
+
+                </motion.div>
+              );
+            })}
+            </>
+          )}
+        </div>
+
+        {/* OTHER PROFILES */}
+        {!loading && otherProfiles.length > 0 && (
+          <div className="mt-6">
+            <p className="text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2.5 px-1">
+              
+            </p>
+            <div className="flex flex-col gap-2.5">
+              {otherProfiles.map((profile) => {
+                const modeLabel = {
+                  business: "Business profile",
+                  networking: "Company profile",
+                  university: "University profile",
+                  social: "Social profile",
+                }[profile.mode] || "Profile";
+                const initials = (profile.name || "?")
+                  .split(" ")
+                  .map((n) => n[0])
+                  .join("")
+                  .slice(0, 2)
+                  .toUpperCase();
+
+                return (
+                  <button
+                    key={profile.id}
+                    onClick={() => handleSetActive(profile.id)}
+                    className="w-full flex items-center gap-4 bg-white rounded-3xl border border-gray-100 shadow-[0_4px_16px_rgba(0,0,0,0.05)] px-5 py-4 text-left"
+                  >
+                    <div className="w-12 h-12 rounded-full bg-blue-600 flex items-center justify-center overflow-hidden flex-shrink-0">
+                      {profile.avatar_url ? (
+                        <img src={profile.avatar_url} className="w-full h-full object-cover" />
+                      ) : (
+                        <span className="text-white text-[15px] font-bold">{initials}</span>
+                      )}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-[17px] font-semibold text-gray-900 truncate leading-tight">
+                        {profile.label || profile.name || "Untitled profile"}
+                      </p>
+                      <p className="text-[14px] text-gray-500 mt-0.5 truncate">
+                        {profile.label ? `${profile.name} · ${modeLabel}` : modeLabel}
+                      </p>
+                    </div>
+                    <span className="flex items-center gap-1 text-[14px] font-semibold text-blue-600 flex-shrink-0">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#d1d5db" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6" /></svg>
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
           </div>
-        </div>
-      </div>
+        )}
 
-{/* QR RIGHT - active only */}
-{profile.is_active && (
-  <div
-    data-tutorial={profiles.indexOf(profile) === 0 ? "profile-qr" : undefined}
-    onClick={(e) => { e.stopPropagation(); handleShowQR(profile.username); }}
-    className="w-14 h-14 bg-blue-50 rounded-2xl flex items-center justify-center shadow-sm flex-shrink-0 cursor-pointer hover:bg-blue-100 transition">
-    <QrCode size={30} className="text-blue-600" />
-  </div>
-)}
-    </motion.div>
-  ))
-)}
+        {/* CREATE */}
+        <button
+          data-tutorial="create"
+          onClick={handleCreateProfile}
+          className={`w-full mt-5 text-[16px] font-semibold py-3.5 rounded-3xl transition ${
+            profiles.length >= maxProfiles ? "bg-gray-100 text-gray-400" : "bg-black text-white active:scale-[0.98]"
+          }`}
+        >
+          {profiles.length >= maxProfiles
+            ? subscriptionTier === "pro" ? "Max profiles reached" : "Upgrade to add more"
+            : "+ Create new profile"}
+        </button>
 
-        </div>
-
+        {/* UPGRADE TO PRO */}
+        {ready && subscriptionTier !== "pro" && (
+          <motion.div
+            whileTap={{ scale: 0.98 }}
+            onClick={() => router.push("/upgrade")}
+            className="mt-5 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-3xl px-5 py-4 flex items-center justify-between shadow-[0_8px_30px_rgba(99,102,241,0.25)] cursor-pointer"
+          >
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-2xl bg-white/15 flex items-center justify-center flex-shrink-0">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="white">
+                  <path d="M5 16L3 5l5.5 4L12 3l3.5 6L21 5l-2 11H5zm0 2h14v2H5v-2z"/>
+                </svg>
+              </div>
+              <div>
+                <p className="text-[15px] font-bold text-white leading-tight">Upgrade to Pro</p>
+                <p className="text-[13px] text-white/70 leading-tight mt-0.5">Apple Wallet, all modes, QR code</p>
+              </div>
+            </div>
+            <span className="text-white text-lg">→</span>
+          </motion.div>
+        )}
       </div>
       {/* APPLE WALLET HEADER */}
 <div data-tutorial="wallet" className={`${profiles.length === 0 ? "mt-2" : "mt-10"} mb-3 relative z-20`}>
