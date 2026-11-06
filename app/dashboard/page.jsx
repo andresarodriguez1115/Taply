@@ -7,6 +7,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import QRCode from "qrcode";
 import Cropper from "react-easy-crop"
 import UpgradeModal from "@/components/UpgradeModal"
+import DashboardTour from "@/components/DashboardTutorial"
 export default function Dashboard() {
 const [userName, setUserName] = useState("");
 const [username, setUsername] = useState("");
@@ -42,6 +43,7 @@ const [unlockedFeatures, setUnlockedFeatures] = useState([]);
 const [qrSheetOpen, setQrSheetOpen] = useState(false);
 const [qrCheckoutLoading, setQrCheckoutLoading] = useState(false);
 const [quickOpen, setQuickOpen] = useState(false);
+const [tourOpen, setTourOpen] = useState(false);
 const maxProfiles = subscriptionTier === "pro" ? 4 : 1 + unlockedModes.length
 const canBuyMore = subscriptionTier !== "pro" && unlockedModes.length < 3
 const hasQR = subscriptionTier === "pro" || unlockedFeatures.includes("qr")
@@ -198,6 +200,19 @@ useEffect(() => {
   setLastCount(Number.isNaN(saved) ? 1 : saved);
 }, []);
 
+// show the tour once, after the first profile exists
+useEffect(() => {
+  if (!ready || profiles.length === 0) return;
+  try {
+    if (!localStorage.getItem("taply_tour_done")) setTourOpen(true);
+  } catch {}
+}, [ready, profiles.length]);
+
+const closeTour = () => {
+  setTourOpen(false);
+  try { localStorage.setItem("taply_tour_done", "1"); } catch {}
+};
+
 // keep the saved count in sync when profiles are added or deleted
 useEffect(() => {
   if (ready) localStorage.setItem("profileCount", String(Math.max(profiles.length, 1)));
@@ -339,16 +354,12 @@ return (
   >
     {/* LEFT */}
     <div className="flex items-center gap-3 min-w-0">
-      <span
-        className="text-[24px] text-black leading-none flex items-baseline"
-        style={{ fontWeight: 900, letterSpacing: "-0.06em", fontFamily: "'Helvetica Neue', Arial, sans-serif" }}
-      >
-        <span style={{ marginRight: "-0.03em" }}>t</span>
-        <span>a</span>
-        <span>p</span>
-        <span style={{ marginRight: "-0.025em" }}>l</span>
-        <span>y</span>
-      </span>
+      <img
+        src="/taply-letters-logo.png"
+        alt="taply"
+        className="h-[25px] w-auto flex-shrink-0 select-none"
+        draggable={false}
+      />
       <span className="w-px h-6 bg-gray-300/70 flex-shrink-0" />
 
       {ready ? (
@@ -562,7 +573,7 @@ return (
                 >
                   {/* TOP */}
                   <div className="flex items-center gap-4 px-5 pt-5 pb-4">
-                    <div className="w-16 h-16 rounded-full bg-blue-600 flex items-center justify-center overflow-hidden flex-shrink-0">
+                    <div className={`w-16 h-16 rounded-full flex items-center justify-center overflow-hidden flex-shrink-0 ${profile.avatar_url ? "bg-gray-100" : "bg-blue-600"}`}>
                       {profile.avatar_url ? (
                         <img src={profile.avatar_url} className="w-full h-full object-cover" style={photoStyle(profile, 64)} draggable={false} />
                       ) : (
@@ -691,7 +702,7 @@ return (
                     onClick={() => handleSetActive(profile.id)}
                     className="w-full flex items-center gap-4 bg-white rounded-3xl border border-gray-100 shadow-[0_4px_16px_rgba(0,0,0,0.05)] px-5 py-4 text-left"
                   >
-                    <div className="w-12 h-12 rounded-full bg-blue-600 flex items-center justify-center overflow-hidden flex-shrink-0">
+                    <div className={`w-12 h-12 rounded-full flex items-center justify-center overflow-hidden flex-shrink-0 ${profile.avatar_url ? "bg-gray-100" : "bg-blue-600"}`}>
                       {profile.avatar_url ? (
                         <img src={profile.avatar_url} className="w-full h-full object-cover" style={photoStyle(profile, 48)} draggable={false} />
                       ) : (
@@ -1422,6 +1433,21 @@ label: "QR Code",
         </>
       )}
     </AnimatePresence>
+
+    <DashboardTour
+      open={tourOpen}
+      onClose={closeTour}
+      steps={[
+        { title: "Welcome to Taply", text: "This is where you manage your business card profiles." },
+        { target: "first-profile", title: "Your active card", text: "This is what people see when they tap your card or scan your QR.", radius: 28 },
+        { target: "profile-edit", title: "Edit", text: "Change your info, photo, and links.", radius: 14, pad: 4 },
+        { target: "profile-delete", title: "Delete", text: "Removes this profile.", radius: 14, pad: 4 },
+        { target: "profile-qr", title: "QR code", text: "Anyone can scan it to open your card. It always shows your active profile.", radius: 14, pad: 4 },
+        profiles.length < maxProfiles
+          ? { target: "create", title: "Add a profile", text: "Make another profile, like one for school or social.", radius: 26 }
+          : { target: "create", title: "Unlock another profile", text: "Unlock a new mode to get a new profile and an extra slot.", radius: 26 },
+      ]}
+    />
 
     <UpgradeModal
       open={upgradeModalOpen}
