@@ -121,11 +121,18 @@ useEffect(() => {
 
     const { data: accountData } = await supabase
       .from("accounts")
-      .select("subscription_tier")
+      .select("subscription_tier, unlocked_modes")
       .eq("user_id", userData.user.id)
       .single();
 
-    setSubscriptionTier(accountData?.subscription_tier || "free");
+    const tierNow = accountData?.subscription_tier || "free";
+    const unlockedNow = accountData?.unlocked_modes || [];
+    setSubscriptionTier(tierNow);
+
+    if (!profileId && urlMode && urlMode !== "business" && tierNow !== "pro" && !unlockedNow.includes(urlMode)) {
+      router.replace("/create");
+      return;
+    }
 
 let data = null;
 
@@ -701,7 +708,7 @@ useEffect(() => {
   // -----------------------------
   const MODES = [
     { id: "business", label: "Business Mode" },
-    { id: "university", label: "University Mode" },
+    { id: "university", label: "Student Mode" },
     { id: "social", label: "Social Mode" },
     { id: "networking", label: "Networking Mode" },
   ];
@@ -872,7 +879,7 @@ if (showTemplatePicker) {
         {[
           { id: "business", label: "Business" },
           { id: "social", label: "Social" },
-          { id: "university", label: "University" },
+          { id: "university", label: "Student" },
           { id: "networking", label: "Networking" },
         ].map((item) => (
           <button

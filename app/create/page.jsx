@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { useState, useEffect } from "react";
 import supabase from "@/lib/supabase";
 import UpgradeModal from "@/components/UpgradeModal";
@@ -65,7 +65,7 @@ best: "Best for reps & teams networking on behalf of a company",
   },
   {
     id: "university",
-    label: "University",
+    label: "Student",
     desc: "Student & campus identity",
 best: "Best for students, career fairs & campus recruiting",    color: "#059669",
     bg: "#ecfdf5",
@@ -123,6 +123,34 @@ export default function CreatePage() {
   const [subscriptionTier, setSubscriptionTier] = useState("free");
   const [tierLoaded, setTierLoaded] = useState(false);
   const [upgradeModalOpen, setUpgradeModalOpen] = useState(false);
+  const [unlockMode, setUnlockMode] = useState(null);
+  const [unlockedModes, setUnlockedModes] = useState([]);
+  const [checkoutLoading, setCheckoutLoading] = useState(false);
+  const [profileCount, setProfileCount] = useState(0);
+
+  const startUnlock = async (modeId) => {
+    if (checkoutLoading) return;
+    setCheckoutLoading(true);
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) { router.push("/login"); return; }
+      const res = await fetch("/api/unlock-mode", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${session.access_token}` },
+        body: JSON.stringify({ mode: modeId }),
+      });
+      const json = await res.json();
+      if (json.url) window.location.href = json.url;
+      else { alert(json.error || "Something went wrong"); setCheckoutLoading(false); }
+    } catch {
+      alert("Something went wrong");
+      setCheckoutLoading(false);
+    }
+  };
+
+  const UNLOCK_PRICE = "$2.99";
+  const atLimit = tierLoaded && subscriptionTier !== "pro" && profileCount >= 1 + unlockedModes.length;
+  const PRO_PRICE = "$5.99";
 
   useEffect(() => {
     const getTier = async () => {
@@ -131,11 +159,18 @@ export default function CreatePage() {
 
       const { data: accountData } = await supabase
         .from("accounts")
-        .select("subscription_tier")
+        .select("subscription_tier, unlocked_modes")
         .eq("user_id", userData.user.id)
-        .single();
+        .maybeSingle();
+
+      const { count } = await supabase
+        .from("profiles")
+        .select("id", { count: "exact", head: true })
+        .eq("user_id", userData.user.id);
+      setProfileCount(count || 0);
 
       setSubscriptionTier(accountData?.subscription_tier || "free");
+      setUnlockedModes(accountData?.unlocked_modes || []);
       setTierLoaded(true);
     };
     getTier();
@@ -152,58 +187,200 @@ export default function CreatePage() {
 
       {/* HEADER */}
       <h1 className="text-3xl font-bold text-gray-900 tracking-tight mb-1 mt-16">Choose a mode</h1>
-      <p className="text-gray-500 mb-8">Pick the style that fits you best.</p>
+      <p className="text-gray-500 mb-2">
+        {atLimit ? "All slots used. Unlock a mode for $2.99 to add another profile." : "Pick the style that fits you best."}
+      </p>
+      {tierLoaded && subscriptionTier !== "pro" ? (
+        <button
+          onClick={() => router.push("/upgrade")}
+          className="text-[13px] font-semibold text-[#a07c22] mb-8"
+        >
+          Or unlock every mode with Pro: {PRO_PRICE}/mo →
+        </button>
+      ) : (
+        <div className="mb-6" />
+      )}
 
       {/* GRID */}
       <div className="grid grid-cols-2 gap-4">
-        {MODES.map((m, i) => (
-          <motion.button
-            key={m.id}
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: i * 0.07 }}
-            whileTap={{ scale: 0.97 }}
-            whileHover={{ y: -4 }}
-            onClick={() => {
-              if (!tierLoaded) return;
-              if (m.id !== "business" && subscriptionTier !== "pro") {
-                setUpgradeModalOpen(true);
-                return;
-              }
-              router.push(`/builder?mode=${m.id}`);
-            }}
-            className="bg-white rounded-3xl overflow-hidden shadow-sm border border-gray-100 text-left flex flex-col"
-          >
-            {/* MOCKUP PREVIEW */}
-            <div className="w-full h-40 p-3" style={{ background: m.bg }}>
-              {m.mockup}
-            </div>
-
-            {/* LABEL */}
-            <div className="p-4 flex flex-col gap-1">
-              <div className="flex items-center gap-2">
-                <div className="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0" style={{ background: m.bg }}>
-                  {m.icon}
+        {MODES.map((m, i) => {
+          if (!tierLoaded) {
+            return (
+              <div key={m.id} className="rounded-3xl bg-white border border-gray-100 shadow-sm overflow-hidden animate-pulse">
+                <div className="h-40 bg-gray-100" />
+                <div className="p-4 space-y-2.5">
+                  <div className="flex items-center gap-2">
+                    <div className="w-7 h-7 rounded-lg bg-gray-200" />
+                    <div className="h-4 w-20 bg-gray-200 rounded-full" />
+                  </div>
+                  <div className="h-3 w-full bg-gray-100 rounded-full" />
+                  <div className="h-3 w-3/4 bg-gray-100 rounded-full" />
+                  <div className="h-3 w-2/3 bg-gray-100 rounded-full" />
                 </div>
-                <p className="font-semibold text-gray-900 flex items-center gap-1.5">
-                  {m.label}
-                  {m.id !== "business" && tierLoaded && subscriptionTier !== "pro" && (
-                    <span className="text-[9px] font-bold bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-1.5 py-0.5 rounded-full tracking-wide">PRO</span>
-                  )}
-                </p>
               </div>
-              <p className="text-xs text-gray-400 leading-snug">{m.desc}</p>
-              <p className="text-xs font-medium mt-0.5" style={{ color: m.color }}>{m.best}</p>
-            </div>
-          </motion.button>
-        ))}
+            );
+          }
+          const locked = m.id !== "business" && tierLoaded && subscriptionTier !== "pro" && !unlockedModes.includes(m.id);
+          const full = !locked && atLimit;
+
+          return (
+            <motion.button
+              key={m.id}
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: i * 0.07 }}
+              whileTap={{ scale: 0.97 }}
+              whileHover={{ y: -4 }}
+              onClick={() => {
+                if (!tierLoaded) return;
+                if (locked) {
+                  setUnlockMode(m);
+                  return;
+                }
+                if (full) {
+                  alert("All your profile slots are used. Unlock a new mode to add another profile.");
+                  return;
+                }
+                router.push(`/builder?mode=${m.id}`);
+              }}
+              className={`rounded-3xl text-left flex flex-col ${
+                locked
+                  ? "p-[2px] bg-gradient-to-br from-[#f0d78c] via-[#c9a443] to-[#9a7623] shadow-[0_8px_24px_rgba(184,151,63,0.22)]"
+                  : "bg-white shadow-sm border border-gray-100 overflow-hidden"
+              }`}
+            >
+              <div className={`flex flex-col flex-1 bg-white overflow-hidden ${locked ? "rounded-[22px]" : ""} ${full ? "opacity-50" : ""}`}>
+                {/* MOCKUP PREVIEW */}
+                <div className="relative w-full h-40 p-3" style={{ background: m.bg }}>
+                  <div className={locked ? "w-full h-full opacity-60" : "w-full h-full"}>
+                    {m.mockup}
+                  </div>
+                  {locked && (
+                    <span className="absolute top-3 left-1/2 -translate-x-1/2 flex items-center gap-1.5 text-[12px] font-bold bg-gradient-to-r from-[#d9b75a] to-[#b08a2e] text-white pl-2.5 pr-3 py-1 rounded-full shadow-md whitespace-nowrap">
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round">
+                        <rect x="4" y="11" width="16" height="10" rx="2" />
+                        <path d="M8 11V7a4 4 0 0 1 8 0v4" />
+                      </svg>
+                      $2.99
+                    </span>
+                  )}
+                </div>
+
+                {/* LABEL */}
+                <div className="p-4 flex flex-col gap-1 flex-1">
+                  <div className="flex items-center gap-2">
+                    <div className="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0" style={{ background: m.bg }}>
+                      {m.icon}
+                    </div>
+                    <p className="font-semibold text-gray-900 flex items-center gap-1.5">
+                      {m.label}
+              
+                    </p>
+                  </div>
+                  <p className="text-xs text-gray-400 leading-snug">{m.desc}</p>
+                  <p className="text-xs font-medium mt-0.5" style={{ color: m.color }}>{m.best}</p>
+
+                </div>
+              </div>
+            </motion.button>
+          );
+        })}
       </div>
 
-      <UpgradeModal
+      <AnimatePresence>
+        {unlockMode && (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setUnlockMode(null)}
+              className="fixed inset-0 bg-black/40 z-[100]"
+            />
+            <motion.div
+              initial={{ y: "100%" }}
+              animate={{ y: 0 }}
+              exit={{ y: "100%" }}
+              transition={{ type: "spring", damping: 30, stiffness: 300 }}
+              className="fixed bottom-0 left-0 right-0 z-[101] bg-white rounded-t-3xl max-w-md mx-auto px-5 pt-3 pb-8"
+            >
+              <div className="w-10 h-1 bg-gray-200 rounded-full mx-auto mb-5" />
+
+              <div className="flex items-center gap-3 mb-5">
+                <div className="w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: unlockMode.bg }}>
+                  {unlockMode.icon}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-[19px] font-bold text-gray-900 leading-tight">{unlockMode.label} mode</p>
+                  <p className="text-[13px] text-gray-500">{unlockMode.desc}</p>
+                </div>
+              </div>
+
+              <button
+                onClick={() => {
+                  // TODO: preview function
+                }}
+                className="w-full flex items-center justify-center gap-2 text-[15px] font-semibold py-3 rounded-2xl mb-4 active:scale-[0.98] transition"
+                style={{ background: unlockMode.bg, color: unlockMode.color }}
+              >
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                  <circle cx="12" cy="12" r="3" />
+                </svg>
+                Preview {unlockMode.label} mode
+              </button>
+
+              {/* OPTION 1: ONE-TIME UNLOCK */}
+              <button
+                onClick={() => startUnlock(unlockMode.id)}
+                disabled={checkoutLoading}
+                className="w-full text-left border border-gray-200 rounded-2xl p-4 mb-3 active:bg-gray-50 transition"
+              >
+                <div className="flex items-center justify-between">
+                  <p className="text-[15px] font-semibold text-gray-900">Unlock {unlockMode.label}</p>
+                  <p className="text-[17px] font-bold text-gray-900">{checkoutLoading ? "…" : UNLOCK_PRICE}</p>
+                </div>
+                <p className="text-[13px] text-gray-500 mt-0.5">One-time · Yours forever + 1 extra profile slot</p>
+              </button>
+
+              {/* OPTION 2: PRO */}
+              <button
+                onClick={() => router.push("/upgrade")}
+                className="relative w-full text-left rounded-2xl p-[2px] bg-gradient-to-br from-[#f0d78c] via-[#c9a443] to-[#9a7623]"
+              >
+                <span className="absolute -top-2.5 right-4 text-[10px] font-bold bg-gray-900 text-white px-2 py-0.5 rounded-full tracking-wide">
+                  BEST VALUE
+                </span>
+                <div className="bg-white rounded-[14px] p-4">
+                  <div className="flex items-center justify-between">
+                    <p className="text-[15px] font-semibold text-gray-900">Try Pro free for 14 days</p>
+                    <p className="text-[17px] font-bold text-gray-900">
+                      <span className="text-[12px] font-medium text-gray-500">then </span>{PRO_PRICE}<span className="text-[12px] font-medium text-gray-500">/mo</span>
+                    </p>
+                  </div>
+                  <ul className="mt-2 space-y-1">
+                    {["All 4 modes, including " + unlockMode.label, "Apple Wallet pass", "QR code sharing", "Up to 4 profiles"].map(f => (
+                      <li key={f} className="flex items-center gap-2 text-[13px] text-gray-600">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#b8973f" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12" /></svg>
+                        {f}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </button>
+
+              <button onClick={() => setUnlockMode(null)} className="w-full text-center text-[14px] text-gray-400 font-medium mt-4">
+                Not now
+              </button>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+       <UpgradeModal
         open={upgradeModalOpen}
         onClose={() => setUpgradeModalOpen(false)}
         title="Unlock all modes"
-        description="Free plans include Business mode only. Upgrade to Pro to access Networking, University, and Social modes."
+        description="Free plans include Business mode only. Upgrade to Pro to access Company, Student, and Social modes."
       />
     </div>
   );

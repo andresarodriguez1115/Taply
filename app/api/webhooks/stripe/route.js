@@ -8,6 +8,15 @@ const supabaseAdmin = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY
 )
 
+const PAID_MODES = ["networking", "university", "social"]
+const PAID_FEATURES = ["qr"]
+
+const setTierBySub = (subId, tier) =>
+  supabaseAdmin
+    .from("accounts")
+    .update({ subscription_tier: tier })
+    .eq("stripe_subscription_id", subId)
+
 export async function POST(request) {
   const body = await request.text()
   const signature = request.headers.get("stripe-signature")
@@ -28,36 +37,92 @@ export async function POST(request) {
     switch (event.type) {
       case "checkout.session.completed": {
         const session = event.data.object
-        const userId = session.client_reference_id
-        const customerId = session.customer
-        const subscriptionId = session.subscription
+        const userId = session.client_reference_id || session.metadata?.userId
+        if (!userId) break
 
-        await supabaseAdmin
-          .from("accounts")
-          .upsert({
-            user_id: userId,
-            subscription_tier: "pro",
-            stripe_customer_id: customerId,
-            stripe_subscription_id: subscriptionId,
-          })
+        // ONE-TIME $2.99 MODE UNLOCK → add the mode only (never Pro)
+        if (session.mode === "payment" && session.metadata?.type === "mode_unlock") {
+          if (session.payment_status !== "paid") break
+          const mode = session.metadata.mode
+          if (!PAID_MODES.includes(mode)) break
+
+          const { data: acc } = await supabaseAdmin
+            .from("accounts")
+            .select("unlocked_modes")
+            .eq("user_id", userId)
+            .maybeSingle()
+
+          const current = acc?.unlocked_modes || []
+          if (current.includes(mode)) break
+
+          await supabaseAdmin
+            .from("accounts")
+            .upsert({
+              user_id: userId,
+              unlocked_modes: [...current, mode],
+              ...(session.customer ? { stripe_customer_id: session.customer } : {}),
+            })
+          break
+        }
+
+        // ONE-TIME FEATURE UNLOCK (QR, etc.) → add the feature only (never Pro)
+        if (session.mode === "payment" && session.metadata?.type === "feature_unlock") {
+          if (session.payment_status !== "paid") break
+          const feature = session.metadata.feature
+          if (!PAID_FEATURES.includes(feature)) break
+
+          const { data: acc } = await supabaseAdmin
+            .from("accounts")
+            .select("unlocked_features")
+            .eq("user_id", userId)
+            .maybeSingle()
+
+          const current = acc?.unlocked_features || []
+          if (current.includes(feature)) break
+
+          await supabaseAdmin
+            .from("accounts")
+            .upsert({
+              user_id: userId,
+              unlocked_features: [...current, feature],
+              ...(session.customer ? { stripe_customer_id: session.customer } : {}),
+            })
+          break
+        }
+
+        // SUBSCRIPTION (incl. 14-day trial) → Pro
+        if (session.mode === "subscription") {
+          await supabaseAdmin
+            .from("accounts")
+            .upsert({
+              user_id: userId,
+              subscription_tier: "pro",
+              stripe_customer_id: session.customer,
+              stripe_subscription_id: session.subscription,
+              trial_used: true,
+            })
+        }
+        break
+      }
+
+      // Trial ended, payment failed, reactivated, etc.
+      case "customer.subscription.updated": {
+        const subscription = event.data.object
+        const isActive = ["active", "trialing"].includes(subscription.status)
+        await setTierBySub(subscription.id, isActive ? "pro" : "free")
         break
       }
 
       case "customer.subscription.deleted": {
-        const subscription = event.data.object
-        await supabaseAdmin
-          .from("accounts")
-          .update({ subscription_tier: "free" })
-          .eq("stripe_subscription_id", subscription.id)
+        await setTierBySub(event.data.object.id, "free")
         break
       }
 
       case "invoice.payment_failed": {
         const invoice = event.data.object
-        await supabaseAdmin
-          .from("accounts")
-          .update({ subscription_tier: "free" })
-          .eq("stripe_customer_id", invoice.customer)
+        const subId =
+          invoice.subscription || invoice.parent?.subscription_details?.subscription
+        if (subId) await setTierBySub(subId, "free")
         break
       }
     }

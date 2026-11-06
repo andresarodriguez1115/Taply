@@ -364,7 +364,7 @@ useEffect(() => {
           {[
             { title: "Business", tag: "Meetings & sales", desc: "Name, title, company, phone, email. Everything a client needs in one tap.", accent: "#2563eb", tagBg: "rgba(37,99,235,0.15)", tagColor: "#60a5fa" },
             { title: "Company", tag: "Events & meetups", desc: "Social links front and center. Built for rooms full of people you want to know.", accent: "#7c3aed", tagBg: "rgba(124,58,237,0.15)", tagColor: "#a78bfa" },
-            { title: "University", tag: "Campus & career", desc: "Major, grad year, LinkedIn, clubs. Built for career fairs and campus life.", accent: "#059669", tagBg: "rgba(5,150,105,0.15)", tagColor: "#34d399" },
+            { title: "Student", tag: "Campus & career", desc: "Major, grad year, LinkedIn, clubs. Built for career fairs and campus life.", accent: "#059669", tagBg: "rgba(5,150,105,0.15)", tagColor: "#34d399" },
             { title: "Social", tag: "Creators & influencers", desc: "TikTok, Instagram, YouTube — laid out like a feed. Grow your audience in person.", accent: "#ea580c", tagBg: "rgba(234,88,12,0.15)", tagColor: "#fb923c" },
           ].map(({ title, tag, desc, accent, tagBg, tagColor }) => (
             <div key={title} className="rounded-2xl p-5 border border-white/8" style={{ background: "rgba(255,255,255,0.04)" }}>

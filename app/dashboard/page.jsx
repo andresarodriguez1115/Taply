@@ -1,12 +1,10 @@
 "use client";
 import { useEffect, useState } from "react";
 import supabase from "@/lib/supabase";
-import { QrCode, Link, Wallet, Share2, Pencil, Trash2 } from "lucide-react";
+import { QrCode, Link, Wallet, Share2, Pencil, Trash2, Crown, Menu, ChevronDown } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import QRCode from "qrcode";
-import DashboardTutorial from "@/components/DashboardTutorial";
-import ProfileCardTutorial from "@/components/ProfileCardTutorial"
 import Cropper from "react-easy-crop"
 import UpgradeModal from "@/components/UpgradeModal"
 export default function Dashboard() {
@@ -27,8 +25,6 @@ const [stats, setStats] = useState({ views: 0, taps: 0, saves: 0, saveRate: 0 })
 const [walletBgColor, setWalletBgColor] = useState("rgb(238,243,255)");
 const [walletLogoUrl, setWalletLogoUrl] = useState("/taply-wallet-logo.png");
 const [walletTextColor, setWalletTextColor] = useState("rgb(0,0,0)");
-const [showTutorial, setShowTutorial] = useState(false);
-const [showProfileCardTutorial, setShowProfileCardTutorial] = useState(false)
 const [cropImageSrc, setCropImageSrc] = useState(null)
 const [crop, setCrop] = useState({ x: 0, y: 0 })
 const [zoom, setZoom] = useState(1)
@@ -40,14 +36,57 @@ const [photoCroppedAreaPixels, setPhotoCroppedAreaPixels] = useState(null)
 const [walletPhotoUrl, setWalletPhotoUrl] = useState(null)
 const [upgradeModalOpen, setUpgradeModalOpen] = useState(false)
 const [pendingCardId, setPendingCardId] = useState(null)
-const maxProfiles = subscriptionTier === "pro" ? 4 : 1
+const [unlockedModes, setUnlockedModes] = useState([]);
+const [tierKnown, setTierKnown] = useState(false);
+const [unlockedFeatures, setUnlockedFeatures] = useState([]);
+const [qrSheetOpen, setQrSheetOpen] = useState(false);
+const [qrCheckoutLoading, setQrCheckoutLoading] = useState(false);
+const [quickOpen, setQuickOpen] = useState(false);
+const maxProfiles = subscriptionTier === "pro" ? 4 : 1 + unlockedModes.length
+const canBuyMore = subscriptionTier !== "pro" && unlockedModes.length < 3
+const hasQR = subscriptionTier === "pro" || unlockedFeatures.includes("qr")
+
+const startQrUnlock = async () => {
+  if (qrCheckoutLoading) return;
+  setQrCheckoutLoading(true);
+  try {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) { router.push("/login"); return; }
+    const res = await fetch("/api/unlock-feature", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${session.access_token}` },
+      body: JSON.stringify({ feature: "qr" }),
+    });
+    const json = await res.json();
+    if (json.url) window.location.href = json.url;
+    else { alert(json.error || "Something went wrong"); setQrCheckoutLoading(false); }
+  } catch {
+    alert("Something went wrong");
+    setQrCheckoutLoading(false);
+  }
+};
 const activeProfile = profiles.find((profile) => profile.is_active) || profiles[0] || null;
 const otherProfiles = profiles.filter((profile) => profile.id !== activeProfile?.id);
 
+// Apply the photo zoom/position saved in the builder.
+// x/y were saved for the layout's photo size, so they're scaled down to the dashboard size.
+const LAYOUT_PHOTO_SIZE = 128;
+const photoStyle = (p, size) => {
+  if (!p || p.mode === "university") return {};
+  const isNet = p.mode === "networking";
+  const scale = (isNet ? p.networking_scale : p.avatar_scale) ?? 1;
+  const x = (isNet ? p.networking_x : p.avatar_x) ?? 0;
+  const y = (isNet ? p.networking_y : p.avatar_y) ?? 0;
+  const ratio = size / LAYOUT_PHOTO_SIZE;
+  const ZOOM_SOFTEN = 0.3; // 1 = same as profile, lower = less zoomed in
+  const softScale = Math.max(1, 1 + (scale - 1) * ZOOM_SOFTEN);
+  return { transform: `translate(${x * ratio * ZOOM_SOFTEN}px, ${y * ratio * ZOOM_SOFTEN}px) scale(${softScale})` };
+};
+
 const handleCreateProfile = () => {
   if (profiles.length >= maxProfiles) {
-    if (subscriptionTier !== "pro") {
-      setUpgradeModalOpen(true);
+    if (canBuyMore) {
+      router.push("/create");
     } else {
       alert("You've reached the maximum of 4 profiles. Delete one to create a new one.");
     }
@@ -63,8 +102,8 @@ useEffect(() => {
 
 const handleShowQR = async (profileUsername) => {
   if (!ready) return;
-  if (subscriptionTier !== "pro") {
-    setUpgradeModalOpen(true);
+  if (!hasQR) {
+    setQrSheetOpen(true);
     return;
   }
   const url = `https://taply.now/${profileUsername}`;
@@ -151,6 +190,10 @@ const saveRename = async (id) => {
 
 useEffect(() => {
   setMounted(true);
+  document.body.style.overflow = "";
+  document.documentElement.style.overflow = "";
+  const cachedTier = localStorage.getItem("tier");
+  if (cachedTier) { setSubscriptionTier(cachedTier); setTierKnown(true); }
   const saved = parseInt(localStorage.getItem("profileCount") || "1", 10);
   setLastCount(Number.isNaN(saved) ? 1 : saved);
 }, []);
@@ -191,11 +234,15 @@ setUsername(user_username);
 
 const { data: accountData } = await supabase
   .from("accounts")
-  .select("subscription_tier")
+  .select("subscription_tier, unlocked_modes, unlocked_features")
   .eq("user_id", userData.user.id)
-  .single();
+  .maybeSingle();
 
 setSubscriptionTier(accountData?.subscription_tier || "free");
+setUnlockedModes(accountData?.unlocked_modes || []);
+setUnlockedFeatures(accountData?.unlocked_features || []);
+localStorage.setItem("tier", accountData?.subscription_tier || "free");
+setTierKnown(true);
 
 // Resume checkout if user picked a plan before logging in
 const pendingRaw = localStorage.getItem("pending_checkout_plan");
@@ -265,13 +312,6 @@ if (profileIds.length > 0) {
 setStatsLoading(false);
 setLoading(false);
 setReady(true);
-const tutorialDone = localStorage.getItem("taply_tutorial_done");
-const profileCardDone = localStorage.getItem("taply_profile_card_tutorial_done")
-if (!tutorialDone) {
-  setTimeout(() => setShowTutorial(true), 500)
-} else if (data.length > 0 && !profileCardDone) {
-  setTimeout(() => setShowProfileCardTutorial(true), 800)
-}
     };
 
     getUser();
@@ -289,49 +329,68 @@ return (
       <div className="sticky top-4 z-40 flex justify-center relative">
 
 {mounted && (
- <div data-tutorial="navlink" className={`flex items-center justify-between w-[96%] px-5 py-2.5 rounded-full 
-backdrop-blur-xl border shadow-[0_8px_30px_rgba(0,0,0,0.08)] ring-2 ${
-  subscriptionTier === "pro"
-    ? "bg-gradient-to-r from-amber-50 to-yellow-50 border-amber-200/60 ring-amber-100"
-    : "bg-white/60 border-white/30 ring-white/100"
-}`}>
-
+  <div
+    data-tutorial="navlink"
+    className={`flex items-center justify-between w-[96%] pl-6 pr-3 py-2.5 rounded-full backdrop-blur-xl border shadow-[0_8px_30px_rgba(0,0,0,0.08)] ${
+      subscriptionTier === "pro"
+        ? "bg-[#fbf8f1]/95 border-amber-200/70"
+        : "bg-white/85 border-gray-200/60"
+    }`}
+  >
     {/* LEFT */}
-    <div className="flex items-center gap-1.5">
-      <span className="text-[18px] font-bold text-gray-900 tracking-tight">
-        taply
+    <div className="flex items-center gap-3 min-w-0">
+      <span
+        className="text-[24px] text-black leading-none flex items-baseline"
+        style={{ fontWeight: 900, letterSpacing: "-0.06em", fontFamily: "'Helvetica Neue', Arial, sans-serif" }}
+      >
+        <span style={{ marginRight: "-0.03em" }}>t</span>
+        <span>a</span>
+        <span>p</span>
+        <span style={{ marginRight: "-0.025em" }}>l</span>
+        <span>y</span>
       </span>
-      <span className="text-[18px] text-gray-300 font-light">/</span>
-<div className="flex items-center gap-1.5">
-<span className="text-[18px] font-bold text-gray-900 tracking-tight">
-  {ready ? username : "..."}
-</span>
+      <span className="w-px h-6 bg-gray-300/70 flex-shrink-0" />
 
-{ready && profiles.length > 0 && profiles.some(p => p.is_active) && (
-  <span className={`w-2 h-2 rounded-full ${subscriptionTier === "pro" ? "bg-yellow-400" : "bg-green-500"}`}></span>
-)}
-
-{ready && subscriptionTier === "pro" && (
-  <span className="inline-flex items-center gap-1.5 text-[12px] font-bold bg-gradient-to-r from-amber-400 to-yellow-500 text-white px-3 py-1.5 rounded-full tracking-wide ml-1 shadow-sm">
-    <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor">
-      <path d="M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4z"/>
-    </svg>
-    PRO
-  </span>
-)}
-</div>
-
-
+      {ready ? (
+        <div className="flex items-center gap-2 min-w-0">
+          <div
+            className={`w-8 h-8 rounded-full flex items-center justify-center text-[12px] font-semibold text-white flex-shrink-0 ${
+              subscriptionTier === "pro" ? "bg-[#b8973f]" : "bg-blue-600"
+            }`}
+          >
+            {(userName || "?").split(" ").map((n) => n[0]).join("").slice(0, 2).toUpperCase()}
+          </div>
+          <span className="text-[17px] font-medium text-gray-900 truncate">
+            {(userName || "").split(" ")[0]}
+          </span>
+          {profiles.some((p) => p.is_active) && (
+            <span
+              className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${
+                subscriptionTier === "pro" ? "bg-[#b8973f]" : "bg-green-500"
+              }`}
+            />
+          )}
+        </div>
+      ) : (
+        <div className="flex items-center gap-2">
+          <div className="w-8 h-8 rounded-full bg-gray-200 animate-pulse" />
+          <div className="w-16 h-4 rounded-full bg-gray-200 animate-pulse" />
+        </div>
+      )}
     </div>
 
     {/* RIGHT */}
-    <button
-      onClick={() => setMenuOpen((prev) => !prev)}
-      className="p-2 rounded-xl hover:bg-white/50 transition"
-    >
-      ☰
-    </button>
-
+    <div className="flex items-center flex-shrink-0">
+      {tierKnown && subscriptionTier === "pro" && (
+                <Crown size={24} strokeWidth={1.6} className="text-[#b8973f] mr-5" />
+      )}
+      <button
+        onClick={() => setMenuOpen((prev) => !prev)}
+        className="p-2 rounded-xl hover:bg-black/5 transition"
+      >
+        <Menu size={24} strokeWidth={2} />
+      </button>
+    </div>
   </div>
 )}
   {/* DROPDOWN */}
@@ -390,6 +449,7 @@ backdrop-blur-xl border shadow-[0_8px_30px_rgba(0,0,0,0.08)] ring-2 ${
       <div
         onClick={async () => {
           localStorage.removeItem("has_chosen");
+          localStorage.removeItem("tier");
           await supabase.auth.signOut();
           router.push("/signup");
         }}
@@ -435,7 +495,7 @@ backdrop-blur-xl border shadow-[0_8px_30px_rgba(0,0,0,0.08)] ring-2 ${
           {loading ? (
             <>
               {/* Big card skeleton */}
-              <div className="bg-white rounded-3xl border border-gray-100 shadow-sm animate-pulse">
+              <div className="bg-white rounded-3xl border-2 border-gray-100 shadow-sm animate-pulse">
                 <div className="flex items-center gap-4 px-5 pt-5 pb-4">
                   <div className="w-16 h-16 rounded-full bg-gray-200 flex-shrink-0" />
                   <div className="flex-1 space-y-2.5">
@@ -444,7 +504,7 @@ backdrop-blur-xl border shadow-[0_8px_30px_rgba(0,0,0,0.08)] ring-2 ${
                   </div>
                 </div>
                 <div className="h-px bg-gray-100 mx-5" />
-                <div className="flex items-center py-4 px-5 gap-6">
+                <div className="flex items-center h-[54px] px-5 gap-6">
                   <div className="flex-1 h-4 bg-gray-100 rounded-full" />
                   <div className="flex-1 h-4 bg-gray-100 rounded-full" />
                   <div className="flex-1 h-4 bg-gray-100 rounded-full" />
@@ -504,7 +564,7 @@ backdrop-blur-xl border shadow-[0_8px_30px_rgba(0,0,0,0.08)] ring-2 ${
                   <div className="flex items-center gap-4 px-5 pt-5 pb-4">
                     <div className="w-16 h-16 rounded-full bg-blue-600 flex items-center justify-center overflow-hidden flex-shrink-0">
                       {profile.avatar_url ? (
-                        <img src={profile.avatar_url} className="w-full h-full object-cover" />
+                        <img src={profile.avatar_url} className="w-full h-full object-cover" style={photoStyle(profile, 64)} draggable={false} />
                       ) : (
                         <span className="text-white text-[18px] font-bold">{initials}</span>
                       )}
@@ -559,7 +619,7 @@ backdrop-blur-xl border shadow-[0_8px_30px_rgba(0,0,0,0.08)] ring-2 ${
                   <div className="h-px bg-gray-100 mx-5" />
 
                   {/* ACTIONS */}
-                  <div className="flex items-center py-1">
+                  <div className="flex items-center h-[54px]">
                     <button
                       data-tutorial={index === 0 ? "profile-edit" : undefined}
                       onClick={(e) => { e.stopPropagation(); router.push(`/builder?id=${profile.id}`); }}
@@ -589,8 +649,10 @@ backdrop-blur-xl border shadow-[0_8px_30px_rgba(0,0,0,0.08)] ring-2 ${
                     >
                       <QrCode size={16} />
                       QR
-                      {!isPro && ready && (
-                        <span className="absolute top-0.5 right-2 text-[9px] font-bold bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-1.5 py-0.5 rounded-full">PRO</span>
+                      {!hasQR && ready && (
+                        <span className="w-[18px] h-[18px] rounded-full bg-gradient-to-r from-[#d9b75a] to-[#b08a2e] flex items-center justify-center">
+                          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round"><rect x="4" y="11" width="16" height="10" rx="2" /><path d="M8 11V7a4 4 0 0 1 8 0v4" /></svg>
+                        </span>
                       )}
                     </button>
                   </div>
@@ -631,7 +693,7 @@ backdrop-blur-xl border shadow-[0_8px_30px_rgba(0,0,0,0.08)] ring-2 ${
                   >
                     <div className="w-12 h-12 rounded-full bg-blue-600 flex items-center justify-center overflow-hidden flex-shrink-0">
                       {profile.avatar_url ? (
-                        <img src={profile.avatar_url} className="w-full h-full object-cover" />
+                        <img src={profile.avatar_url} className="w-full h-full object-cover" style={photoStyle(profile, 48)} draggable={false} />
                       ) : (
                         <span className="text-white text-[15px] font-bold">{initials}</span>
                       )}
@@ -655,42 +717,32 @@ backdrop-blur-xl border shadow-[0_8px_30px_rgba(0,0,0,0.08)] ring-2 ${
         )}
 
         {/* CREATE */}
+        {!ready ? (
+          <div className="w-full mt-5 h-[52px] rounded-3xl bg-gray-200/70 animate-pulse" />
+        ) : (
         <button
           data-tutorial="create"
           onClick={handleCreateProfile}
           className={`w-full mt-5 text-[16px] font-semibold py-3.5 rounded-3xl transition ${
-            profiles.length >= maxProfiles ? "bg-gray-100 text-gray-400" : "bg-black text-white active:scale-[0.98]"
+            profiles.length < maxProfiles
+              ? "bg-black text-white active:scale-[0.98]"
+              : canBuyMore
+                ? "bg-gray-100 text-gray-500 active:scale-[0.98]"
+                : "bg-gray-100 text-gray-400"
           }`}
         >
-          {profiles.length >= maxProfiles
-            ? subscriptionTier === "pro" ? "Max profiles reached" : "Upgrade to add more"
-            : "+ Create new profile"}
+          {profiles.length < maxProfiles
+            ? "+ Create new profile"
+            : canBuyMore
+              ? "Unlock another profile"
+              : "Max profiles reached"}
         </button>
-
-        {/* UPGRADE TO PRO */}
-        {ready && subscriptionTier !== "pro" && (
-          <motion.div
-            whileTap={{ scale: 0.98 }}
-            onClick={() => router.push("/upgrade")}
-            className="mt-5 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-3xl px-5 py-4 flex items-center justify-between shadow-[0_8px_30px_rgba(99,102,241,0.25)] cursor-pointer"
-          >
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-2xl bg-white/15 flex items-center justify-center flex-shrink-0">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="white">
-                  <path d="M5 16L3 5l5.5 4L12 3l3.5 6L21 5l-2 11H5zm0 2h14v2H5v-2z"/>
-                </svg>
-              </div>
-              <div>
-                <p className="text-[15px] font-bold text-white leading-tight">Upgrade to Pro</p>
-                <p className="text-[13px] text-white/70 leading-tight mt-0.5">Apple Wallet, all modes, QR code</p>
-              </div>
-            </div>
-            <span className="text-white text-lg">→</span>
-          </motion.div>
         )}
+
+
       </div>
       {/* APPLE WALLET HEADER */}
-<div data-tutorial="wallet" className={`${profiles.length === 0 ? "mt-2" : "mt-10"} mb-3 relative z-20`}>
+<div data-tutorial="wallet" className={`${!loading && profiles.length === 0 ? "mt-2" : "mt-10"} mb-3 relative z-20`}>
   <h2 className="text-xl font-semibold tracking-tight relative z-20">
  
   </h2>
@@ -701,18 +753,21 @@ backdrop-blur-xl border shadow-[0_8px_30px_rgba(0,0,0,0.08)] ring-2 ${
 <motion.div
   whileTap={{ scale: 0.985 }}
   whileHover={{ y: -3 }}
-  className="
-    relative
-    bg-white/85
-    backdrop-blur-md
-    rounded-[32px]
-    border border-white/40
-    shadow-[0_12px_40px_rgba(0,0,0,0.10)]
-    overflow-hidden
-  "
+  className={`relative bg-white/85 backdrop-blur-md rounded-[32px] overflow-hidden ${
+    tierKnown && subscriptionTier !== "pro"
+      ? "shadow-[0_12px_40px_rgba(184,151,63,0.22)]"
+      : "border border-white/40 shadow-[0_12px_40px_rgba(0,0,0,0.10)]"
+  }`}
+  style={tierKnown && subscriptionTier !== "pro" ? {
+    border: "2px solid transparent",
+    background: "linear-gradient(#fff, #fff) padding-box, linear-gradient(135deg, #f0d78c, #c9a443, #9a7623) border-box",
+  } : undefined}
 >
-  {ready && subscriptionTier !== "pro" && (
-<span className="absolute top-4 right-4 z-10 text-[12px] font-bold bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-3.5 py-1.5 rounded-full tracking-wide">PRO</span>
+  {tierKnown && subscriptionTier !== "pro" && (
+<span className="absolute top-4 right-4 z-10 flex items-center gap-1.5 text-[12px] font-bold bg-gradient-to-r from-[#d9b75a] to-[#b08a2e] text-white pl-2.5 pr-3 py-1 rounded-full shadow-md whitespace-nowrap">
+  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round"><rect x="4" y="11" width="16" height="10" rx="2" /><path d="M8 11V7a4 4 0 0 1 8 0v4" /></svg>
+  PRO
+</span>
   )}
 
   {/* TOP */}
@@ -865,6 +920,7 @@ backdrop-blur-xl border shadow-[0_8px_30px_rgba(0,0,0,0.08)] ring-2 ${
       className="overflow-hidden bg-transparent mt-0"
     >
       <div className="px-6 py-5 space-y-4">
+        <div className="flex items-stretch justify-between">
         <div>
           <p className="text-sm font-semibold text-gray-700 mb-2">Card Color</p>
           <div className="flex flex-wrap gap-3">
@@ -898,6 +954,7 @@ backdrop-blur-xl border shadow-[0_8px_30px_rgba(0,0,0,0.08)] ring-2 ${
             </label>
           </div>
         </div>
+        <div className="w-px bg-gray-200 self-stretch" />
         <div>
           <p className="text-sm font-semibold text-gray-700 mb-2">Text Color</p>
           <div className="flex gap-3">
@@ -930,6 +987,7 @@ backdrop-blur-xl border shadow-[0_8px_30px_rgba(0,0,0,0.08)] ring-2 ${
               }} />
             </label>
           </div>
+        </div>
         </div>
         <div>
           <p className="text-sm font-semibold text-gray-700 mb-2">Profile Photo</p>
@@ -1006,8 +1064,31 @@ backdrop-blur-xl border shadow-[0_8px_30px_rgba(0,0,0,0.08)] ring-2 ${
    
 {/* QUICK ACTIONS */}
 <div className="mt-8">
-  <h2 className="text-xl font-semibold mb-3 tracking-tight">Quick Actions</h2>
+  <button
+    onClick={() => setQuickOpen((prev) => !prev)}
+    className="w-full flex items-center justify-between mb-3 bg-white border border-gray-100 shadow-[0_4px_16px_rgba(0,0,0,0.05)] rounded-2xl pl-5 pr-3 py-3 active:scale-[0.99] transition"
+  >
+    <h2 className="text-xl font-semibold tracking-tight">Quick Actions</h2>
+    <span className="flex items-center gap-2">
+      <span className="text-[13px] font-medium text-gray-400">{quickOpen ? "Hide" : "Show"}</span>
+      <span className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center">
+        <ChevronDown
+          size={18}
+          className={`text-gray-600 transition-transform duration-300 ${quickOpen ? "rotate-180" : ""}`}
+        />
+      </span>
+    </span>
+  </button>
 
+  <AnimatePresence initial={false}>
+  {quickOpen && (
+  <motion.div
+    initial={{ height: 0, opacity: 0 }}
+    animate={{ height: "auto", opacity: 1 }}
+    exit={{ height: 0, opacity: 0 }}
+    transition={{ duration: 0.25 }}
+    className="overflow-hidden -mx-2 px-2 pt-1 pb-3"
+  >
   <div className="grid grid-cols-2 gap-3">
     {[
       {
@@ -1061,10 +1142,21 @@ label: "QR Code",
         whileTap={{ scale: 0.96 }}
         whileHover={{ y: -3 }}
         onClick={onClick}
-        className="bg-white/70 backdrop-blur-md p-4 rounded-2xl border border-white/40 shadow-[0_8px_30px_rgba(0,0,0,0.08)] flex flex-col gap-3 h-[150px] cursor-pointer relative"
+        className={`bg-white/70 backdrop-blur-md p-4 rounded-2xl flex flex-col gap-3 h-[150px] cursor-pointer relative ${
+          isPro && ready && !hasQR
+            ? "shadow-[0_8px_24px_rgba(184,151,63,0.22)]"
+            : "border border-white/40 shadow-[0_8px_30px_rgba(0,0,0,0.08)]"
+        }`}
+        style={isPro && ready && !hasQR ? {
+          border: "2px solid transparent",
+          background: "linear-gradient(#fff, #fff) padding-box, linear-gradient(135deg, #f0d78c, #c9a443, #9a7623) border-box",
+        } : undefined}
       >
-        {isPro && ready && subscriptionTier !== "pro" && (
-          <span className="absolute top-3 right-3 text-[11px] font-bold bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-3 py-1 rounded-full tracking-wide">PRO</span>
+        {isPro && ready && !hasQR && (
+          <span className="absolute top-3 right-3 flex items-center gap-1 text-[11px] font-bold bg-gradient-to-r from-[#d9b75a] to-[#b08a2e] text-white pl-2 pr-2.5 py-1 rounded-full shadow-md whitespace-nowrap">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round"><rect x="4" y="11" width="16" height="10" rx="2" /><path d="M8 11V7a4 4 0 0 1 8 0v4" /></svg>
+            PRO
+          </span>
         )}
         <div className="flex-1 flex flex-col justify-between">
           {icon}
@@ -1075,8 +1167,10 @@ label: "QR Code",
         </div>
       </motion.div>
     ))}
-    
   </div>
+  </motion.div>
+  )}
+  </AnimatePresence>
   
 
 
@@ -1084,12 +1178,7 @@ label: "QR Code",
 
 </div>
 
-    {showTutorial && <DashboardTutorial onComplete={() => {
-  setShowTutorial(false)
-  const profileCardDone = localStorage.getItem("taply_profile_card_tutorial_done")
-  if (profiles.length > 0 && !profileCardDone) setTimeout(() => setShowProfileCardTutorial(true), 400)
-}} />}
-{showProfileCardTutorial && <ProfileCardTutorial onComplete={() => setShowProfileCardTutorial(false)} />}
+
 
     {/* QR MODAL */}
     <AnimatePresence>
@@ -1253,6 +1342,86 @@ label: "QR Code",
     </div>
   </div>
 )}
+
+    {/* QR UNLOCK SHEET */}
+    <AnimatePresence>
+      {qrSheetOpen && (
+        <>
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setQrSheetOpen(false)}
+            className="fixed inset-0 bg-black/40 z-[100]"
+          />
+          <motion.div
+            initial={{ y: "100%" }}
+            animate={{ y: 0 }}
+            exit={{ y: "100%" }}
+            transition={{ type: "spring", damping: 30, stiffness: 300 }}
+            className="fixed bottom-0 left-0 right-0 z-[101] bg-white rounded-t-3xl max-w-md mx-auto px-5 pt-3 pb-8"
+          >
+            <div className="w-10 h-1 bg-gray-200 rounded-full mx-auto mb-5" />
+
+            {/* HEADER */}
+            <div className="flex items-center gap-3 mb-5">
+              <div className="w-11 h-11 rounded-xl bg-blue-50 flex items-center justify-center flex-shrink-0">
+                <QrCode size={24} className="text-blue-600" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-[19px] font-bold text-gray-900 leading-tight">QR Code</p>
+                <p className="text-[13px] text-gray-500">Works for all your profiles, shows the active profile.</p>
+              </div>
+            </div>
+
+
+
+            {/* OPTION 1: ONE-TIME */}
+            <button
+              onClick={startQrUnlock}
+              disabled={qrCheckoutLoading}
+              className="w-full text-left border border-gray-200 rounded-2xl p-4 mb-3 active:bg-gray-50 transition"
+            >
+              <div className="flex items-center justify-between">
+                <p className="text-[15px] font-semibold text-gray-900">Unlock QR Code</p>
+                <p className="text-[17px] font-bold text-gray-900">{qrCheckoutLoading ? "…" : "$1.99"}</p>
+              </div>
+              <p className="text-[13px] text-gray-500 mt-0.5">One-time · Yours forever</p>
+            </button>
+
+            {/* OPTION 2: PRO */}
+            <button
+              onClick={() => router.push("/upgrade")}
+              className="relative w-full text-left rounded-2xl p-[2px] bg-gradient-to-br from-[#f0d78c] via-[#c9a443] to-[#9a7623]"
+            >
+              <span className="absolute -top-2.5 right-4 text-[10px] font-bold bg-gray-900 text-white px-2 py-0.5 rounded-full tracking-wide">
+                BEST VALUE
+              </span>
+              <div className="bg-white rounded-[14px] p-4">
+                <div className="flex items-center justify-between">
+                  <p className="text-[15px] font-semibold text-gray-900">Try Pro free for 14 days</p>
+                  <p className="text-[17px] font-bold text-gray-900">
+                    <span className="text-[12px] font-medium text-gray-500">then </span>$5.99<span className="text-[12px] font-medium text-gray-500">/mo</span>
+                  </p>
+                </div>
+                <ul className="mt-2 space-y-1">
+                  {["QR code", "Apple Wallet pass", "All 4 modes", "Up to 4 profiles"].map((f) => (
+                    <li key={f} className="flex items-center gap-2 text-[13px] text-gray-600">
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#b8973f" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12" /></svg>
+                      {f}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </button>
+
+            <button onClick={() => setQrSheetOpen(false)} className="w-full text-center text-[14px] text-gray-400 font-medium mt-4">
+              Not now
+            </button>
+          </motion.div>
+        </>
+      )}
+    </AnimatePresence>
 
     <UpgradeModal
       open={upgradeModalOpen}
